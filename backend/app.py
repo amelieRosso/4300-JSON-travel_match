@@ -4,6 +4,7 @@ from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import pandas as pd
+import numpy as np
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -41,6 +42,13 @@ def home():
 def episodes_search():
     text = request.args.get("title")
     return json_search(text)
+
+"""
+Expects [text] to be the "short description" field in the json file. Can be extended later to process the brief synthesis or other review text.
+Outputs a list of tokens as a numpy array for more efficient processing later.
+"""
+def preprocess_description(text:str) -> np.ndarray:
+    text = text.removeprefix("<p>").removesuffix("</p>")
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)
