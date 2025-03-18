@@ -58,11 +58,11 @@ def get_rating_from_api(input_json_path, output_json_path):
                     place_id = text_data["results"][0].get("place_id")
                     site["place_id"] = place_id  # Add place_id to JSON
 
-                    # Use Place Details API when there is avaliable query result
+                    # Use Place Details API when there is available query result
                     details_url = "https://maps.googleapis.com/maps/api/place/details/json"
                     details_params = {
                         "place_id": place_id,
-                        "fields": "rating,formatted_address",
+                        "fields": "rating,formatted_address,reviews",
                         "key": API_KEY
                     }
 
@@ -74,6 +74,19 @@ def get_rating_from_api(input_json_path, output_json_path):
                         result = details_data.get("result", {})
                         site["rating"] = result.get("rating")
                         site["formatted_address"] = result.get("formatted_address")
+
+                        # Extract top 5 "relevant" reviews
+                        reviews = result.get("reviews", [])
+                        top_reviews = []
+                        for review in reviews[:5]:
+                            top_reviews.append({
+                                "author_name": review.get("author_name"),
+                                "rating": review.get("rating"),
+                                "text": review.get("text"),
+                                "relative_time": review.get("relative_time_description"),
+                                "language": review.get("language")
+                            })
+                        site["reviews"] = top_reviews
 
                         updated_count += 1
                         matched = True
@@ -94,6 +107,7 @@ def get_rating_from_api(input_json_path, output_json_path):
             site["rating"] = None
             site["formatted_address"] = None
             site["place_id"] = None
+            site["reviews"] = []
 
     try:
         with open(output_json_path, 'w', encoding='utf-8') as f:
