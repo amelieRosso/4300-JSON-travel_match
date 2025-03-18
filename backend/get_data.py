@@ -56,6 +56,7 @@ def get_rating_from_api(input_json_path, output_json_path):
 
                 if text_data.get("status") == "OK" and text_data.get("results"):
                     place_id = text_data["results"][0].get("place_id")
+                    site["place_id"] = place_id  # Add place_id to JSON
 
                     # Use Place Details API when there is avaliable query result
                     details_url = "https://maps.googleapis.com/maps/api/place/details/json"
@@ -92,6 +93,7 @@ def get_rating_from_api(input_json_path, output_json_path):
         if not matched:
             site["rating"] = None
             site["formatted_address"] = None
+            site["place_id"] = None
 
     try:
         with open(output_json_path, 'w', encoding='utf-8') as f:
