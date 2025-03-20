@@ -3,7 +3,9 @@ import os
 import re
 import json
 import numpy as np
-from nltk.tokenize import TreebankWordTokenizer # type: ignore
+import nltk
+from nltk.tokenize import word_tokenize, TreebankWordTokenizer
+from nltk.corpus import stopwords
 from typing import List, Tuple
 
 # Get the directory of the current script
@@ -17,13 +19,32 @@ with open(json_file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 """
-Expects [text] to be the "short description" field in the json file. Can be extended later to process the brief synthesis or other review text.
-Outputs a list of tokens as a numpy array for more efficient processing later.
+Expects: [text] to be the "short description" field in the json file. Can be extended later to process the brief synthesis or other review text.
+Outputs: a list of tokens as a numpy array for more efficient processing later.
 """
 def preprocess_description(text:str) -> np.ndarray:
-    lowercase_text = text.lower()
-    words_list = re.findall("[a-z]+", lowercase_text)
-    return words_list
+    #preprocessing steps followed from: https://spotintelligence.com/2022/12/21/nltk-preprocessing-pipeline/
+    text = text.removeprefix("<p>").removesuffix("</p>")
+    text = text.lower()
+    #words_list = re.findall("[a-z]+", lowercase_text)
+    
+
+    # remove URLs in the text
+    pattern = r"(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?"
+    text = re.sub(pattern, "", text)
+
+    # create basic tokens
+    tokens = nltk.word_tokenize(text)
+
+    # get list of stopwords in English (multilingual processing seems to be much harder and most of the text is english except for place names)
+    tokens = stopwords.words("english")
+    # remove stopwords
+    filtered_tokens = [token for token in tokens if token.lower() not in stopwords]  
+
+    # if lemmatizer takes too long, switch to using stemming
+    lemmatizer = nltk.stem.WordNetLemmatizer()
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
+    return np.array(lemmatized_tokens)
 
 # number of sites
 n_sites = len(data)
