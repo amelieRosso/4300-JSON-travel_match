@@ -45,12 +45,6 @@ def json_search(query):
     scores = similarity.index_search(query = query)
     ids = [id for (_, id) in scores]
     return [get_place_details(id) for id in ids]
-    # matches = []
-    # merged_df = pd.merge(episodes_df, reviews_df, left_on='id', right_on='id', how='inner')
-    # matches = merged_df[merged_df['title'].str.lower().str.contains(query.lower())]
-    # matches_filtered = matches[['title', 'descr', 'imdb_rating']]
-    # matches_filtered_json = matches_filtered.to_json(orient='records')
-    # return matches_filtered_json
 
 @app.route("/")
 def home():
