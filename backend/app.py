@@ -9,6 +9,7 @@ import json
 import math
 import pandas as pd
 import numpy as np
+import similarity
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -18,25 +19,38 @@ os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..",os.curdir))
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Specify the path to the JSON file relative to the current script
-json_file_path = os.path.join(current_directory, 'init.json')
+json_file_path = os.path.join(current_directory, 'whc_sites_2021_with_ratings.json')
 
 # Assuming your JSON data is stored in a file named 'init.json'
 with open(json_file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
-    episodes_df = pd.DataFrame(data['episodes'])
-    reviews_df = pd.DataFrame(data['reviews'])
 
 app = Flask(__name__)
 CORS(app)
 
+def get_place_details(index):
+    place = data[index]
+    name = place.get("Name", "N/A")
+    short_description = place.get("short_description", "N/A")
+    rating = place.get("rating", "N/A")
+
+    return {
+            "Name": name,
+            "Short Description": short_description,
+            "Rating": rating
+    }
+
 # Sample search using json with pandas
 def json_search(query):
-    matches = []
-    merged_df = pd.merge(episodes_df, reviews_df, left_on='id', right_on='id', how='inner')
-    matches = merged_df[merged_df['title'].str.lower().str.contains(query.lower())]
-    matches_filtered = matches[['title', 'descr', 'imdb_rating']]
-    matches_filtered_json = matches_filtered.to_json(orient='records')
-    return matches_filtered_json
+    scores = similarity.index_search(query = query)
+    ids = [id for (_, id) in scores]
+    return [get_place_details(id) for id in ids]
+    # matches = []
+    # merged_df = pd.merge(episodes_df, reviews_df, left_on='id', right_on='id', how='inner')
+    # matches = merged_df[merged_df['title'].str.lower().str.contains(query.lower())]
+    # matches_filtered = matches[['title', 'descr', 'imdb_rating']]
+    # matches_filtered_json = matches_filtered.to_json(orient='records')
+    # return matches_filtered_json
 
 @app.route("/")
 def home():

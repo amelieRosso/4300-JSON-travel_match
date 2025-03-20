@@ -145,18 +145,18 @@ def accumulate_dot_scores(query_word_counts: dict, index, idf) -> dict:
 
 """
 Expects: [query, index, idf, doc_norms, score_func, tokenizer] query, inverted index from above, idf from above, doc norms form above, dot scores form above, and a tokenizer. 
-Outputs: a list of tules (cosine similarity value, site id)
+Outputs: a list of tuples (cosine similarity value, site id)
 """
 # need to figure out tokenizer
 def index_search(
     query: str,
-    index: dict,
-    idf,
-    doc_norms,
+    index: dict = inv_idx,
+    idf = idf,
+    doc_norms = doc_norms,
     score_func=accumulate_dot_scores,
     tokenizer=TreebankWordTokenizer(),
 ) -> List[Tuple[int, int]]:
-    index_search_list_tuples = [() for i in range(len(doc_norms))] 
+    index_search_list_tuples = [] 
     tokenize_list = tokenizer.tokenize(query.lower())
     query_word_counts_dict = {}
 
@@ -171,8 +171,8 @@ def index_search(
 
     numer = score_func(query_word_counts_dict, index, idf)
     for site_id, score in numer.items():
-      index_search_list_tuples[site_id] = ((score / (doc_norms[site_id] * abs_q)), site_id)
+      index_search_list_tuples.append(((score / (doc_norms[site_id] * abs_q)), site_id))
+      index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
     
-    index_search_list_tuples.sort(reverse=True)
-    return index_search_list_tuples
-
+    #index_search_list_tuples.sort(reverse=True)[:10]
+    return sorted(index_search_list_tuples, reverse=True)[:10]
