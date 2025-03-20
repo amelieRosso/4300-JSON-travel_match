@@ -3,7 +3,8 @@ import os
 import re
 import json
 import numpy as np
-from typing import List
+from nltk.tokenize import TreebankWordTokenizer # type: ignore
+from typing import List, Tuple
 
 # Get the directory of the current script
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -87,4 +88,70 @@ def compute_idf(inv_idx, n_sites, min_df=10, max_df_ratio=0.95):
 
     return idf_value_dict
 
-idf_dict = compute_idf(inv_idx, n_sites)
+idf = compute_idf(inv_idx, n_sites)
+
+"""
+Expects: [inv_idx, idf, n_sites] inverted index from above, idf from above and number of sites. 
+Outputs: an array of doc norms.
+"""
+def compute_doc_norms(inv_idx, idf, n_sites):
+    doc_norms_array = np.zeros(n_sites, dtype=float)
+    for word, value_list in inv_idx.items():
+      idf_value = idf.get(word, 0)
+      for doc_id, tf in value_list:
+        doc_norms_array[doc_id] += ((tf * idf_value) ** 2.0)
+    doc_norms_array = np.sqrt(doc_norms_array)
+    return doc_norms_array
+
+doc_norms = compute_doc_norms(inv_idx, idf, n_sites)
+
+"""
+Expects: [query_word_counts, index, idf] dict of query words to tf values, inverted index from above, and idf from above. 
+Outputs: dict of site ids to dot product value.
+"""
+# we need a query_word_counts (dict of words to tf of the query)
+def accumulate_dot_scores(query_word_counts: dict, index, idf) -> dict:
+    dot_scores_dict = {}
+    for word, query_tf in query_word_counts.items():
+      if word in idf and word in index:
+        idf_value = idf[word]
+        for site_id, tf in index[word]:
+          numer = (query_tf * idf_value) * (tf * idf_value) 
+          if site_id not in dot_scores_dict:
+            dot_scores_dict[site_id] = 0
+          dot_scores_dict[site_id] += numer
+    return dot_scores_dict
+
+"""
+Expects: [query, index, idf, doc_norms, score_func, tokenizer] query, inverted index from above, idf from above, doc norms form above, dot scores form above, and a tokenizer. 
+Outputs: a list of tules (cosine similarity value, site id)
+"""
+# need to figure out tokenizer
+def index_search(
+    query: str,
+    index: dict,
+    idf,
+    doc_norms,
+    score_func=accumulate_dot_scores,
+    tokenizer=TreebankWordTokenizer(),
+) -> List[Tuple[int, int]]:
+    index_search_list_tuples = [() for i in range(len(doc_norms))] 
+    tokenize_list = tokenizer.tokenize(query.lower())
+    query_word_counts_dict = {}
+
+    for word in tokenize_list:
+      query_word_counts_dict[word] = tokenize_list.count(word)
+    
+    q = 0
+    for word in query_word_counts_dict:
+      if word in idf:
+        q += (query_word_counts_dict[word] * idf[word]) ** 2
+    abs_q = math.sqrt(q)
+
+    numer = score_func(query_word_counts_dict, index, idf)
+    for site_id, score in numer.items():
+      index_search_list_tuples[site_id] = ((score / (doc_norms[site_id] * abs_q)), site_id)
+    
+    index_search_list_tuples.sort(reverse=True)
+    return index_search_list_tuples
+
