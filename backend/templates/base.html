@@ -15,7 +15,7 @@
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
             </div>
         </div>
         <div id="answer-box">
@@ -25,11 +25,11 @@
 
     <script>
 
-        function answerBoxTemplate(title,titleDesc,rating){
+        function answerBoxTemplate(name,description,rating){
             return `<div class=''>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+                <h3 class='site_name'>${name}</h3>
+                <p class='short_description'>${description}</p>
+                <p class='google_rating'> Google Rating: ${rating}</p>
             </div>`
         }
 
@@ -45,7 +45,7 @@
             .then((data) => data.forEach(row => {
                 
                 let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                tempDiv.innerHTML = answerBoxTemplate(row.Name,row["Short Description"],row.Rating)
                 document.getElementById("answer-box").appendChild(tempDiv)
             }));
 

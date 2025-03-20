@@ -40,9 +40,9 @@ def preprocess_description(text:str) -> np.ndarray:
     tokens = nltk.word_tokenize(text)
 
     # get list of stopwords in English (multilingual processing seems to be much harder and most of the text is english except for place names)
-    stop_list = stopwords.words("english")
+    stop_words = stopwords.words("english")
     # remove stopwords
-    filtered_tokens = [token for token in tokens if token.lower() not in stop_list]  
+    filtered_tokens = [token for token in tokens if token.lower() not in stop_words]  
 
     # if lemmatizer takes too long, switch to using stemming
     lemmatizer = nltk.stem.WordNetLemmatizer()
