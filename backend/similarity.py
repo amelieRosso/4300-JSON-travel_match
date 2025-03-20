@@ -8,6 +8,9 @@ from nltk.tokenize import word_tokenize, TreebankWordTokenizer
 from nltk.corpus import stopwords
 from typing import List, Tuple
 
+# download tokenizer info 
+nltk.download('punkt_tab')
+
 # Get the directory of the current script
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -37,9 +40,9 @@ def preprocess_description(text:str) -> np.ndarray:
     tokens = nltk.word_tokenize(text)
 
     # get list of stopwords in English (multilingual processing seems to be much harder and most of the text is english except for place names)
-    tokens = stopwords.words("english")
+    stop_list = stopwords.words("english")
     # remove stopwords
-    filtered_tokens = [token for token in tokens if token.lower() not in stopwords]  
+    filtered_tokens = [token for token in tokens if token.lower() not in stop_list]  
 
     # if lemmatizer takes too long, switch to using stemming
     lemmatizer = nltk.stem.WordNetLemmatizer()
