@@ -82,10 +82,10 @@
     margin-top:50px; 
 }
 
-.episode-title{
+.site_name{
     font-family: 'Kanit', sans-serif;
 }
 
-.episode-desc{
+.short_description, .google_rating{
     font-family: 'Montserrat', sans-serif;
 }
