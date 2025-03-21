@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-import pandas as pd
+#import pandas as pd
 from get_data import get_rating_from_api
 
 
