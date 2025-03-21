@@ -11,6 +11,7 @@ from typing import List, Tuple
 # download tokenizer info 
 nltk.download('punkt_tab')
 nltk.download('stopwords')
+nltk.download('wordnet')
 
 # Get the directory of the current script
 current_directory = os.path.dirname(os.path.abspath(__file__))
