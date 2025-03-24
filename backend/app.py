@@ -44,7 +44,15 @@ def get_place_details(index):
 def json_search(query):
     scores = similarity.index_search(query = query)
     ids = [id for (_, id) in scores]
-    return [get_place_details(id) for id in ids]
+    places = [get_place_details(id) for id in ids]
+    def sort_key(place):
+        rating = place["Rating"]
+        try:
+            return float(rating)
+        except (ValueError, TypeError):
+            return -1.0 
+    sorted_places = sorted(places, key=sort_key, reverse=True)  
+    return sorted_places
 
 @app.route("/")
 def home():
