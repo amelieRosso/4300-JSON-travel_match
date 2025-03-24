@@ -1,3 +1,24 @@
+body {
+    background-image: url("https://img.freepik.com/premium-photo/png-taj-mahal-india-tourist-attraction-line-art-illustration-transparent-background_53876-963048.jpg?semt=ais_hybrid");
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    height: 100vh; 
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85); 
+    z-index: -1;
+}
+
 .full-body-container{
     position: absolute;
     top:0;
