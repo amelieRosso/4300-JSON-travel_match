@@ -102,7 +102,7 @@ Expects: [inv_idx, n_sites] inverted index from above and number of sites.
 Outputs: a dict of terms to idf vlaues.
 """
 # create dict of term to idf value
-def compute_idf(inv_idx, n_sites, min_df=10, max_df_ratio=0.95):
+def compute_idf(inv_idx, n_sites, min_df=1, max_df_ratio=0.95):
     idf_value_dict = {}
 
     for word, value_list in inv_idx.items():
