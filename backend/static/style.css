@@ -82,6 +82,23 @@
     margin-top:50px; 
 }
 
+.answerContainer{
+    padding-bottom: 5px;
+}
+
+.answerCard{
+    transition: 0.3s;
+    border-radius: 5px;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border:2px solid cornflowerblue;
+}
+.answerCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
 .site_name{
     font-family: 'Kanit', sans-serif;
 }
