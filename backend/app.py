@@ -62,6 +62,7 @@ def home():
 @app.route("/episodes")
 def episodes_search():
     text = request.args.get("title")
+    print(text)
     return json_search(text)
 
 if 'DB_NAME' not in os.environ:

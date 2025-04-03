@@ -17,7 +17,7 @@ nltk.download('wordnet')
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Specify the path to the JSON file relative to the current script
-json_file_path = os.path.join(current_directory, 'whc_sites_2021.json')
+json_file_path = os.path.join(current_directory, 'whc_sites_2021_with_ratings.json')
 
 # Assuming your JSON data is stored in a file named 'init.json'
 with open(json_file_path, 'r', encoding='utf-8') as file:
@@ -63,7 +63,16 @@ def create_tokenized_dict(data: List[dict]) -> dict:
     tokenized_dict = {}
     for site_id, site in enumerate(data):
       tokenize_description = preprocess_description(site['short_description'])
-      tokenized_dict[site_id] = tokenize_description
+      tokenize_name = preprocess_description(site['Name'])
+
+      # tokenize all reviews for a site
+      reviews_text = ""
+      for review in site['reviews']:
+        reviews_text += review["text"] + " "
+      tokenize_reviews = preprocess_description(reviews_text)
+
+      # create a tokenized_dict to use in tf-idf matrix with site name, description, and review text
+      tokenized_dict[site_id] = np.concatenate([tokenize_name, tokenize_description, tokenize_reviews])
     return tokenized_dict
 
 tokenized_dict = create_tokenized_dict(data)
@@ -149,7 +158,7 @@ def accumulate_dot_scores(query_word_counts: dict, index, idf) -> dict:
     return dot_scores_dict
 
 """
-Expects: [query, index, idf, doc_norms, score_func, tokenizer] query, inverted index from above, idf from above, doc norms form above, dot scores form above, and a tokenizer. 
+Expects: [query, index, idf, doc_norms, score_func] query, inverted index from above, idf from above, doc norms form above, dot scores form above, and a tokenizer. 
 Outputs: a list of tuples (cosine similarity value, site id)
 """
 # need to figure out tokenizer
@@ -159,10 +168,10 @@ def index_search(
     idf = idf,
     doc_norms = doc_norms,
     score_func=accumulate_dot_scores,
-    tokenizer=TreebankWordTokenizer(),
 ) -> List[Tuple[int, int]]:
     index_search_list_tuples = [] 
-    tokenize_list = tokenizer.tokenize(query.lower())
+
+    tokenize_list = preprocess_description(query.lower()).tolist()
     query_word_counts_dict = {}
 
     for word in tokenize_list:
