@@ -23,6 +23,7 @@
     </div>
 
     <script>
+        let debounceTimeout;
 
         function answerBoxTemplate(name,description,rating){
             return `<div class='answerCard'>
@@ -36,19 +37,48 @@
             document.getElementById('filter-text-val').focus()
         }
 
-        function filterText(){
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-            .then((response) => response.json())
-            .then((data) => data.forEach(row => {
+        // function filterText(){
+            
+        //     document.getElementById("answer-box").innerHTML = ""
+        //     console.log(document.getElementById("filter-text-val").value)
+        //     fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+        //     .then((response) => response.json())
+        //     .then((data) => data.forEach(row => {
                 
-                let tempDiv = document.createElement("div")
-                tempDiv.classList.add('answerContainer')
-                tempDiv.innerHTML = answerBoxTemplate(row.Name,row["Short Description"],row.Rating)
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
+        //         let tempDiv = document.createElement("div")
+        //         tempDiv.classList.add('answerContainer')
+        //         tempDiv.innerHTML = answerBoxTemplate(row.Name,row["Short Description"],row.Rating)
+        //         document.getElementById("answer-box").appendChild(tempDiv)
+        //     }));
 
+        // }
+        function filterText() {
+        // Clear existing debounce timer
+        clearTimeout(debounceTimeout);
+
+        // Set a new debounce timer
+        debounceTimeout = setTimeout(() => {
+            const query = document.getElementById("filter-text-val").value;
+            if (query.length === 0) {
+                document.getElementById("answer-box").innerHTML = "";
+                return;
+            }
+
+            console.log("Searching:", query);
+            fetch("/episodes?" + new URLSearchParams({ title: query }).toString())
+                .then((response) => response.json())
+                .then((data) => {
+                    const container = document.getElementById("answer-box");
+                    container.innerHTML = "";  // Clear previous results
+
+                    data.forEach(row => {
+                        let tempDiv = document.createElement("div");
+                        tempDiv.classList.add('answerContainer');
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating);
+                        container.appendChild(tempDiv);
+                    });
+                });
+        }, 300);  // Only search after user stops typing for 300ms
         }
             
     </script>

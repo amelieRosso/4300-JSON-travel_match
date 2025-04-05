@@ -7,6 +7,9 @@ import nltk
 from nltk.tokenize import word_tokenize, TreebankWordTokenizer
 from nltk.corpus import stopwords
 from typing import List, Tuple
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -186,7 +189,39 @@ def index_search(
     numer = score_func(query_word_counts_dict, index, idf)
     for site_id, score in numer.items():
       index_search_list_tuples.append(((score / (doc_norms[site_id] * abs_q)), site_id))
-      index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
+      # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
     
     #index_search_list_tuples.sort(reverse=True)[:10]
     return sorted(index_search_list_tuples, reverse=True)[:10]
+
+
+# SVD approach
+def svd_index_search(
+    query: str,
+    n_components=100
+) -> List[Tuple[int, int]]:
+  
+  #convert all data to strings for vectorization
+  docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+  
+  vectorizer = TfidfVectorizer()
+  docs_tfidf = vectorizer.fit_transform(docs)
+  
+  svd = TruncatedSVD(n_components=n_components)
+  reduced_docs = svd.fit_transform(docs_tfidf)
+
+  query_tokens = preprocess_description(query.lower())
+  query_str = " ".join(query_tokens)
+  query_tfidf = vectorizer.transform([query_str])
+  reduced_query = svd.transform(query_tfidf)
+
+  sim = cosine_similarity(reduced_docs,reduced_query).flatten()
+  ids = sim.argsort()[::-1]
+
+  print([(sim[i],i) for i in ids[:10]])
+  return [(sim[i],i) for i in ids[:10]]
+
+
+
+   
+   

@@ -42,7 +42,7 @@ def get_place_details(index):
 
 # Sample search using json with pandas
 def json_search(query):
-    scores = similarity.index_search(query = query)
+    scores = similarity.svd_index_search(query = query)
     ids = [id for (_, id) in scores]
     return [get_place_details(id) for id in ids]
 """    places = [get_place_details(id) for id in ids]
