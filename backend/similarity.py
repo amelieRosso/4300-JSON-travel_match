@@ -218,7 +218,7 @@ def svd_index_search(
   sim = cosine_similarity(reduced_docs,reduced_query).flatten()
   ids = sim.argsort()[::-1]
 
-  print([(sim[i],i) for i in ids[:10]])
+  # print([(sim[i],i) for i in ids[:10]])
   return [(sim[i],i) for i in ids[:10]]
 
 
