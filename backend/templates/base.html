@@ -18,7 +18,6 @@
             </div>
         </div>
         <div id="answer-box">
-
         </div>
     </div>
 
@@ -70,8 +69,24 @@
                 .then((data) => {
                     const container = document.getElementById("answer-box");
                     container.innerHTML = "";  // Clear previous results
+                     // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
+                    if (data?.length == 0) {
+                        let tempDiv = document.createElement("div");
+                        tempDiv.classList.add('answerContainer');
+                        tempDiv.innerHTML = 
+                        `<div class='answerCard'>
+                            <h3 class='site_name'>No results found.</h3>
+                            <div class='short_description'>Try a differnt search.</div>
+                        </div>`
+                        container.appendChild(tempDiv);
+                        return;
+                    }
+                    let tempDiv = document.createElement("div");
+                    tempDiv.setAttribute("id", "answer-amount");
+                    tempDiv.innerHTML = `<h3>${data?.length} Sites Found </h3>`;
+                    container.appendChild(tempDiv);
 
-                    data.forEach(row => {
+                    data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
                         tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating);
