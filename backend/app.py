@@ -42,18 +42,20 @@ def get_place_details(index):
 
 # Sample search using json with pandas
 def json_search(query):
-    scores = similarity.svd_index_search(query = query)
-    ids = [id for (_, id) in scores]
-    return [get_place_details(id) for id in ids]
-"""    places = [get_place_details(id) for id in ids]
-    def sort_key(place):
-        rating = place["Rating"]
-        try:
-            return float(rating)
-        except (ValueError, TypeError):
-            return -1.0 
-    sorted_places = sorted(places, key=sort_key, reverse=True)  
-    return sorted_places"""
+    reduced_query, _ = similarity.transform_query_to_svd(query)
+    scores = similarity.svd_index_search(reduced_query=reduced_query, reduced_docs= similarity.reduced_docs)
+    top_10 = scores[:10]
+    result = []
+    for score, id in top_10:
+        place = get_place_details(id)
+        reduced_docs = similarity.reduced_docs[id]
+        tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
+        place["Similarity_Score"]= str(round(score*100,1))+"%"
+        place["Tags"] = tags
+        result.append(place)
+
+    return result
+
 
 @app.route("/")
 def home():

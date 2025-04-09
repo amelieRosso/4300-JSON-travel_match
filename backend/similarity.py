@@ -195,31 +195,48 @@ def index_search(
     return sorted(index_search_list_tuples, reverse=True)[:10]
 
 
+#create reduced_docs (global var)
+docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+vectorizer = TfidfVectorizer()
+docs_tfidf = vectorizer.fit_transform(docs)
+svd = TruncatedSVD(n_components=100)
+reduced_docs = svd.fit_transform(docs_tfidf)
+
+def transform_query_to_svd(query: str, vectorizer=vectorizer, svd=svd):
+    query_tokens = preprocess_description(query.lower())
+    query_str = " ".join(query_tokens)
+    query_tfidf = vectorizer.transform([query_str])
+    reduced_query = svd.transform(query_tfidf)
+    return reduced_query, query_tfidf
+
+
 # SVD approach
 def svd_index_search(
-    query: str,
-    n_components=100
+    reduced_query,
+    reduced_docs,
 ) -> List[Tuple[int, int]]:
-  
-  #convert all data to strings for vectorization
-  docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
-  
-  vectorizer = TfidfVectorizer()
-  docs_tfidf = vectorizer.fit_transform(docs)
-  
-  svd = TruncatedSVD(n_components=n_components)
-  reduced_docs = svd.fit_transform(docs_tfidf)
-
-  query_tokens = preprocess_description(query.lower())
-  query_str = " ".join(query_tokens)
-  query_tfidf = vectorizer.transform([query_str])
-  reduced_query = svd.transform(query_tfidf)
 
   sim = cosine_similarity(reduced_docs,reduced_query).flatten()
   ids = sim.argsort()[::-1]
-
-  # print([(sim[i],i) for i in ids[:10]])
   return [(sim[i],i) for i in ids[:10]]
+
+
+def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer):
+    # Project back into term space
+    query_term_scores = np.dot(reduced_query, svd.components_).flatten()  
+    doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
+ 
+    match = query_term_scores * doc_term_scores
+
+    # Get vocabulary
+    terms = vectorizer.get_feature_names_out()
+
+    # Find top N highest combined scores
+    top_indices = match.argsort()[::-1][:5]
+    tags = [terms[i] for i in top_indices if match[i] > 0]
+
+    return tags
+
 
 
 

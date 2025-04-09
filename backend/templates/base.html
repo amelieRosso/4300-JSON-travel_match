@@ -24,11 +24,18 @@
     <script>
         let debounceTimeout;
 
-        function answerBoxTemplate(name,description,rating){
+        function answerBoxTemplate(name,description,rating, similarity_score, tags){
+            const tagHtml = tags && tags.length > 0
+            ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
+            : `<span>No tags available</span>`;
+
             return `<div class='answerCard'>
                 <h3 class='site_name'>${name}</h3>
                 <div class='short_description'>${description}</div>
                 <p class='google_rating'> Google Rating: ${rating != null ? rating : "No ratings available"}</p>
+                <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
+                <p class="tags"> Tags: ${tagHtml}</p>
+                
             </div>`
         }
 
@@ -89,7 +96,7 @@
                     data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
-                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating);
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Similarity_Score, row.Tags);
                         container.appendChild(tempDiv);
                     });
                 });
