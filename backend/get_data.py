@@ -4,6 +4,19 @@ import time
 import unicodedata
 import os
 
+
+# Add ascending unique ID to each site
+import json
+with open('whc_sites_2021_with_ratings.json', 'r') as f:
+    data = json.load(f)
+
+for i, site in enumerate(data, start=1):
+    site['id'] = i
+
+with open('whc_sites_2021_with_ratings.json', 'w') as f:
+    json.dump(data, f, indent=2)
+
+
 # Set Google Places API key 
 API_KEY = "PERSONAL KEY"
 
