@@ -28,7 +28,7 @@
     <script>
         let debounceTimeout;
 
-        function answerBoxTemplate(name,description,rating, reviews, similarity_score, tags, id){
+        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region){
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
@@ -54,6 +54,10 @@
                     </div>
                     <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
                     <p class="tags"> Tags: ${tagHtml}</p>
+                    <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
+                    <p class="category"> Category: ${category}</p>
+                    <p class="country"> Country: ${country}</p>
+                    <p class="country"> Region: ${region}</p>
                 </div>                
             </div>`
         }
@@ -62,21 +66,6 @@
             document.getElementById('filter-text-val').focus()
         }
 
-        // function filterText(){
-            
-        //     document.getElementById("answer-box").innerHTML = ""
-        //     console.log(document.getElementById("filter-text-val").value)
-        //     fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-        //     .then((response) => response.json())
-        //     .then((data) => data.forEach(row => {
-                
-        //         let tempDiv = document.createElement("div")
-        //         tempDiv.classList.add('answerContainer')
-        //         tempDiv.innerHTML = answerBoxTemplate(row.Name,row["Short Description"],row.Rating)
-        //         document.getElementById("answer-box").appendChild(tempDiv)
-        //     }));
-
-        // }
         function filterText() {
         // Clear existing debounce timer
         clearTimeout(debounceTimeout);
@@ -115,7 +104,7 @@
                     data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
-                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id);
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region );
                         container.appendChild(tempDiv);
                     });
                 });

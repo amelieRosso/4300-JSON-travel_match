@@ -60,10 +60,16 @@ h1{
         background-color: transparent;
         border: none;
         padding-right: 30px;
+        transition: 0.3s;
         img {
             width: 40px;
             height: 40px;
         }
+    }
+
+    button:hover{
+        transform: translateY(10px);
+        opacity: 0.5;
     }
 }
 
