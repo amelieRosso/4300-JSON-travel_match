@@ -6,14 +6,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 <body>
     <div class="full-body-container">
+        <!-- <img src="{{ url_for('static', filename='images/title_background.png') }}" /> -->
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-3">World</h1>
-                <h1 id="google-0-1">Heritage</h1>
-                <h1 id="google-3">Search</h1>
+            <h1> World Heritage Search </h1>
+            <div class="tagline">
+                <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
             </div>
             <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
                 <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
             </div>
         </div>
@@ -87,7 +86,7 @@
                         tempDiv.innerHTML = 
                         `<div class='answerCard'>
                             <h3 class='site_name'>No results found.</h3>
-                            <div class='short_description'>Try a differnt search.</div>
+                            <div class='short_description'>Try a different search.</div>
                         </div>`
                         container.appendChild(tempDiv);
                         return;
