@@ -7,7 +7,7 @@ from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 from typing import List, Tuple, Dict
 import json
 import math
-#import pandas as pd
+import pandas as pd
 import numpy as np
 import similarity
 

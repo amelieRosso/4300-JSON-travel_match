@@ -19,3 +19,4 @@ build/
 helpers/*
 json_template/
 info4300/*
+requirements.txt
