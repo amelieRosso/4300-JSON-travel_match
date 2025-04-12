@@ -33,11 +33,15 @@ def get_place_details(index):
     name = place.get("Name", "N/A")
     short_description = place.get("short_description", "N/A")
     rating = place.get("rating", "N/A")
+    review_objects = place.get("reviews", [])
+    reviews = [r.get("text", "") for r in review_objects if "text" in r]
+
 
     return {
             "Name": name,
             "Short Description": short_description,
-            "Rating": rating
+            "Rating": rating,
+            "Reviews": reviews
     }
 
 # Sample search using json with pandas
