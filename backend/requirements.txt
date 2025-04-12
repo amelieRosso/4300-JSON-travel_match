@@ -28,3 +28,5 @@ Werkzeug==2.2.2
 requests==2.26.0
 nltk
 beautifulsoup4==4.10.0
+lxml
+tqdm

@@ -12,8 +12,13 @@
             <div class="tagline">
                 <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
             </div>
-            <div class="input-box" onclick="sendFocus()">
-                <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
+            <div class="input-container">
+                <button type="submit" onClick="filterText()">
+                    <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
+                </button>
+                <div class="input-box" onclick="sendFocus()">
+                    <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
+                </div>
             </div>
         </div>
         <div id="answer-box">
@@ -23,11 +28,17 @@
     <script>
         let debounceTimeout;
 
-        function answerBoxTemplate(name,description,rating, similarity_score, tags, id){
+        function answerBoxTemplate(name,description,rating, reviews, similarity_score, tags, id){
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
 
+            const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
+
+            const reviewHtml = filteredReviews.length > 0
+            ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
+            : `<span>No reviews yet.</span>`;
+            
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -35,10 +46,15 @@
                 <div class='answerCard'>
                 <h3 class='site_name'>${name}</h3>
                 <div class='short_description'>${description}</div>
-                <p class='google_rating'> Google Rating: ${rating != null ? rating : "No ratings available"}</p>
-                <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
-                <p class="tags"> Tags: ${tagHtml}</p>
-                
+                <div class='extra_info'>
+                    <p class='google_rating'> Google Rating: ${rating != null ? rating : "No ratings available"}</p>
+                    <div class='reviews'>
+                        <strong>Google Reviews:</strong>
+                        ${reviewHtml}
+                    </div>
+                    <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
+                    <p class="tags"> Tags: ${tagHtml}</p>
+                </div>                
             </div>`
         }
 
@@ -99,7 +115,7 @@
                     data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
-                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Similarity_Score, row.Tags, row.id);
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id);
                         container.appendChild(tempDiv);
                     });
                 });

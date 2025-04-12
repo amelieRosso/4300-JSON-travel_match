@@ -54,6 +54,19 @@ h1{
     font-weight: normal;
 }
 
+.input-container{
+    display:flex;
+    button {
+        background-color: transparent;
+        border: none;
+        padding-right: 30px;
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+}
+
 .input-box{
     border-radius: 50px;
     display: flex;
@@ -129,6 +142,7 @@ h1{
 
     #answer-amount{
         font-size: 20px;
+        padding-bottom: 50px;
         grid-column: 1 / -1;
     }
 }
@@ -193,6 +207,6 @@ h1{
 }
 
 /* All the extra info here */
-h3, .google_rating, .similarity_score, .tags {
+h3, .extra_info {
     font-family: 'TTNorms', sans-serif;
 }

@@ -37,6 +37,10 @@ def get_place_details(index):
     category = place.get("category_long", "N/A")
     country = place.get("Country name", "N/A")
     region = place.get("Region", "N/A")
+    review_objects = place.get("reviews", [])
+    reviews = [r.get("text", "") for r in review_objects if "text" in r]
+
+
 
     return {
             "Name": name,
@@ -45,7 +49,8 @@ def get_place_details(index):
             "Inscribe Date": inscribe_date,
             "Category": category,
             "Country": country,
-            "Region": region
+            "Region": region,
+            "Reviews": reviews
     }
 
 # Sample search using json with pandas
