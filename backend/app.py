@@ -33,14 +33,23 @@ def get_place_details(index):
     name = place.get("Name", "N/A")
     short_description = place.get("short_description", "N/A")
     rating = place.get("rating", "N/A")
+    inscribe_date = place.get("date_inscribed", "N/A")
+    category = place.get("category_long", "N/A")
+    country = place.get("Country name", "N/A")
+    region = place.get("Region", "N/A")
     review_objects = place.get("reviews", [])
     reviews = [r.get("text", "") for r in review_objects if "text" in r]
+
 
 
     return {
             "Name": name,
             "Short Description": short_description,
             "Rating": rating,
+            "Inscribe Date": inscribe_date,
+            "Category": category,
+            "Country": country,
+            "Region": region,
             "Reviews": reviews
     }
 
@@ -50,13 +59,14 @@ def json_search(query):
     scores = similarity.svd_index_search(reduced_query=reduced_query, reduced_docs= similarity.reduced_docs)
     top_10 = scores[:10]
     result = []
-    for score, id in top_10:
-        place = get_place_details(id)
-        reduced_docs = similarity.reduced_docs[id]
+    for score, idx in top_10:
+        place = get_place_details(idx)
+        reduced_docs = similarity.reduced_docs[idx]
         tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
         place["Similarity_Score"]= str(round(score*100,1))+"%"
         place["Tags"] = tags
-        place["id"] = data[id]["id"]
+        print(place['Name'])
+        place["id"] = data[idx]["id"]
         result.append(place)
 
     return result

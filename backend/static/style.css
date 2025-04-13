@@ -1,12 +1,22 @@
 body {
-    background-image: url("https://img.freepik.com/premium-photo/png-taj-mahal-india-tourist-attraction-line-art-illustration-transparent-background_53876-963048.jpg?semt=ais_hybrid");
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
     height: 100vh; 
     margin: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'LibreBaskerville', sans-serif;
+    background-color: #ebe9e7;
 }
+
+@font-face {
+    font-family: 'LibreBaskerville'; 
+    src: url('./fonts/LibreBaskerville-Regular.ttf'); 
+  }
+  @font-face {
+    font-family: 'Roxborough'; 
+    src: url('./fonts/Roxborough\ CF.ttf');
+  }
+  @font-face {
+    font-family: 'TTNorms';
+    src: url('./fonts/TTNorms-Medium.otf'); 
+  }
 
 body::before {
     content: "";
@@ -31,42 +41,36 @@ body::before {
     justify-content: start;
     align-items: center;
     flex-direction: column;
+    background-color: #ebe9e7;
 }
 
-#google-c{
-    color:#4285F4;
-}
-
-#google-s{
-    color:#DB4437;
-}
-
-#google-4{
-    color:	#F4B400;
-}
-
-#google-3{
-    color:	#4285F4;
-}
-
-#google-0-1{
-    color:	#0F9D58;
-}
-
-#google-0-2{
-    color:#DB4437;
-}
-
-.google-colors{
+h1{
+    /* margin-bottom: 0;
+    margin-right: 3px; */
     display: flex;
     align-items: center;
-    font-size: 48px;
-    font-family: 'Open Sans', sans-serif;
+    font-size: 100px;
+    font-family: 'Roxborough', sans-serif;
+    font-weight: normal;
 }
 
-.google-colors h1{
-    margin-bottom: 0;
-    margin-right: 3px;
+.input-container{
+    display:flex;
+    button {
+        background-color: transparent;
+        border: none;
+        padding-right: 30px;
+        transition: 0.3s;
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    button:hover{
+        transform: translateY(10px);
+        opacity: 0.5;
+    }
 }
 
 .input-box{
@@ -74,11 +78,20 @@ body::before {
     display: flex;
     align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
     padding:12px;
     width: 600px;
     box-shadow: 0px 3px 7px rgb(0 0 0 / 20%);
-    background:white;
+    background:whitesmoke;
 }
+
+  ::placeholder {
+    color: #20a67d;;
+  }
+  
+  ::-ms-input-placeholder { /* Edge 12-18 */
+    color: #20a67d;;
+  }
 
 .input-box img{
     height: 20px;
@@ -86,9 +99,31 @@ body::before {
 }
 
 .top-text{
+    padding-top: 8%;
+    background-position-x: center;
+    background-position-y: 30%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: center;
+    background-image: url(./images/title_background.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    align-self: flex-start;
+    padding-left: 5%;
+
+    h1{
+        max-width: 50%;
+    }
+}
+
+.tagline {
+    display: flex;
+    max-width: 50%;
+    h2{
+        font-size: 40px;
+        font-weight: normal;
+    }
 }
 
 .input-box input{
@@ -97,6 +132,10 @@ body::before {
     font-size: 16px;
     border: none;
     outline: 0;
+    font-family: 'TTNorms', sans-serif;
+    color: #20a67d;
+    background-color: whitesmoke;
+    
 }
 
 #answer-box{
@@ -109,6 +148,7 @@ body::before {
 
     #answer-amount{
         font-size: 20px;
+        padding-bottom: 50px;
         grid-column: 1 / -1;
     }
 }
@@ -117,6 +157,23 @@ body::before {
     padding: 10px;
     display: flex;
     flex-direction: column;
+    transition: 0.2s;
+    animation: fadeIn 1s ease-out 0.5s both;
+
+}
+.answerContainer:hover {
+    cursor:grab;
+    transform:scale(1.05);
+    
+  }
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0%;
+    }
+    100%{
+        opacity:100%;
+    }
 }
 
 .imageContainer {
@@ -141,16 +198,21 @@ body::before {
     padding-top: 5px;
     padding-bottom: 5px;
     box-shadow: 0px 2px 8px 0 rgba(0, 0, 0, 0.1);
-    /*border:2px solid cornflowerblue; */
+    background-color: whitesmoke;
 }
-.answerCard:hover {
-    cursor:grab;
-  }
 
 .site_name{
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Roxborough', sans-serif;
 }
 
-.short_description, .google_rating{
-    font-family: 'Montserrat', sans-serif;
+
+.short_description{
+    font-family: 'LibreBaskerville', sans-serif;
+    font-size:15px;
+    line-height: 25px;
+}
+
+/* All the extra info here */
+h3, .extra_info {
+    font-family: 'TTNorms', sans-serif;
 }
