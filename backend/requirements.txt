@@ -24,6 +24,7 @@ PyMySQL==1.0.2pyt
 python-dateutil==2.9.0.post0
 pytz==2024.1
 six==1.16.0
+<<<<<<< HEAD
 #smmap==5.0.0
 smmap
 
@@ -31,9 +32,21 @@ smmap
 
 #SQLAlchemy==1.4.46
 sqlalchemy
+=======
+scikit-learn
+smmap==5.0.0
+SQLAlchemy==1.4.46
+>>>>>>> fbd4f4d5cf92a09725ceaaaa0e57f0fd5638dd8b
 typing_extensions==4.5.0
 #tzdata==2024.1
 tzdata
 Werkzeug==2.2.2
 requests==2.26.0
+<<<<<<< HEAD
 nltk
+=======
+nltk
+beautifulsoup4==4.10.0
+lxml
+tqdm
+>>>>>>> fbd4f4d5cf92a09725ceaaaa0e57f0fd5638dd8b
