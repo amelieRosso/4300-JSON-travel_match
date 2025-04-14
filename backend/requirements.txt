@@ -12,7 +12,7 @@
  MarkupSafe==2.1.2
  numpy>=1.26.4
  numpy<1.28
- #pandas>=2.2.1
+ pandas>=2.2.1
  protobuf==3.20.3
  pycparser==2.21
  PyMySQL==1.0.2
@@ -30,4 +30,3 @@
  beautifulsoup4==4.10.0
  lxml
  tqdm
- 
