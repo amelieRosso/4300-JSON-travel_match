@@ -42,6 +42,7 @@
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
+                    <p class="category ${category}"> ${category}</p>
                 </div>
                 <div class='answerCard'>
                 <h3 class='site_name'>${name}</h3>
@@ -55,7 +56,6 @@
                     <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
                     <p class="tags"> Tags: ${tagHtml}</p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
-                    <p class="category"> Category: ${category}</p>
                     <p class="country"> Country: ${country}</p>
                     <p class="country"> Region: ${region}</p>
                 </div>                
