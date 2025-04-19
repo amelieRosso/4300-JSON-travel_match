@@ -163,7 +163,7 @@ h1{
 }
 .answerContainer:hover {
     cursor:grab;
-    transform:scale(1.05);
+    transform:scale(1.01);
     
   }
 
@@ -198,7 +198,28 @@ h1{
         background-color: #20a67d;
     }
     .Mixed{
+        background-color:darkorchid;
+    }
+
+    .similarity_score {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 8px;
+        font-family: 'TTNorms', sans-serif;
+        font-size: 12px;
+        color: white;
+        border-radius: 20px;
+        margin-left: 15px;
+    }
+    .High{
+        background-color: darkgreen;
+    }
+    .Moderate{
         background-color: peru;
+    }
+    .Low{
+        background-color: darkred;
     }
 }
 
@@ -231,6 +252,19 @@ h1{
     font-size:15px;
     line-height: 25px;
 }
+
+.moreBtn{
+    font-family: 'TTNorms', sans-serif;
+    color:darkblue;
+    background:none;
+    border: none;
+    transition: 0.3s;
+    margin-left: -5px;
+}
+.moreBtn:hover {
+    color:dodgerblue; 
+}
+#more {display: none;}
 
 /* All the extra info here */
 h3, .extra_info {

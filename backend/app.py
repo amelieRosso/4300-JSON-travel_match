@@ -63,7 +63,7 @@ def json_search(query):
         place = get_place_details(idx)
         reduced_docs = similarity.reduced_docs[idx]
         tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
-        place["Similarity_Score"]= str(round(score*100,1))+"%"
+        place["Similarity_Score"]= (round(score*100,1))
         place["Tags"] = tags
         print(place['Name'])
         place["id"] = data[idx]["id"]
