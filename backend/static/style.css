@@ -242,8 +242,17 @@ h1{
     background-color: whitesmoke;
 }
 
+.flag_icon {
+    width: 45px;
+    height: 25px;
+    object-fit: cover;
+    display: inline-block;
+    margin-top: 15px;
+  }
+
 .site_name{
     font-family: 'Roxborough', sans-serif;
+    margin-top: 10px;
 }
 
 

@@ -25,6 +25,11 @@ json_file_path = os.path.join(current_directory, 'whc_sites_2021_with_ratings.js
 with open(json_file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
+# Load the country code map
+code_map_path = os.path.join(current_directory, 'country_code.json')
+with open(code_map_path, 'r', encoding='utf-8') as f:
+    country_code = json.load(f)
+
 app = Flask(__name__)
 CORS(app)
 
@@ -39,7 +44,8 @@ def get_place_details(index):
     region = place.get("Region", "N/A")
     review_objects = place.get("reviews", [])
     reviews = [r.get("text", "") for r in review_objects if "text" in r]
-
+    code = country_code.get(country, "unknown")
+    print(f"Looking up code for: {country} -> {country_code.get(country)}")
 
 
     return {
@@ -50,7 +56,8 @@ def get_place_details(index):
             "Category": category,
             "Country": country,
             "Region": region,
-            "Reviews": reviews
+            "Reviews": reviews,
+            "Country_Code": code
     }
 
 # Sample search using json with pandas
@@ -72,6 +79,7 @@ def json_search(query):
         place["Tags"] = tags
         #print(place['Name'])
         place["id"] = data[idx]["id"]
+        place["Country_Code"] = country_code.get(place["Country"], "unknown")
         result.append(place)
 
     return result
