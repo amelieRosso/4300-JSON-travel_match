@@ -70,8 +70,15 @@
 
 
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
-            const previewIndex = Math.min(description.length, 200);
-            const descriptionPreview = description.slice(0, previewIndex);
+            // const previewIndex = Math.min(description.length, 200);
+            // const descriptionPreview = description.slice(0, previewIndex);
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = description;
+            const fullText = tempDiv.innerText || tempDiv.textContent || "";
+            const words = fullText.split(/\s+/);
+            const previewWordCount = 40;
+            const previewWords = words.slice(0, previewWordCount).join(" ");
+            const remainingWords = words.slice(previewWordCount).join(" ");
 
             const reviewHtml = filteredReviews.length > 0
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
@@ -86,7 +93,9 @@
                 <div class='answerCard'>
                 <div class="site_title_with_flag">${flagsHtml}</div>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${descriptionPreview}<span id="dots-${id}">...</span><span id="more-${id}" style="display:none">${description.slice(previewIndex, description.length)}</span>
+                <div class='short_description'>${previewWords}
+                    <span id="dots-${id}">...</span>
+                    <span id="more-${id}" style="display:none">${remainingWords}</span>
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
