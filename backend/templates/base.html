@@ -54,6 +54,21 @@
             `<img class="flag_icon" src="/static/images/${code}.svg" alt="${code} flag" />`
             ).join(" ");
 
+            function renderStarIcons(rating) {
+                if (!rating || isNaN(rating)) return "No ratings available";
+                const full = Math.floor(rating);
+                const half = rating % 1 >= 0.5;
+                const empty = 5 - full - (half ? 1 : 0);
+
+                return (
+                    '<span class="star full"></span>'.repeat(full) +
+                    (half ? '<span class="star half"></span>' : '') +
+                    '<span class="star empty"></span>'.repeat(empty) +
+                    ` <span class="numeric-rating">(${rating})</span>`
+                );
+            }
+
+
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
             const previewIndex = Math.min(description.length, 200);
             const descriptionPreview = description.slice(0, previewIndex);
@@ -75,7 +90,20 @@
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
-                    <p class='google_rating'> Google Rating: ${rating != null ? rating : "No ratings available"}</p>
+                    <p class='google_rating'>Google Rating: 
+                        ${rating != null ? `
+                        <input
+                        class="rating"
+                        type="range"
+                        max="5"
+                        readonly
+                        step="0.01"
+                        style="--value:${rating}"
+                        value="${rating}"
+                        title="${rating} stars"
+                        />` : "No ratings available"} 
+                        ${rating != null ? rating : ""}
+                    </p>
 
                     <div class='reviews'>
                         <strong>Google Reviews:</strong> <span id="review-dots-${id}"></span> 
