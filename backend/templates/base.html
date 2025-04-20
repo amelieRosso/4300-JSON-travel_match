@@ -27,13 +27,32 @@
 
     <script>
         let debounceTimeout;
+        
+        // js code for showing more or less information.
+        function readMore(dotsId, moreId, btnId, textOpen, textClose) {
+            const dots = document.getElementById(dotsId);
+            const moreText = document.getElementById(moreId);
+            const btnText = document.getElementById(btnId);
+            if (dots.style.display === "none") {
+                dots.style.display = "inline";
+                btnText.innerHTML = textOpen; 
+                moreText.style.display = "none";
+            } else {
+                dots.style.display = "none";
+                btnText.innerHTML = textClose; 
+                moreText.style.display = "inline";
+            }
+        }
 
+        // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region){
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
 
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
+            const previewIndex = Math.min(description.length, 200);
+            const descriptionPreview = description.slice(0, previewIndex);
 
             const reviewHtml = filteredReviews.length > 0
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
@@ -42,20 +61,29 @@
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
+                    <p class="category ${category}"> ${category}</p>
+                    <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}%</p>
                 </div>
                 <div class='answerCard'>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${description}</div>
+                <div class='short_description'>${descriptionPreview}<span id="dots-${id}">...</span><span id="more-${id}" style="display:none">${description.slice(previewIndex, description.length)}</span>
+                </div>
+                <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
                     <p class='google_rating'> Google Rating: ${rating != null ? rating : "No ratings available"}</p>
+
                     <div class='reviews'>
-                        <strong>Google Reviews:</strong>
+                        <strong>Google Reviews:</strong> <span id="review-dots-${id}"></span> 
+                        <button onclick="readMore('review-dots-${id}', 'review-more-${id}', 'review-mybtn-${id}', 'See reviews', 'Hide reviews')"
+                            class="moreBtn" id="review-mybtn-${id}">See reviews</button> 
+
+                        <span id="review-more-${id}" style="display:none">
                         ${reviewHtml}
+                        </span>
                     </div>
-                    <p class="similarity_score"> Similarity Score: ${similarity_score}</p>
+
                     <p class="tags"> Tags: ${tagHtml}</p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
-                    <p class="category"> Category: ${category}</p>
                     <p class="country"> Country: ${country}</p>
                     <p class="country"> Region: ${region}</p>
                 </div>                
@@ -85,6 +113,7 @@
                     const container = document.getElementById("answer-box");
                     container.innerHTML = "";  // Clear previous results
                      // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
+                     //TODO: if all the similarity scores are 0 then show no results found
                     if (data?.length == 0) {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
