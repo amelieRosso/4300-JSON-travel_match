@@ -7,22 +7,25 @@
 <body>
     <div class="full-body-container">
         <!-- <img src="{{ url_for('static', filename='images/title_background.png') }}" /> -->
-        <div class="top-text">
-            <h1> World Heritage Search </h1>
-            <div class="tagline">
-                <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
-            </div>
-            <div class="input-container">
-                <button type="submit" onClick="filterText()">
-                    <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
-                </button>
-                <div class="input-box" onclick="sendFocus()">
-                    <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
+        <div class="background">
+            <div class="top-text">
+                <h1> World Heritage Search </h1>
+                <div class="tagline">
+                    <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
+                </div>
+                <div class="input-container">
+                    <button type="submit" onClick="filterText()">
+                        <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
+                    </button>
+                    <div class="input-box" onclick="sendFocus()">
+                        <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
+                    </div>
                 </div>
             </div>
+            <div id="answer-box">
+            </div>
         </div>
-        <div id="answer-box">
-        </div>
+        
     </div>
 
     <script>

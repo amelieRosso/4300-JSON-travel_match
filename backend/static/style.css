@@ -56,6 +56,7 @@ h1{
 
 .input-container{
     display:flex;
+    margin-bottom: 50px;
     button {
         background-color: transparent;
         border: none;
@@ -98,22 +99,31 @@ h1{
     width:20px;
 }
 
-.top-text{
-    padding-top: 8%;
+.background{
     background-position-x: center;
-    background-position-y: 30%;
+    background-position-y: -50px;
+    background-image: url(./images/title_background.png);
+    background-repeat: no-repeat;
+    display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        align-self: flex-start;
+        padding-left: 5%;
+}
+
+.top-text{
+    padding-top: 3%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    /* align-items: flex-start;
     justify-content: center;
-    background-image: url(./images/title_background.png);
-    background-size: cover;
-    background-repeat: no-repeat;
     align-self: flex-start;
-    padding-left: 5%;
+    padding-left: 5%; */
 
     h1{
         max-width: 50%;
+        margin: 10px;
     }
 }
 
@@ -140,7 +150,6 @@ h1{
 
 #answer-box{
     width: 90%;
-    margin-top: 50px;
     display: grid;
     /* grid-template-columns: auto auto auto; */
     grid-template-columns: repeat(3, 1fr); 
@@ -148,7 +157,6 @@ h1{
 
     #answer-amount{
         font-size: 20px;
-        padding-bottom: 50px;
         grid-column: 1 / -1;
     }
 }
