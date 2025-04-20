@@ -45,10 +45,14 @@
         }
 
         // All the html and js logic for the information in the answer cards.
-        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, countryCode){
+        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
+
+            const flagsHtml = (isoCodes || []).map(code => 
+            `<img class="flag_icon" src="/static/images/${code}.svg" alt="${code} flag" />`
+            ).join(" ");
 
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
             const previewIndex = Math.min(description.length, 200);
@@ -65,9 +69,7 @@
                     <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}%</p>
                 </div>
                 <div class='answerCard'>
-                    ${countryCode === "unknown"
-                        ? `<img class="flag_icon" src="/static/images/UNESCO.svg.png" alt="unknown flag" />`
-                        : `<img class="flag_icon" src="/static/images/${countryCode}.svg" alt="${country} flag" />`}
+                <div class="site_title_with_flag">${flagsHtml}</div>
                 <h3 class='site_name'>${name}</h3>
                 <div class='short_description'>${descriptionPreview}<span id="dots-${id}">...</span><span id="more-${id}" style="display:none">${description.slice(previewIndex, description.length)}</span>
                 </div>
@@ -136,7 +138,7 @@
                     data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
-                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.Country_Code);
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
                         container.appendChild(tempDiv);
                     });
                 });

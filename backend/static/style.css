@@ -233,6 +233,8 @@ h1{
 }
 
 .answerCard{
+    /* display: flex;
+    flex-direction: column; */
     transition: 0.3s;
     border-radius: 5px;
     padding-left: 5%;
@@ -243,13 +245,20 @@ h1{
     background-color: whitesmoke;
 }
 
+.site_title_with_flag {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .flag_icon {
     width: 45px;
     height: 25px;
     object-fit: cover;
-    display: inline-block;
+    /* display: inline-block; */
     margin-top: 15px;
-  }
+}
 
 .site_name{
     font-family: 'Roxborough', sans-serif;

@@ -44,9 +44,10 @@ def get_place_details(index):
     region = place.get("Region", "N/A")
     review_objects = place.get("reviews", [])
     reviews = [r.get("text", "") for r in review_objects if "text" in r]
-    code = country_code.get(country, "unknown")
-    print(f"Looking up code for: {country} -> {country_code.get(country)}")
-
+    # code = country_code.get(country, "unknown")
+    # print(f"Looking up code for: {country} -> {country_code.get(country)}")
+    iso_codes_raw = place.get("iso_code", "")
+    iso_codes = [code.strip() for code in iso_codes_raw.split(",") if code.strip()]
 
     return {
             "Name": name,
@@ -57,7 +58,9 @@ def get_place_details(index):
             "Country": country,
             "Region": region,
             "Reviews": reviews,
-            "Country_Code": code
+            # "Country_Code": code
+            "ISO_Codes": iso_codes,
+
     }
 
 # Sample search using json with pandas
@@ -79,7 +82,7 @@ def json_search(query):
         place["Tags"] = tags
         #print(place['Name'])
         place["id"] = data[idx]["id"]
-        place["Country_Code"] = country_code.get(place["Country"], "unknown")
+        # place["Country_Code"] = country_code.get(place["Country"], "unknown")
         result.append(place)
 
     return result
