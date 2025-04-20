@@ -56,16 +56,21 @@ def get_place_details(index):
 # Sample search using json with pandas
 def json_search(query):
     reduced_query, _ = similarity.transform_query_to_svd(query)
-    scores = similarity.svd_index_search(reduced_query=reduced_query, reduced_docs= similarity.reduced_docs)
-    top_10 = scores[:10]
+    #scores = similarity.svd_index_search(reduced_query=reduced_query, reduced_docs= similarity.reduced_docs)
+    #top_10 = scores[:10]
+    top_10 = similarity.index_search(query)
+
+    #print(f"top 10 {top_10}")
+
     result = []
-    for score, idx in top_10:
+    for score_cos, idx, score_svd in top_10:
         place = get_place_details(idx)
         reduced_docs = similarity.reduced_docs[idx]
         tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
-        place["Similarity_Score"]= (round(score*100,1))
+        score = (score_cos + score_svd) / 2
+        place["Similarity_Score"]= str(round(score*100,1))+"%"
         place["Tags"] = tags
-        print(place['Name'])
+        #print(place['Name'])
         place["id"] = data[idx]["id"]
         result.append(place)
 
@@ -79,6 +84,7 @@ def home():
 @app.route("/episodes")
 def episodes_search():
     text = request.args.get("title")
+    print(type(text))
     print(text)
     return json_search(text)
 
