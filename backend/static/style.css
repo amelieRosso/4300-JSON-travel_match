@@ -56,7 +56,7 @@ h1{
 
 .input-container{
     display:flex;
-    margin-bottom: 50px;
+    align-items: center;
     button {
         background-color: transparent;
         border: none;
@@ -354,3 +354,28 @@ h1{
 h3, .extra_info {
     font-family: 'TTNorms', sans-serif;
 }
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+  }
+  
+  .dropdowns-inline {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .dropdowns-inline input {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 50px;
+    border: none;
+    background: whitesmoke;
+    box-shadow: 0px 3px 7px rgb(0 0 0 / 20%);
+    font-family: 'TTNorms', sans-serif;
+    color: #20a67d;
+    width: 220px;
+  }  

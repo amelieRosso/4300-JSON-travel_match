@@ -13,14 +13,27 @@
                 <div class="tagline">
                     <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
                 </div>
-                <div class="input-container">
-                    <button type="submit" onClick="filterText()">
+                <div class="input-row">
+                    <div class="input-container">
+                      <button type="submit" onClick="filterText()">
                         <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
-                    </button>
-                    <div class="input-box" onclick="sendFocus()">
-                        <input placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)" id="filter-text-val" onkeyup="filterText()">
+                      </button>
+                      <div class="input-box" onclick="sendFocus()">
+                        <input
+                          placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
+                          id="filter-text-val"
+                          onkeyup="filterText()"
+                        >
+                      </div>
                     </div>
-                </div>
+                    <div class="dropdowns-inline">
+                      <input list="country-list" id="country-filter" placeholder="Filter by country" oninput="filterText()">
+                      <datalist id="country-list"></datalist>
+                  
+                      <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
+                      <datalist id="category-list"></datalist>
+                    </div>
+                  </div>
             </div>
             <div id="answer-box">
             </div>
@@ -152,7 +165,17 @@
             }
 
             console.log("Searching:", query);
-            fetch("/episodes?" + new URLSearchParams({ title: query }).toString())
+            
+            const country = document.getElementById("country-filter").value;
+            const category = document.getElementById("category-filter").value;
+
+            const params = new URLSearchParams({
+                title: query,
+                country: country,
+                category: category
+            });
+
+            fetch("/episodes?" + params.toString())
                 .then((response) => response.json())
                 .then((data) => {
                     const container = document.getElementById("answer-box");
@@ -184,6 +207,27 @@
                 });
         }, 300);  // Only search after user stops typing for 300ms
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/filters')
+                .then(res => res.json())
+                .then(data => {
+                    const countryList = document.getElementById("country-list");
+                    const categoryList = document.getElementById("category-list");
+
+                    (data.countries || []).forEach(country => {
+                        const option = document.createElement("option");
+                        option.value = country;
+                        countryList.appendChild(option);
+                    });
+
+                    (data.categories || []).forEach(category => {
+                        const option = document.createElement("option");
+                        option.value = category;
+                        categoryList.appendChild(option);
+                    });
+                });
+        });
             
     </script>
 </body>

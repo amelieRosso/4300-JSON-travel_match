@@ -242,11 +242,12 @@ Outputs: a list of tuples (cosine similarity value, site id)
 def index_search(
     query: str,
     score_func=accumulate_dot_scores,
+    subset_indices=None
 ) -> List[Tuple[int, int]]:
     idf = compute_idf(query, n_sites)
     doc_norms = compute_doc_norms(query, n_sites)
 
-    index_search_list_tuples = [] 
+    index_search_list_tuples = []
 
     tokenize_list = preprocess_description(query).tolist()
     query_word_counts_dict = {}
@@ -265,7 +266,12 @@ def index_search(
     similarity_score_to_site_index_tuple = svd_index_search(reduced_query, reduced_docs)
     similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
     for site_id, score in numer.items():
-      index_search_list_tuples.append(((score / (doc_norms[site_id] * abs_q)), site_id, similarity_score_to_site_index_dict[site_id]))
+      if subset_indices is not None and site_id not in subset_indices:
+        continue
+      norm = doc_norms[site_id]
+      svd_score = similarity_score_to_site_index_dict[site_id]
+      cosine_sim = score/(norm * abs_q)
+      index_search_list_tuples.append((cosine_sim, site_id, svd_score))
       # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
 
     #index_search_list_tuples.sort(reverse=True)[:10]
