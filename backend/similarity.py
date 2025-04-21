@@ -199,7 +199,7 @@ def index_search(
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
 vectorizer = TfidfVectorizer()
 docs_tfidf = vectorizer.fit_transform(docs)
-svd = TruncatedSVD(n_components=100)
+svd = TruncatedSVD(n_components=200)
 reduced_docs = svd.fit_transform(docs_tfidf)
 
 def transform_query_to_svd(query: str, vectorizer=vectorizer, svd=svd):
