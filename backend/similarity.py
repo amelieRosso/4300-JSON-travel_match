@@ -10,6 +10,7 @@ from typing import List, Tuple
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sentence_transformers import SentenceTransformer
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -276,3 +277,22 @@ def index_search(
 
     #index_search_list_tuples.sort(reverse=True)[:10]
     return sorted(index_search_list_tuples, key=lambda x: (x[0], x[2]), reverse=True)
+
+
+"""
+Bert embeding
+"""
+
+bert_model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+def bert_search(
+    query,
+    docs,
+) -> List[Tuple[int, int]]:
+  query_arr = preprocess_description(query)
+  query_embedding = bert_model.encode(list(query_arr))
+  corpus_embeddings = bert_model.encode(docs)
+
+  sim = cosine_similarity(corpus_embeddings, query_embedding).flatten() 
+  ids = sim.argsort()[::-1]
+  return [(sim[i], i) for i in ids[:10]]

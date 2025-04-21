@@ -32,7 +32,13 @@
                   
                       <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
                       <datalist id="category-list"></datalist>
+                      
+                      <select id="search-mode" onchange="filterText()">
+                        <option value="svd">SVD search</option>
+                        <option value="bert">BERT Embedding search</option>
+                        </select>
                     </div>
+            
                   </div>
             </div>
             <div id="answer-box">
@@ -104,7 +110,7 @@
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
                     <p class="category ${category}"> ${category}</p>
-                    <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}%</p>
+                    <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}</p>
                 </div>
                 <div class='answerCard'>
                 <div class="site_title_with_flag">${flagsHtml}</div>
@@ -168,11 +174,12 @@
             
             const country = document.getElementById("country-filter").value;
             const category = document.getElementById("category-filter").value;
-
+            const mode = document.getElementById("search-mode").value; 
             const params = new URLSearchParams({
                 title: query,
                 country: country,
-                category: category
+                category: category,
+                mode: mode
             });
 
             fetch("/episodes?" + params.toString())
@@ -205,7 +212,7 @@
                         container.appendChild(tempDiv);
                     });
                 });
-        }, 300);  // Only search after user stops typing for 300ms
+        }, 200);  // Only search after user stops typing for 200ms
         }
 
         window.addEventListener('DOMContentLoaded', () => {

@@ -64,7 +64,7 @@ def get_place_details(index):
     }
 
 # Sample search using json with pandas
-def json_search(query, country_filter = "", category_filter = ""):
+def json_search(query, country_filter="", category_filter="", mode="svd"):
     filtered_docs = []
     filtered_indices = []
 
@@ -72,32 +72,41 @@ def json_search(query, country_filter = "", category_filter = ""):
         country = entry.get("Country name", "").lower()
         category = entry.get("category_long", "").lower()
 
-        if(not country_filter or country_filter in country) and (not category_filter or category_filter in category):
-            filtered_docs.append(entry)
+        if (not country_filter or country_filter.lower() in country) and (not category_filter or category_filter.lower() in category):
+            full_text = entry.get("Name", "") + " " + entry.get("short_description", "")
+            reviews = entry.get("reviews", [])
+            full_text += " " + " ".join(r.get("text", "") for r in reviews)
+            filtered_docs.append(full_text)
             filtered_indices.append(i)
-    
+
     if not filtered_indices:
         return []
-    
-    reduced_query, _ = similarity.transform_query_to_svd(query)
-    #scores = similarity.svd_index_search(reduced_query=reduced_query, reduced_docs= similarity.reduced_docs)
-    #top_10 = scores[:10]
-    top_10 = similarity.index_search(query, subset_indices = set(filtered_indices))
-
-    #print(f"top 10 {top_10}")
 
     result = []
-    for score_cos, idx, score_svd in top_10:
-        place = get_place_details(idx)
-        reduced_docs = similarity.reduced_docs[idx]
-        tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
-        score = (score_cos + score_svd) / 2
-        place["Similarity_Score"]= str(round(score*100,1))+"%"
-        place["Tags"] = tags
-        #print(place['Name'])
-        place["id"] = data[idx]["id"]
-        # place["Country_Code"] = country_code.get(place["Country"], "unknown")
-        result.append(place)
+
+    if mode == "bert":
+        scores = similarity.bert_search(query, filtered_docs)
+
+        for score, local_idx in scores:
+            global_idx = filtered_indices[local_idx]
+            place = get_place_details(global_idx)
+            place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
+            place["id"] = data[global_idx]["id"]
+            result.append(place)
+
+    else:  # default: SVD
+        reduced_query, _ = similarity.transform_query_to_svd(query)
+        top_10 = similarity.index_search(query, subset_indices=set(filtered_indices))
+
+        for score_cos, idx, score_svd in top_10:
+            place = get_place_details(idx)
+            reduced_docs = similarity.reduced_docs[idx]
+            tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
+            score = (score_cos + score_svd) / 2
+            place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
+            place["Tags"] = tags
+            place["id"] = data[idx]["id"]
+            result.append(place)
 
     return result
 
@@ -113,7 +122,8 @@ def episodes_search():
     print(text)
     country_filter = request.args.get("country", "").strip().lower()
     category_filter = request.args.get("category", "").strip().lower()
-    return json_search(text, country_filter, category_filter)
+    mode = request.args.get("mode", "svd") 
+    return json_search(text, country_filter, category_filter, mode)
 
 @app.route("/filters")
 def filters():

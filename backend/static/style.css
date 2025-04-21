@@ -368,7 +368,7 @@ h3, .extra_info {
     gap: 10px;
   }
   
-  .dropdowns-inline input {
+  .dropdowns-inline input, .dropdowns-inline select {
     padding: 12px;
     font-size: 14px;
     border-radius: 50px;
