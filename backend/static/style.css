@@ -363,6 +363,8 @@ h3, .extra_info {
     font-family: 'LibreBaskerville', sans-serif;
 }
 
+/* TODO: Noticed that the elements of this row don't look centered (look a little shifted to the right)
+ Might be because of padding somewhere (nitpicky fix for finishing touches?) */
 .input-row {
     display: flex;
     align-items: center;
