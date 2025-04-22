@@ -32,7 +32,7 @@
                   
                       <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
                       <datalist id="category-list"></datalist>
-                      
+
                       <select id="search-mode" onchange="filterText()">
                         <option value="svd">SVD search</option>
                         <option value="bert">BERT Embedding search</option>
@@ -48,6 +48,15 @@
     </div>
 
     <script>
+        function highlightTags(description, tags) {
+            let highlighted = description;
+            tags.forEach(tag => {
+                const regex = new RegExp(`\\b${tag}\\b`, 'i');
+                highlighted = highlighted.replace(regex, `<mark class="tag-highlight">${tag}</mark>`);
+            });
+            return highlighted;
+        }
+
         let debounceTimeout;
         
         // js code for showing more or less information.
@@ -68,6 +77,8 @@
 
         // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){
+            
+            
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
@@ -106,6 +117,8 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
+            const highlightedPreview = highlightTags(previewWords, tags);
+            const highlightedMore = highlightTags(remainingWords, tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -115,9 +128,9 @@
                 <div class='answerCard'>
                 <div class="site_title_with_flag">${flagsHtml}</div>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${previewWords}
+                <div class='short_description'>${highlightedPreview}
                     <span id="dots-${id}">...</span>
-                    <span id="more-${id}" style="display:none">${remainingWords}</span>
+                    <span id="more-${id}" style="display:none">${highlightedMore}</span>
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>

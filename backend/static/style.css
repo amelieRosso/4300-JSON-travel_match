@@ -379,3 +379,11 @@ h3, .extra_info {
     color: #20a67d;
     width: 220px;
   }  
+
+  .tag-highlight {
+    background-color: #fff3b0;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #333;
+}
