@@ -40,7 +40,7 @@
                           <span class="slider round"></span>
                         </label>
                       </div>
-                  </div>
+                </div>
             </div>
             <div id="answer-box">
             </div>
@@ -49,6 +49,15 @@
     </div>
 
     <script>
+        function highlightTags(description, tags) {
+            let highlighted = description;
+            tags.forEach(tag => {
+                const regex = new RegExp(`\\b${tag}\\b`, 'i');
+                highlighted = highlighted.replace(regex, `<mark class="tag-highlight">${tag}</mark>`);
+            });
+            return highlighted;
+        }
+
         let debounceTimeout;
         
         // js code for showing more or less information.
@@ -68,7 +77,7 @@
         }
 
         // All the html and js logic for the information in the answer cards.
-        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){
+        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
             const tagHtml = tags && tags.length > 0
             ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             : `<span>No tags available</span>`;
@@ -107,6 +116,9 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
+            const highlightedPreview = highlightTags(previewWords, tags);
+            const highlightedMore = highlightTags(remainingWords, tags);
+            const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -114,11 +126,14 @@
                     <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}</p>
                 </div>
                 <div class='answerCard'>
-                <div class="site_title_with_flag">${flagsHtml}</div>
+                <div class="site_title_with_flag">
+                    ${flagsHtml}
+                    <p class="country">${country}</p>
+                </div>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${previewWords}
+                <div class='short_description'>${highlightedPreview}
                     <span id="dots-${id}">...</span>
-                    <span id="more-${id}" style="display:none">${remainingWords}</span>
+                    <span id="more-${id}" style="display:none">${highlightedMore}</span>
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
@@ -138,19 +153,18 @@
                     </p>
 
                     <div class='reviews'>
-                        <strong>Google Reviews:</strong> <span id="review-dots-${id}"></span> 
+                        Google Reviews:<span id="review-dots-${id}"></span> 
                         <button onclick="readMore('review-dots-${id}', 'review-more-${id}', 'review-mybtn-${id}', 'See reviews', 'Hide reviews')"
                             class="moreBtn" id="review-mybtn-${id}">See reviews</button> 
 
                         <span id="review-more-${id}" style="display:none">
-                        ${reviewHtml}
+                        ${highlightedReviews}
                         </span>
                     </div>
-
+                    <hr>
                     <p class="tags"> Tags: ${tagHtml}</p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
-                    <p class="country"> Country: ${country}</p>
-                    <p class="country"> Region: ${region}</p>
+                    <p class="region"> Region: ${region}</p>
                 </div>                
             </div>`
         }

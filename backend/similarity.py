@@ -103,11 +103,13 @@ def svd_index_search(
 
   sim = cosine_similarity(reduced_docs,reduced_query).flatten()
   ids = sim.argsort()[::-1]
-  return [(sim[i],i) for i in ids[:10]]
+  return [(sim[i],i) for i in ids[:9]]
 
 
 def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer):
     # Project back into term space
+
+    #this is where we could boost some of the scores in the QUERY, dont change the DOCUMENT scores
     query_term_scores = np.dot(reduced_query, svd.components_).flatten()  
     doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
  
