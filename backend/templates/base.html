@@ -119,6 +119,7 @@
             
             const highlightedPreview = highlightTags(previewWords, tags);
             const highlightedMore = highlightTags(remainingWords, tags);
+            const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -126,7 +127,10 @@
                     <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}</p>
                 </div>
                 <div class='answerCard'>
-                <div class="site_title_with_flag">${flagsHtml}</div>
+                <div class="site_title_with_flag">
+                    ${flagsHtml}
+                    <p class="country">${country}</p>
+                </div>
                 <h3 class='site_name'>${name}</h3>
                 <div class='short_description'>${highlightedPreview}
                     <span id="dots-${id}">...</span>
@@ -150,19 +154,18 @@
                     </p>
 
                     <div class='reviews'>
-                        <strong>Google Reviews:</strong> <span id="review-dots-${id}"></span> 
+                        Google Reviews:<span id="review-dots-${id}"></span> 
                         <button onclick="readMore('review-dots-${id}', 'review-more-${id}', 'review-mybtn-${id}', 'See reviews', 'Hide reviews')"
                             class="moreBtn" id="review-mybtn-${id}">See reviews</button> 
 
                         <span id="review-more-${id}" style="display:none">
-                        ${reviewHtml}
+                        ${highlightedReviews}
                         </span>
                     </div>
-
+                    <hr>
                     <p class="tags"> Tags: ${tagHtml}</p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
-                    <p class="country"> Country: ${country}</p>
-                    <p class="country"> Region: ${region}</p>
+                    <p class="region"> Region: ${region}</p>
                 </div>                
             </div>`
         }

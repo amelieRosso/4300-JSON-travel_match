@@ -251,6 +251,7 @@ h1{
     padding-bottom: 5px;
     box-shadow: 0px 2px 8px 0 rgba(0, 0, 0, 0.1);
     background-color: whitesmoke;
+    font-family: 'LibreBaskerville', sans-serif;
 }
 
 .site_title_with_flag {
@@ -268,6 +269,12 @@ h1{
     margin-top: 15px;
 }
 
+.country {
+   margin-top: 15px;
+   margin-bottom: 0;
+   color: darkslategray;
+   font-family: 'TTNorms'; 
+}
 .site_name{
     font-family: 'Roxborough', sans-serif;
     margin-top: 10px;
@@ -344,6 +351,7 @@ h1{
     border: none;
     transition: 0.3s;
     margin-left: -5px;
+    font-size: 18px;
 }
 .moreBtn:hover {
     color:dodgerblue; 
@@ -352,7 +360,7 @@ h1{
 
 /* All the extra info here */
 h3, .extra_info {
-    font-family: 'TTNorms', sans-serif;
+    font-family: 'LibreBaskerville', sans-serif;
 }
 
 .input-row {

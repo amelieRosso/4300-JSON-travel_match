@@ -20,6 +20,7 @@
  pytz==2024.1
  six==1.16.0
  scikit-learn
+ sentence-transformers
  smmap==5.0.0
  SQLAlchemy==1.4.46
  typing_extensions==4.5.0
