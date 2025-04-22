@@ -22,6 +22,7 @@
  scikit-learn
  smmap==5.0.0
  SQLAlchemy==1.4.46
+ sentence_transformers
  typing_extensions==4.5.0
  tzdata==2024.1
  Werkzeug==2.2.2

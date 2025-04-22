@@ -32,13 +32,14 @@
                   
                       <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
                       <datalist id="category-list"></datalist>
-                      
-                      <select id="search-mode" onchange="filterText()">
-                        <option value="svd">SVD search</option>
-                        <option value="bert">BERT Embedding search</option>
-                        </select>
                     </div>
-            
+                    <div class="toggle-mode">
+                        <span id="toggle-mode-label">BERT</span>
+                        <label class="switch">
+                          <input type="checkbox" id="search-toggle" onchange="filterText()">
+                          <span class="slider round"></span>
+                        </label>
+                      </div>
                   </div>
             </div>
             <div id="answer-box">
@@ -174,7 +175,7 @@
             
             const country = document.getElementById("country-filter").value;
             const category = document.getElementById("category-filter").value;
-            const mode = document.getElementById("search-mode").value; 
+            const mode = document.getElementById("search-toggle").checked ? "bert" : "svd";
             const params = new URLSearchParams({
                 title: query,
                 country: country,
