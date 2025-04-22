@@ -95,7 +95,6 @@ def transform_query_to_svd(query: str, vectorizer=vectorizer, svd=svd):
     reduced_query = svd.transform(query_tfidf)
     return reduced_query, query_tfidf
 
-
 # SVD approach
 def svd_index_search(
     reduced_query,
@@ -289,10 +288,36 @@ def bert_search(
     query,
     docs,
 ) -> List[Tuple[int, int]]:
-  query_arr = preprocess_description(query)
-  query_embedding = bert_model.encode(list(query_arr))
+  query_tokens = preprocess_description(query)
+  query_embedding = bert_model.encode(list(query_tokens))
   corpus_embeddings = bert_model.encode(docs)
 
   sim = cosine_similarity(corpus_embeddings, query_embedding).flatten() 
   ids = sim.argsort()[::-1]
   return [(sim[i], i) for i in ids[:10]]
+
+def extract_bert_tags(query, doc) -> List[str]:
+  
+    query_tokens = preprocess_description(query)
+    doc_tokens = preprocess_description(doc)
+
+    # BERT encode token-level vectors
+    query_embeddings = bert_model.encode(list(query_tokens)) 
+    doc_embeddings = bert_model.encode(list(doc_tokens))
+
+    # Compute similarity matrix and average similarity for each doc token
+    similarity_matrix = cosine_similarity(doc_embeddings, query_embeddings)  
+    average_similarities = similarity_matrix.mean(axis=1) 
+ 
+    top_indices = average_similarities.argsort()[::-1]
+
+    seen = set()
+    tags = []
+    for idx in top_indices:
+        token = doc_tokens[idx]
+        if token not in seen:
+            tags.append(token)
+            seen.add(token)
+        if len(tags) == 5:
+            break
+    return tags
