@@ -87,15 +87,22 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
     if mode == "bert":
         scores = similarity.bert_search(query, filtered_docs)
 
+        if not scores:
+            print(f"[INFO] No BERT results for query '{query}' with filters: country={country_filter}, category={category_filter}")
+            return []  # ✅ Avoid IndexError if no BERT results
+
         for score, local_idx in scores:
+            if local_idx >= len(filtered_indices):
+                print(f"[WARNING] Skipping out-of-range local_idx={local_idx} for filtered_indices length={len(filtered_indices)}")
+                continue
+
             global_idx = filtered_indices[local_idx]
             place = get_place_details(global_idx)
-            tags = similarity.extract_bert_tags(query, similarity.docs[global_idx])
+            tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
             place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
             place["Tags"] = tags
             place["id"] = data[global_idx]["id"]
             result.append(place)
-          
 
     else:  # default: SVD
         reduced_query, _ = similarity.transform_query_to_svd(query)
