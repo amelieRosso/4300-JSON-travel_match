@@ -103,7 +103,7 @@ def svd_index_search(
 
   sim = cosine_similarity(reduced_docs,reduced_query).flatten()
   ids = sim.argsort()[::-1]
-  return [(sim[i],i) for i in ids[:10]]
+  return [(sim[i],i) for i in ids[:9]]
 
 
 def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer):
