@@ -350,7 +350,7 @@ h1{
     background:none;
     border: none;
     transition: 0.3s;
-    margin-left: -5px;
+    margin-left: -6px;
     font-size: 18px;
 }
 .moreBtn:hover {
@@ -394,4 +394,10 @@ h3, .extra_info {
     border-radius: 4px;
     font-weight: bold;
     color: #333;
+}
+
+/* Adjust space between reviews */
+.reviews ol li {
+    margin-bottom: 13px; 
+    line-height: 1.5;   
 }
