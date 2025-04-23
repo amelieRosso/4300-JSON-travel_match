@@ -51,8 +51,20 @@
         function highlightTags(description, tags) {
             let highlighted = description;
             tags.forEach(tag => {
-                const regex = new RegExp(`\\b${tag}\\b`, 'i');
-                highlighted = highlighted.replace(regex, `<mark class="tag-highlight">${tag}</mark>`);
+                // Escape any regex special characters in tag
+                const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+                // Allow optional plural 's', space, or hyphen between compound words
+                const pattern = safeTag
+                    .split(/\s+/) // split compound tags like "mountain range"
+                    .map(part => `${part}s?`) // allow plural on each part
+                    .join('[\\s-]*'); // allow space or hyphen between parts
+
+                const regex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+
+                highlighted = highlighted.replace(regex, match =>
+                    `<mark class="tag-highlight">${match}</mark>`
+                );
             });
             return highlighted;
         }

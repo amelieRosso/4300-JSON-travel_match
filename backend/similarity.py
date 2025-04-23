@@ -88,6 +88,18 @@ docs_tfidf = vectorizer.fit_transform(docs)
 svd = TruncatedSVD(n_components=200)
 reduced_docs = svd.fit_transform(docs_tfidf)
 
+# uncomment it to play with the dimension
+# # Step 3: Get term-topic matrix (terms per dimension)
+# terms = vectorizer.get_feature_names_out()
+# term_topic_matrix = svd.components_  
+
+# # Step 4: For each of the top 10 dimensions, get top 10 terms
+# for dim in range(10):
+#     top_indices = term_topic_matrix[dim].argsort()[::-1][:10]  
+#     top_words = [terms[i] for i in top_indices]
+#     print(f"Dimension {dim + 1}: {top_words}")
+
+
 def transform_query_to_svd(query: str, vectorizer=vectorizer, svd=svd):
     query_tokens = preprocess_description(query)
     query_str = " ".join(query_tokens)
@@ -106,21 +118,26 @@ def svd_index_search(
   return [(sim[i],i) for i in ids[:9]]
 
 
-def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer):
-    # Project back into term space
-
-    #this is where we could boost some of the scores in the QUERY, dont change the DOCUMENT scores
-    query_term_scores = np.dot(reduced_query, svd.components_).flatten()  
+def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, doc_text=""):
+   # Project scores back into term space
+    query_term_scores = np.dot(reduced_query, svd.components_).flatten()
     doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
- 
+
+    # Match relevance by multiplying query and doc term scores
     match = query_term_scores * doc_term_scores
 
-    # Get vocabulary
     terms = vectorizer.get_feature_names_out()
+    doc_text_lower = doc_text.lower()
+    tags = []
 
-    # Find top N highest combined scores
-    top_indices = match.argsort()[::-1][:5]
-    tags = [terms[i] for i in top_indices if match[i] > 0]
+    top_indices = match.argsort()[::-1]
+
+    for i in top_indices:
+        if len(tags) >= 5:
+            break
+        term = terms[i]
+        if term in doc_text_lower:
+            tags.append(term)
 
     return tags
 
@@ -323,3 +340,7 @@ def extract_bert_tags(query, doc) -> List[str]:
         if len(tags) == 5:
             break
     return tags
+
+
+# SVD (10 dimension)
+
