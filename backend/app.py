@@ -64,6 +64,7 @@ def get_place_details(index):
     }
 
 # Sample search using json with pandas
+# TODO: Bert is being slow right now, so want to look into ways to have it go faster (goes faster after first search goes through, so maybe there's some caching taking place??)
 def json_search(query, country_filter="", category_filter="", mode="svd"):
     filtered_docs = []
     filtered_indices = []
@@ -87,15 +88,22 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
     if mode == "bert":
         scores = similarity.bert_search(query, filtered_docs)
 
+        if not scores:
+            print(f"[INFO] No BERT results for query '{query}' with filters: country={country_filter}, category={category_filter}")
+            return [] # If there are no BERT results, skip the process below to avoid the IndexError
+
         for score, local_idx in scores:
+            if local_idx >= len(filtered_indices):
+                print(f"[WARNING] Skipping out-of-range local_idx={local_idx} for filtered_indices length={len(filtered_indices)}")
+                continue # This is a temporary fix to avoid getting the IndexError. I don't love just skipping over indices > length of filtered_indices, but it's helping the error from throwing
+
             global_idx = filtered_indices[local_idx]
             place = get_place_details(global_idx)
-            tags = similarity.extract_bert_tags(query, similarity.docs[global_idx])
+            tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
             place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
             place["Tags"] = tags
             place["id"] = data[global_idx]["id"]
             result.append(place)
-          
 
     else:  # default: SVD
         reduced_query, _ = similarity.transform_query_to_svd(query)
@@ -107,7 +115,9 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
             tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer, similarity.docs[idx])
             score = (0.2*score_cos) + (0.8*score_svd) 
             # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
+            # This actually happens with a lot of queries. Might make more sense to just order by similarity score
             # sometimes this is Nan??
+            # For Nan, what if we just show no similarity score for now before debugging why
             place["Similarity_Score"] = round(score * 100, 1)
             place["Tags"] = tags
             place["id"] = data[idx]["id"]
