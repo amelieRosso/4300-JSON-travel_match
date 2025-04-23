@@ -89,10 +89,42 @@
             }
         }
 
+        // js code for toggle highlight on tag button
+        function toggleHighlight(cardId, tag) {
+            const descriptionDiv = document.querySelector(`#more-${cardId}`).parentElement;
+            const reviewSpan = document.querySelector(`#review-more-${cardId}`);
+            
+            const button = event.target;
+            button.classList.toggle("active-tag");
+
+            const isActive = button.classList.contains("active-tag");
+            if (isActive) {
+                applyHighlight(descriptionDiv, tag);
+                applyHighlight(reviewSpan, tag);
+            } else {
+                removeHighlight(descriptionDiv, tag);
+                removeHighlight(reviewSpan, tag);
+            }
+        }
+
+        function applyHighlight(container, tag) {
+            const regex = new RegExp(`(${tag})`, 'gi');
+            container.innerHTML = container.innerHTML.replace(regex, `<mark class="tag-highlight">$1</mark>`);
+        }
+
+        function removeHighlight(container, tag) {
+            const regex = new RegExp(`<mark class="tag-highlight">(${tag})</mark>`, 'gi');
+            container.innerHTML = container.innerHTML.replace(regex, '$1');
+        }
+
+
         // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
+            // const tagHtml = tags && tags.length > 0
+            // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
+            // : `<span>No tags available</span>`;
             const tagHtml = tags && tags.length > 0
-            ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
+            ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
             : `<span>No tags available</span>`;
 
             const flagsHtml = (isoCodes || []).map(code => 
@@ -129,9 +161,9 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
-            const highlightedPreview = highlightTags(previewWords, tags);
-            const highlightedMore = highlightTags(remainingWords, tags);
-            const highlightedReviews = highlightTags(reviewHtml,tags);
+            // const highlightedPreview = highlightTags(previewWords, tags);
+            // const highlightedMore = highlightTags(remainingWords, tags);
+            // const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -144,9 +176,9 @@
                     <p class="country">${country}</p>
                 </div>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${highlightedPreview}
+                <div class='short_description'>${previewWords}
                     <span id="dots-${id}">...</span>
-                    <span id="more-${id}" style="display:none">${highlightedMore}</span>
+                    <span id="more-${id}" style="display:none">${remainingWords}</span>
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
@@ -171,7 +203,7 @@
                             class="moreBtn" id="review-mybtn-${id}">See reviews</button> 
 
                         <span id="review-more-${id}" style="display:none">
-                        ${highlightedReviews}
+                        ${reviewHtml}
                         </span>
                     </div>
                     <hr>
@@ -215,6 +247,10 @@
                 .then((data) => {
                     const container = document.getElementById("answer-box");
                     container.innerHTML = "";  // Clear previous results
+                    // Clear any previous highlights
+                    document.querySelectorAll('.tag-highlight').forEach(el => {
+                        el.outerHTML = el.innerText;  
+                    });
                      // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
                      //TODO: if all the similarity scores are 0 then show no results found
                     if (data?.length == 0) {

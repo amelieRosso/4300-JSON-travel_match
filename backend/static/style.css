@@ -458,3 +458,31 @@ input:checked + .slider {
 input:checked + .slider::before {
     transform: translateX(16px);
 }  
+
+/* Tag buttons */
+.tag-button {
+    background-color: white;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 3px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 12px;
+}
+
+.tag-button:hover {
+    background-color: #20a67d;
+}
+
+.tag-button.active-tag {
+    background-color: #20a67d;
+    color: white;
+}
+
+.tag-highlight {
+    background-color: yellow;
+    padding: 0 3px;
+    border-radius: 3px;
+}
