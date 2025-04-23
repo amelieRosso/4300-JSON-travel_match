@@ -241,9 +241,9 @@ h1{
 }
 
 .answerCard{
-    /* display: flex;
-    flex-direction: column; */
-    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    /* transition: 0.3s; */
     border-radius: 5px;
     padding-left: 5%;
     padding-right: 5%;
@@ -252,6 +252,7 @@ h1{
     box-shadow: 0px 2px 8px 0 rgba(0, 0, 0, 0.1);
     background-color: whitesmoke;
     font-family: 'LibreBaskerville', sans-serif;
+    height: 100%;
 }
 
 .site_title_with_flag {
@@ -345,6 +346,7 @@ h1{
 }
 
 .moreBtn{
+    display: flex;
     font-family: 'TTNorms', sans-serif;
     color:darkblue;
     background:none;
