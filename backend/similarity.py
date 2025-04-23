@@ -118,29 +118,61 @@ def svd_index_search(
   return [(sim[i],i) for i in ids[:9]]
 
 
-def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, doc_text=""):
-   # Project scores back into term space
-    query_term_scores = np.dot(reduced_query, svd.components_).flatten()
-    doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
+# def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, doc_text=""):
+#    # Project scores back into term space
+#     query_term_scores = np.dot(reduced_query, svd.components_).flatten()
+#     doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
 
-    # Match relevance by multiplying query and doc term scores
-    match = query_term_scores * doc_term_scores
+#     # Match relevance by multiplying query and doc term scores
+#     match = query_term_scores * doc_term_scores
+
+#     terms = vectorizer.get_feature_names_out()
+#     doc_text_lower = doc_text.lower()
+#     tags = []
+
+#     top_indices = match.argsort()[::-1]
+
+#     for i in top_indices:
+#         if len(tags) >= 5:
+#             break
+#         term = terms[i]
+#         if term in doc_text_lower:
+#             tags.append(term)
+
+#     return tags
+
+
+def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
+    
+    print(preprocess_description(doc_text))
+   
+    dim_scores = reduced_query.flatten() * reduced_doc.flatten()
+    top_dims = dim_scores.argsort()[::-1]  
 
     terms = vectorizer.get_feature_names_out()
-    doc_text_lower = doc_text.lower()
+    doc_text_lower = preprocess_description(doc_text)
+
     tags = []
+    seen_roots = set()
 
-    top_indices = match.argsort()[::-1]
-
-    for i in top_indices:
+    for dim in top_dims:
         if len(tags) >= 5:
             break
-        term = terms[i]
-        if term in doc_text_lower:
-            tags.append(term)
+
+        # Get terms associated with this dimension
+        component = svd.components_[dim]
+        top_term_indices = component.argsort()[::-1]
+
+        for idx in top_term_indices:
+            term = terms[idx]
+            if term in doc_text_lower:
+                root = term.lower()
+                if root not in seen_roots:
+                    tags.append(term)
+                    seen_roots.add(root)
+                    break  # go to next dimension
 
     return tags
-
 """
 Expects: [data] from top 10 sites be the data from whc_sites_2021 in the json file. 
 Outputs: a dict of site_id to tokenized descriptions.
