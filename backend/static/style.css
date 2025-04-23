@@ -505,3 +505,9 @@ input:checked + .slider::before {
 .clear-tags-button:hover {
     background-color: #c0392b;
 }
+
+/* Loading GIF */
+.button-loading-gif {
+    width: 30px;
+    height: 30px;
+}

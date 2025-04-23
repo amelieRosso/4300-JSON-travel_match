@@ -15,7 +15,7 @@
                 </div>
                 <div class="input-row">
                     <div class="input-container">
-                      <button type="submit" onClick="filterText()">
+                      <button type="submit" id="search-button" onClick="filterText()">
                         <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
                       </button>
                       <div class="input-box" onclick="sendFocus()">
@@ -259,11 +259,18 @@
         // Set a new debounce timer
         debounceTimeout = setTimeout(() => {
             const query = document.getElementById("filter-text-val").value;
+            const container = document.getElementById("answer-box");
+            const searchButton = document.getElementById("search-button");
             if (query.length === 0) {
-                document.getElementById("answer-box").innerHTML = "";
+                container.innerHTML = "";
                 return;
             }
 
+            // Replace button content with loading GIF
+            searchButton.innerHTML = `<img src="/static/images/loading.gif" alt="Loading..." class="button-loading-gif"/>`;
+            searchButton.disabled = true;
+            // Show "Loading..." message
+            container.innerHTML = `<div id="answer-amount"><h3>Loading...</h3></div>`;
             console.log("Searching:", query);
             
             const country = document.getElementById("country-filter").value;
@@ -279,8 +286,7 @@
             fetch("/episodes?" + params.toString())
                 .then((response) => response.json())
                 .then((data) => {
-                    const container = document.getElementById("answer-box");
-                    container.innerHTML = "";  // Clear previous results
+                    container.innerHTML = "";  // Clear previous results and loading message
                     // Clear any previous highlights
                     document.querySelectorAll('.tag-highlight').forEach(el => {
                         el.outerHTML = el.innerText;  
@@ -309,6 +315,11 @@
                         tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
                         container.appendChild(tempDiv);
                     });
+                })
+                .finally(() => {
+                    // Restore the submit button after fetch completes
+                    searchButton.innerHTML = `<img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>`;
+                    searchButton.disabled = false;
                 });
         }, 200);  // Only search after user stops typing for 200ms
         }
