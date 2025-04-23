@@ -241,9 +241,9 @@ h1{
 }
 
 .answerCard{
-    /* display: flex;
-    flex-direction: column; */
-    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    /* transition: 0.3s; */
     border-radius: 5px;
     padding-left: 5%;
     padding-right: 5%;
@@ -252,6 +252,7 @@ h1{
     box-shadow: 0px 2px 8px 0 rgba(0, 0, 0, 0.1);
     background-color: whitesmoke;
     font-family: 'LibreBaskerville', sans-serif;
+    height: 100%;
 }
 
 .site_title_with_flag {
@@ -345,6 +346,7 @@ h1{
 }
 
 .moreBtn{
+    display: flex;
     font-family: 'TTNorms', sans-serif;
     color:darkblue;
     background:none;
@@ -458,3 +460,54 @@ input:checked + .slider {
 input:checked + .slider::before {
     transform: translateX(16px);
 }  
+
+/* Tag buttons */
+.tag-button {
+    background-color: white;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 3px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 12px;
+}
+
+.tag-button:hover {
+    background-color: #20a67d;
+}
+
+.tag-button.active-tag {
+    background-color: #20a67d;
+    color: white;
+}
+
+.tag-highlight {
+    background-color: yellow;
+    padding: 0;
+    border-radius: 3px;
+}
+
+.clear-tags-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 3px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 12px;
+}
+
+.clear-tags-button:hover {
+    background-color: #c0392b;
+}
+
+/* Loading GIF */
+.button-loading-gif {
+    width: 30px;
+    height: 30px;
+}

@@ -90,9 +90,9 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
 
             global_idx = filtered_indices[local_idx]
             place = get_place_details(global_idx)
-            tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
+            # tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
             place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
-            place["Tags"] = tags
+            # place["Tags"] = tags
             place["id"] = data[global_idx]["id"]
             result.append(place)
 
@@ -104,14 +104,14 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
         for score_cos, idx, score_svd in top_10:
             place = get_place_details(idx, filtered_data)
             reduced_docs = filtered_reduced_docs[idx]
-            tags = similarity.extract_svd_tags(reduced_query, reduced_docs)
+            #tags = similarity.extract_svd_tags(reduced_query, filtered_reduced_docs, svd, vectorizer)
             score = (0.2*score_cos) + (0.8*score_svd) 
             # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
             # This actually happens with a lot of queries. Might make more sense to just order by similarity score
             # sometimes this is Nan??
             # For Nan, what if we just show no similarity score for now before debugging why
             place["Similarity_Score"] = round(score * 100, 1)
-            place["Tags"] = tags
+            #place["Tags"] = tags
             place["id"] = filtered_data[idx]["id"]
             result.append(place)
 

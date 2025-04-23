@@ -15,7 +15,7 @@
                 </div>
                 <div class="input-row">
                     <div class="input-container">
-                      <button type="submit" onClick="filterText()">
+                      <button type="submit" id="search-button" onClick="filterText()">
                         <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
                       </button>
                       <div class="input-box" onclick="sendFocus()">
@@ -52,13 +52,27 @@
     <script>
         function highlightTags(description, tags) {
             let highlighted = description;
+
             tags.forEach(tag => {
-                const regex = new RegExp(`\\b${tag}\\b`, 'i');
-                highlighted = highlighted.replace(regex, `<mark class="tag-highlight">${tag}</mark>`);
+                // Escape regex special characters in tag
+                const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+                // For compound tags (e.g., "mountain range"), split by space or hyphen
+                // Then allow optional 's' on each part and optional space/hyphen between
+                const pattern = safeTag
+                    .split(/\s+/) // split multi-word tags
+                    .map(part => `${part}s?`) // allow optional plural for each part
+                    .join('[\\s-]*'); // allow optional space or hyphen between parts
+
+                const regex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+
+                highlighted = highlighted.replace(regex, match =>
+                    `<mark class="tag-highlight">${match}</mark>`
+                );
             });
+
             return highlighted;
         }
-
         let debounceTimeout;
         
         // js code for showing more or less information.
@@ -77,10 +91,71 @@
             }
         }
 
+        // js code for toggle highlight on tag button
+        function toggleHighlight(cardId, tag) {
+            const card = document.getElementById(`card-${cardId}`);
+            const descriptionDiv = card.querySelector('.short_description');
+            const reviewSpan = card.querySelector(`#review-more-${cardId}`);
+            const button = event.target;
+            button.classList.toggle("active-tag");
+
+            const isActive = button.classList.contains("active-tag");
+            if (isActive) {
+                applyHighlight(descriptionDiv, tag);
+                applyHighlight(reviewSpan, tag);
+            } else {
+                removeHighlight(descriptionDiv, tag);
+                removeHighlight(reviewSpan, tag);
+            }
+
+            const anyActive = card.querySelectorAll('.tag-button.active-tag').length > 0;
+            const clearBtn = card.querySelector(`#clear-tags-${cardId}`);
+            clearBtn.style.display = anyActive ? "inline-block" : "none";
+        }
+
+        function applyHighlight(container, tag) {
+            const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            let regexPattern;
+            if (tag.includes(' ')) {
+                // for phrases: no word boundaries
+                regexPattern = `(${safeTag})`;
+            } else {
+                // for single words: use word boundaries
+                regexPattern = `\\b(${safeTag})\\b`;
+            }
+
+            const regex = new RegExp(regexPattern, 'gi');
+            container.innerHTML = container.innerHTML.replace(regex, `<mark class="tag-highlight">$1</mark>`);
+        }
+
+        function removeHighlight(container, tag) {
+            const regex = new RegExp(`<mark class="tag-highlight">(${tag})</mark>`, 'gi');
+            container.innerHTML = container.innerHTML.replace(regex, '$1');
+        }
+
+        function clearAllHighlights(cardId) {
+            const card = document.getElementById(`card-${cardId}`);
+            card.querySelectorAll('.tag-highlight').forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();  
+            });
+
+            card.querySelectorAll('.tag-button').forEach(btn => {
+                btn.classList.remove("active-tag");
+            });
+
+            const clearBtn = card.querySelector(`#clear-tags-${cardId}`);
+            clearBtn.style.display = "none";
+        }
+
         // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
+            // const tagHtml = tags && tags.length > 0
+            // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
+            // : `<span>No tags available</span>`;
             const tagHtml = tags && tags.length > 0
-            ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
+            ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
             : `<span>No tags available</span>`;
 
             const flagsHtml = (isoCodes || []).map(code => 
@@ -117,24 +192,24 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
-            const highlightedPreview = highlightTags(previewWords, tags);
-            const highlightedMore = highlightTags(remainingWords, tags);
-            const highlightedReviews = highlightTags(reviewHtml,tags);
+            // const highlightedPreview = highlightTags(previewWords, tags);
+            // const highlightedMore = highlightTags(remainingWords, tags);
+            // const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
                     <p class="category ${category}"> ${category}</p>
-                    <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}</p>
+                    <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}%</p>
                 </div>
-                <div class='answerCard'>
+                <div class='answerCard' id="card-${id}">
                 <div class="site_title_with_flag">
                     ${flagsHtml}
                     <p class="country">${country}</p>
                 </div>
                 <h3 class='site_name'>${name}</h3>
-                <div class='short_description'>${highlightedPreview}
+                <div class='short_description'>${previewWords}
                     <span id="dots-${id}">...</span>
-                    <span id="more-${id}" style="display:none">${highlightedMore}</span>
+                    <span id="more-${id}" style="display:none">${remainingWords}</span>
                 </div>
                 <button onclick="readMore('dots-${id}', 'more-${id}', 'mybtn-${id}', 'Read more', 'Read less')" class="moreBtn" id="mybtn-${id}">Read more</button>
                 <div class='extra_info'>
@@ -159,11 +234,16 @@
                             class="moreBtn" id="review-mybtn-${id}">See reviews</button> 
 
                         <span id="review-more-${id}" style="display:none">
-                        ${highlightedReviews}
+                        ${reviewHtml}
                         </span>
                     </div>
                     <hr>
-                    <p class="tags"> Tags: ${tagHtml}</p>
+                    <p class="tags"> 
+                        Tags: ${tagHtml}
+                        <button class="clear-tags-button" id="clear-tags-${id}" style="display:none;" onclick="clearAllHighlights('${id}')">
+                            X Clear All
+                        </button>
+                    </p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
                     <p class="region"> Region: ${region}</p>
                 </div>                
@@ -181,11 +261,18 @@
         // Set a new debounce timer
         debounceTimeout = setTimeout(() => {
             const query = document.getElementById("filter-text-val").value;
+            const container = document.getElementById("answer-box");
+            const searchButton = document.getElementById("search-button");
             if (query.length === 0) {
-                document.getElementById("answer-box").innerHTML = "";
+                container.innerHTML = "";
                 return;
             }
 
+            // Replace button content with loading GIF
+            searchButton.innerHTML = `<img src="/static/images/loading.gif" alt="Loading..." class="button-loading-gif"/>`;
+            searchButton.disabled = true;
+            // Show "Loading..." message
+            container.innerHTML = `<div id="answer-amount"><h3>Loading...</h3></div>`;
             console.log("Searching:", query);
             
             const country = document.getElementById("country-filter").value;
@@ -201,8 +288,11 @@
             fetch("/episodes?" + params.toString())
                 .then((response) => response.json())
                 .then((data) => {
-                    const container = document.getElementById("answer-box");
-                    container.innerHTML = "";  // Clear previous results
+                    container.innerHTML = "";  // Clear previous results and loading message
+                    // Clear any previous highlights
+                    document.querySelectorAll('.tag-highlight').forEach(el => {
+                        el.outerHTML = el.innerText;  
+                    });
                      // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
                      //TODO: if all the similarity scores are 0 then show no results found
                     if (data?.length == 0) {
@@ -227,6 +317,11 @@
                         tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
                         container.appendChild(tempDiv);
                     });
+                })
+                .finally(() => {
+                    // Restore the submit button after fetch completes
+                    searchButton.innerHTML = `<img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>`;
+                    searchButton.disabled = false;
                 });
         }, 200);  // Only search after user stops typing for 200ms
         }

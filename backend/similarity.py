@@ -48,9 +48,16 @@ def preprocess_description(text:str) -> np.ndarray:
     tokens = nltk.word_tokenize(text)
 
     # get list of stopwords in English (multilingual processing seems to be much harder and most of the text is english except for place names)
-    stop_words = stopwords.words("english")
+    stop_words = set(stopwords.words("english"))
+
+    custom_stopwords = {
+        "site", "location", "place", "area", "visit",  
+    }
+
+    # 🔽 Combine both
+    all_stopwords = stop_words.union(custom_stopwords)
     # remove stopwords
-    filtered_tokens = [token for token in tokens if token.lower() not in stop_words]  
+    filtered_tokens = [token for token in tokens if token.lower() not in all_stopwords]  
 
     # if lemmatizer takes too long, switch to using stemming
     lemmatizer = nltk.stem.WordNetLemmatizer()
@@ -88,6 +95,18 @@ def get_reduced_docs(filtered_data):
   filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
   return svd.fit_transform(filtered_docs_tfidf), vectorizer, svd
 
+# uncomment it to play with the dimension
+# # Step 3: Get term-topic matrix (terms per dimension)
+# terms = vectorizer.get_feature_names_out()
+# term_topic_matrix = svd.components_  
+
+# # Step 4: For each of the top 10 dimensions, get top 10 terms
+# for dim in range(10):
+#     top_indices = term_topic_matrix[dim].argsort()[::-1][:10]  
+#     top_words = [terms[i] for i in top_indices]
+#     print(f"Dimension {dim + 1}: {top_words}")
+
+
 def transform_query_to_svd(query: str, vectorizer, svd):
     query_tokens = preprocess_description(query)
     query_str = " ".join(query_tokens)
@@ -106,24 +125,61 @@ def svd_index_search(
   return [(sim[i],i) for i in ids[:9]]
 
 
-def extract_svd_tags(reduced_query, reduced_docs):
-    # Project back into term space
+# def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer doc_text=""):
+#    # Project scores back into term space
+#     query_term_scores = np.dot(reduced_query, svd.components_).flatten()
+#     doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
 
-    #this is where we could boost some of the scores in the QUERY, dont change the DOCUMENT scores
-    query_term_scores = np.dot(reduced_query, svd.components_).flatten()  
-    doc_term_scores = np.dot(reduced_docs, svd.components_).flatten()
- 
-    match = query_term_scores * doc_term_scores
+#     # Match relevance by multiplying query and doc term scores
+#     match = query_term_scores * doc_term_scores
 
-    # Get vocabulary
+#     terms = vectorizer.get_feature_names_out()
+#     doc_text_lower = doc_text.lower()
+#     tags = []
+
+#     top_indices = match.argsort()[::-1]
+
+#     for i in top_indices:
+#         if len(tags) >= 5:
+#             break
+#         term = terms[i]
+#         if term in doc_text_lower:
+#             tags.append(term)
+
+#     return tags
+
+# This is causing errors (specifically line 156)
+""" def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
+    
+    print(preprocess_description(doc_text))
+   
+    dim_scores = reduced_query.flatten() * reduced_doc.flatten()
+    top_dims = dim_scores.argsort()[::-1]  
+
     terms = vectorizer.get_feature_names_out()
+    doc_text_lower = preprocess_description(doc_text)
 
-    # Find top N highest combined scores
-    top_indices = match.argsort()[::-1][:5]
-    tags = [terms[i] for i in top_indices if match[i] > 0]
+    tags = []
+    seen_roots = set()
 
-    return tags
+    for dim in top_dims:
+        if len(tags) >= 5:
+            break
 
+        # Get terms associated with this dimension
+        component = svd.components_[dim]
+        top_term_indices = component.argsort()[::-1]
+
+        for idx in top_term_indices:
+            term = terms[idx]
+            if term in doc_text_lower:
+                root = term.lower()
+                if root not in seen_roots:
+                    tags.append(term)
+                    seen_roots.add(root)
+                    break  # go to next dimension
+
+    return tags """
 """
 Expects: [data] from top 10 sites be the data from whc_sites_2021 in the json file. 
 Outputs: a dict of site_id to tokenized descriptions.
@@ -296,28 +352,33 @@ def bert_search(
   ids = sim.argsort()[::-1]
   return [(sim[i], i) for i in ids[:9]]
 
-def extract_bert_tags(query, doc) -> List[str]:
+# bert tag not working well
+# def extract_bert_tags(query, doc) -> List[str]:
   
-    query_tokens = preprocess_description(query)
-    doc_tokens = preprocess_description(doc)
+#     query_tokens = preprocess_description(query)
+#     doc_tokens = preprocess_description(doc)
 
-    # BERT encode token-level vectors
-    query_embeddings = bert_model.encode(list(query_tokens)) 
-    doc_embeddings = bert_model.encode(list(doc_tokens))
+#     # BERT encode token-level vectors
+#     query_embeddings = bert_model.encode(list(query_tokens)) 
+#     doc_embeddings = bert_model.encode(list(doc_tokens))
 
-    # Compute similarity matrix and average similarity for each doc token
-    similarity_matrix = cosine_similarity(doc_embeddings, query_embeddings)  
-    average_similarities = similarity_matrix.mean(axis=1) 
- 
-    top_indices = average_similarities.argsort()[::-1]
+#     # Compute similarity matrix and average similarity for each doc token
+#     similarity_matrix = cosine_similarity(doc_embeddings, query_embeddings)  
+#     max_similarities = similarity_matrix.max(axis=1)
 
-    seen = set()
-    tags = []
-    for idx in top_indices:
-        token = doc_tokens[idx]
-        if token not in seen:
-            tags.append(token)
-            seen.add(token)
-        if len(tags) == 5:
-            break
-    return tags
+#     # Sort tokens by descending max similarity
+#     top_indices = max_similarities.argsort()[::-1]
+
+#     seen = set()
+#     tags = []
+#     for idx in top_indices:
+#         token = doc_tokens[idx]
+#         if token not in seen and token in doc_tokens:
+#             tags.append(token)
+#             seen.add(token)
+#         if len(tags) == 5:
+#             break
+#     return tags
+
+
+
