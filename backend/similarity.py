@@ -53,7 +53,10 @@ def preprocess_description(text:str) -> np.ndarray:
     # if lemmatizer takes too long, switch to using stemming
     lemmatizer = nltk.stem.WordNetLemmatizer()
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
-    return np.array(lemmatized_tokens)
+    
+    #remove punctuation, and non-alphabetic tokens
+    new_tokens = [token for token in lemmatized_tokens if token.isalpha()]
+    return np.array(new_tokens)
 
 # number of sites
 n_sites = len(data)
@@ -347,32 +350,33 @@ def bert_search(
   ids = sim.argsort()[::-1]
   return [(sim[i], i) for i in ids[:10]]
 
-def extract_bert_tags(query, doc) -> List[str]:
+# bert tag not working well
+# def extract_bert_tags(query, doc) -> List[str]:
   
-    query_tokens = preprocess_description(query)
-    doc_tokens = preprocess_description(doc)
+#     query_tokens = preprocess_description(query)
+#     doc_tokens = preprocess_description(doc)
 
-    # BERT encode token-level vectors
-    query_embeddings = bert_model.encode(list(query_tokens)) 
-    doc_embeddings = bert_model.encode(list(doc_tokens))
+#     # BERT encode token-level vectors
+#     query_embeddings = bert_model.encode(list(query_tokens)) 
+#     doc_embeddings = bert_model.encode(list(doc_tokens))
 
-    # Compute similarity matrix and average similarity for each doc token
-    similarity_matrix = cosine_similarity(doc_embeddings, query_embeddings)  
-    average_similarities = similarity_matrix.mean(axis=1) 
- 
-    top_indices = average_similarities.argsort()[::-1]
+#     # Compute similarity matrix and average similarity for each doc token
+#     similarity_matrix = cosine_similarity(doc_embeddings, query_embeddings)  
+#     max_similarities = similarity_matrix.max(axis=1)
 
-    seen = set()
-    tags = []
-    for idx in top_indices:
-        token = doc_tokens[idx]
-        if token not in seen:
-            tags.append(token)
-            seen.add(token)
-        if len(tags) == 5:
-            break
-    return tags
+#     # Sort tokens by descending max similarity
+#     top_indices = max_similarities.argsort()[::-1]
+
+#     seen = set()
+#     tags = []
+#     for idx in top_indices:
+#         token = doc_tokens[idx]
+#         if token not in seen and token in doc_tokens:
+#             tags.append(token)
+#             seen.add(token)
+#         if len(tags) == 5:
+#             break
+#     return tags
 
 
-# SVD (10 dimension)
 
