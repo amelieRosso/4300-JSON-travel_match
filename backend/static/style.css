@@ -483,6 +483,22 @@ input:checked + .slider::before {
 
 .tag-highlight {
     background-color: yellow;
-    padding: 0 3px;
+    padding: 0;
     border-radius: 3px;
+}
+
+.clear-tags-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 12px;
+}
+
+.clear-tags-button:hover {
+    background-color: #c0392b;
 }

@@ -91,9 +91,9 @@
 
         // js code for toggle highlight on tag button
         function toggleHighlight(cardId, tag) {
-            const descriptionDiv = document.querySelector(`#more-${cardId}`).parentElement;
-            const reviewSpan = document.querySelector(`#review-more-${cardId}`);
-            
+            const card = document.getElementById(`card-${cardId}`);
+            const descriptionDiv = card.querySelector('.short_description');
+            const reviewSpan = card.querySelector(`#review-more-${cardId}`);
             const button = event.target;
             button.classList.toggle("active-tag");
 
@@ -105,10 +105,24 @@
                 removeHighlight(descriptionDiv, tag);
                 removeHighlight(reviewSpan, tag);
             }
+
+            const anyActive = card.querySelectorAll('.tag-button.active-tag').length > 0;
+            const clearBtn = card.querySelector(`#clear-tags-${cardId}`);
+            clearBtn.style.display = anyActive ? "inline-block" : "none";
         }
 
         function applyHighlight(container, tag) {
-            const regex = new RegExp(`(${tag})`, 'gi');
+            const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            let regexPattern;
+            if (tag.includes(' ')) {
+                // for phrases: no word boundaries
+                regexPattern = `(${safeTag})`;
+            } else {
+                // for single words: use word boundaries
+                regexPattern = `\\b(${safeTag})\\b`;
+            }
+
+            const regex = new RegExp(regexPattern, 'gi');
             container.innerHTML = container.innerHTML.replace(regex, `<mark class="tag-highlight">$1</mark>`);
         }
 
@@ -117,6 +131,21 @@
             container.innerHTML = container.innerHTML.replace(regex, '$1');
         }
 
+        function clearAllHighlights(cardId) {
+            const card = document.getElementById(`card-${cardId}`);
+            card.querySelectorAll('.tag-highlight').forEach(mark => {
+                const parent = mark.parentNode;
+                parent.replaceChild(document.createTextNode(mark.textContent), mark);
+                parent.normalize();  
+            });
+
+            card.querySelectorAll('.tag-button').forEach(btn => {
+                btn.classList.remove("active-tag");
+            });
+
+            const clearBtn = card.querySelector(`#clear-tags-${cardId}`);
+            clearBtn.style.display = "none";
+        }
 
         // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
@@ -170,7 +199,7 @@
                     <p class="category ${category}"> ${category}</p>
                     <p class="similarity_score ${similarity_score >= 70 ? 'High' : (similarity_score > 40 ? 'Moderate' : 'Low')}"> Similarity: ${similarity_score}%</p>
                 </div>
-                <div class='answerCard'>
+                <div class='answerCard' id="card-${id}">
                 <div class="site_title_with_flag">
                     ${flagsHtml}
                     <p class="country">${country}</p>
@@ -207,7 +236,12 @@
                         </span>
                     </div>
                     <hr>
-                    <p class="tags"> Tags: ${tagHtml}</p>
+                    <p class="tags"> 
+                        Tags: ${tagHtml}
+                        <button class="clear-tags-button" id="clear-tags-${id}" style="display:none;" onclick="clearAllHighlights('${id}')">
+                            X Clear All
+                        </button>
+                    </p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
                     <p class="region"> Region: ${region}</p>
                 </div>                
