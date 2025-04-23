@@ -52,15 +52,17 @@
     <script>
         function highlightTags(description, tags) {
             let highlighted = description;
+
             tags.forEach(tag => {
-                // Escape any regex special characters in tag
+                // Escape regex special characters in tag
                 const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-                // Allow optional plural 's', space, or hyphen between compound words
+                // For compound tags (e.g., "mountain range"), split by space or hyphen
+                // Then allow optional 's' on each part and optional space/hyphen between
                 const pattern = safeTag
-                    .split(/\s+/) // split compound tags like "mountain range"
-                    .map(part => `${part}s?`) // allow plural on each part
-                    .join('[\\s-]*'); // allow space or hyphen between parts
+                    .split(/\s+/) // split multi-word tags
+                    .map(part => `${part}s?`) // allow optional plural for each part
+                    .join('[\\s-]*'); // allow optional space or hyphen between parts
 
                 const regex = new RegExp(`\\b(${pattern})\\b`, 'gi');
 
@@ -68,9 +70,9 @@
                     `<mark class="tag-highlight">${match}</mark>`
                 );
             });
+
             return highlighted;
         }
-
         let debounceTimeout;
         
         // js code for showing more or less information.
