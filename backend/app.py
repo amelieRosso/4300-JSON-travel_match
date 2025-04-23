@@ -33,8 +33,8 @@ with open(code_map_path, 'r', encoding='utf-8') as f:
 app = Flask(__name__)
 CORS(app)
 
-def get_place_details(index):
-    place = data[index]
+def get_place_details(index, filtered_data):
+    place = filtered_data[index]
     name = place.get("Name", "N/A")
     short_description = place.get("short_description", "N/A")
     rating = place.get("rating", "N/A")
@@ -66,22 +66,13 @@ def get_place_details(index):
 # Sample search using json with pandas
 # TODO: Bert is being slow right now, so want to look into ways to have it go faster (goes faster after first search goes through, so maybe there's some caching taking place??)
 def json_search(query, country_filter="", category_filter="", mode="svd"):
-    filtered_docs = []
-    filtered_indices = []
+    filtered_data = data  # default
 
-    for i, entry in enumerate(data):
-        country = entry.get("Country name", "").lower()
-        category = entry.get("category_long", "").lower()
+    if country_filter:
+        filtered_data = [entry for entry in filtered_data if country_filter.lower() in entry.get("Country name", "").lower()]
 
-        if (not country_filter or country_filter.lower() in country) and (not category_filter or category_filter.lower() in category):
-            full_text = entry.get("Name", "") + " " + entry.get("short_description", "")
-            reviews = entry.get("reviews", [])
-            full_text += " " + " ".join(r.get("text", "") for r in reviews)
-            filtered_docs.append(full_text)
-            filtered_indices.append(i)
-
-    if not filtered_indices:
-        return []
+    if category_filter:
+        filtered_data = [entry for entry in filtered_data if category_filter.lower() in entry.get("category_long", "").lower()]
 
     result = []
 
@@ -106,13 +97,14 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
             result.append(place)
 
     else:  # default: SVD
-        reduced_query, _ = similarity.transform_query_to_svd(query)
-        top_10 = similarity.index_search(query, subset_indices=set(filtered_indices))
+        filtered_reduced_docs, vectorizer, svd = similarity.get_reduced_docs(filtered_data)
+        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd)
+        top_10 = similarity.index_search(query = query, filtered_data = filtered_data)
 
         for score_cos, idx, score_svd in top_10:
-            place = get_place_details(idx)
-            reduced_docs = similarity.reduced_docs[idx]
-            tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
+            place = get_place_details(idx, filtered_data)
+            reduced_docs = filtered_reduced_docs[idx]
+            tags = similarity.extract_svd_tags(reduced_query, reduced_docs)
             score = (0.2*score_cos) + (0.8*score_svd) 
             # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
             # This actually happens with a lot of queries. Might make more sense to just order by similarity score
@@ -120,7 +112,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
             # For Nan, what if we just show no similarity score for now before debugging why
             place["Similarity_Score"] = round(score * 100, 1)
             place["Tags"] = tags
-            place["id"] = data[idx]["id"]
+            place["id"] = filtered_data[idx]["id"]
             result.append(place)
 
     return result

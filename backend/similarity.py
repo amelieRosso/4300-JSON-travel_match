@@ -4,6 +4,7 @@ import re
 import json
 import numpy as np
 import nltk
+nltk.data.path
 from nltk.tokenize import word_tokenize, TreebankWordTokenizer
 from nltk.corpus import stopwords
 from typing import List, Tuple
@@ -16,6 +17,7 @@ from sentence_transformers import SentenceTransformer
 nltk.download('punkt_tab')
 nltk.download('stopwords')
 nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 # Get the directory of the current script
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -55,17 +57,14 @@ def preprocess_description(text:str) -> np.ndarray:
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
     return np.array(lemmatized_tokens)
 
-# number of sites
-n_sites = len(data)
-
 """
 Expects: [data] to be the data from whc_sites_2021 in the json file. 
 Outputs: a dict of site_id to tokenized descriptions.
 """
 # create dict of doc_id to tokenized description
-def create_tokenized_dict(data: List[dict]) -> dict:
+def create_tokenized_dict(filtered_data: List[dict]) -> dict:
     tokenized_dict = {}
-    for site_id, site in enumerate(data):
+    for site_id, site in enumerate(filtered_data):
       tokenize_description = preprocess_description(site['short_description'])
       tokenize_name = preprocess_description(site['Name'])
 
@@ -79,16 +78,17 @@ def create_tokenized_dict(data: List[dict]) -> dict:
       tokenized_dict[site_id] = np.concatenate([tokenize_name, tokenize_description, tokenize_reviews])
     return tokenized_dict
 
-tokenized_dict = create_tokenized_dict(data)
+svd = TruncatedSVD(n_components=200)
+vectorizer = TfidfVectorizer()
 
 #create reduced_docs (global var)
-docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
-vectorizer = TfidfVectorizer()
-docs_tfidf = vectorizer.fit_transform(docs)
-svd = TruncatedSVD(n_components=200)
-reduced_docs = svd.fit_transform(docs_tfidf)
+def get_reduced_docs(filtered_data):
+  filtered_tokenized_dict = create_tokenized_dict(filtered_data)
+  filtered_docs = [" ".join(filtered_tokenized_dict[site_id]) for site_id in sorted(filtered_tokenized_dict.keys()) ]
+  filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
+  return svd.fit_transform(filtered_docs_tfidf), vectorizer, svd
 
-def transform_query_to_svd(query: str, vectorizer=vectorizer, svd=svd):
+def transform_query_to_svd(query: str, vectorizer, svd):
     query_tokens = preprocess_description(query)
     query_str = " ".join(query_tokens)
     query_tfidf = vectorizer.transform([query_str])
@@ -106,7 +106,7 @@ def svd_index_search(
   return [(sim[i],i) for i in ids[:9]]
 
 
-def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer):
+def extract_svd_tags(reduced_query, reduced_docs):
     # Project back into term space
 
     #this is where we could boost some of the scores in the QUERY, dont change the DOCUMENT scores
@@ -129,14 +129,14 @@ Expects: [data] from top 10 sites be the data from whc_sites_2021 in the json fi
 Outputs: a dict of site_id to tokenized descriptions.
 """
 # create dict of doc_id to tokenized description
-def create_tokenized_dict_10(query: str) -> dict:
+def create_tokenized_dict_10(query: str, reduced_docs, filtered_data, vectorizer, svd) -> dict:
     
     reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer, svd)
     similarity_score_to_site_index_tuple = svd_index_search(reduced_query, reduced_docs)
 
     site_info_dict = {}
     for sim_score, site_index in similarity_score_to_site_index_tuple:
-       site_info_dict[site_index] = data[site_index]
+       site_info_dict[site_index] = filtered_data[site_index]
 
     tokenized_dict_10 = {}
     for site_id, site in site_info_dict.items():
@@ -152,9 +152,9 @@ Expects: [tokenized_dict] a dict of site_id to tokenized descriptions.
 Outputs: a dict of tuples of term to (site id, tokenized descriptions).
 """
 # create inverted index (list of tuples with smaller doc_ids appearing first)
-def build_inverted_index(query: str) -> dict:
+def build_inverted_index(query: str, reduced_docs, filtered_data, vectorizer, svd) -> dict:
     
-    tokenized_dict_10 = create_tokenized_dict_10(query)
+    tokenized_dict_10 = create_tokenized_dict_10(query, reduced_docs, filtered_data, vectorizer, svd)
 
     inverted_index_dict = {}
 
@@ -182,8 +182,8 @@ Expects: [inv_idx, n_sites] inverted index from above and number of sites.
 Outputs: a dict of terms to idf vlaues.
 """
 # create dict of term to idf value
-def compute_idf(query: str, n_sites, min_df=0, max_df_ratio=0.95):
-    inv_idx = build_inverted_index(query)
+def compute_idf(query: str, n_sites, reduced_docs, filtered_data, vectorizer, svd, min_df=0, max_df_ratio=0.95):
+    inv_idx = build_inverted_index(query, reduced_docs, filtered_data, vectorizer, svd)
 
     idf_value_dict = {}
 
@@ -199,9 +199,9 @@ def compute_idf(query: str, n_sites, min_df=0, max_df_ratio=0.95):
 Expects: [inv_idx, idf, n_sites] inverted index from above, idf from above and number of sites. 
 Outputs: an array of doc norms.
 """
-def compute_doc_norms(query: str, n_sites):
-    inv_idx = build_inverted_index(query)
-    idf = compute_idf(query, n_sites)
+def compute_doc_norms(query: str, n_sites, reduced_docs, filtered_data, vectorizer, svd):
+    inv_idx = build_inverted_index(query, reduced_docs, filtered_data, vectorizer, svd)
+    idf = compute_idf(query, n_sites, reduced_docs, filtered_data, vectorizer, svd)
 
     doc_norms_array = np.zeros(n_sites, dtype=float)
     for word, value_list in inv_idx.items():
@@ -216,9 +216,9 @@ Expects: [query_word_counts, index, idf] dict of query words to tf values, inver
 Outputs: dict of site ids to dot product value.
 """
 # we need a query_word_counts (dict of words to tf of the query)
-def accumulate_dot_scores(query_word_counts: dict, query: str) -> dict:
-    inv_idx = build_inverted_index(query)
-    idf = compute_idf(query, n_sites)
+def accumulate_dot_scores(query_word_counts: dict, query: str, reduced_docs, n_sites, filtered_data, vectorizer, svd) -> dict:
+    inv_idx = build_inverted_index(query, reduced_docs, filtered_data, vectorizer, svd)
+    idf = compute_idf(query, n_sites, reduced_docs, filtered_data, vectorizer, svd)
     dot_scores_dict = {}
     for word, query_tf in query_word_counts.items():
       if word in idf and word in inv_idx:
@@ -229,7 +229,7 @@ def accumulate_dot_scores(query_word_counts: dict, query: str) -> dict:
             dot_scores_dict[site_id] = 0
           dot_scores_dict[site_id] += numer
 
-    tokenized_dict_10 = create_tokenized_dict_10(query)
+    tokenized_dict_10 = create_tokenized_dict_10(query, reduced_docs, filtered_data, vectorizer, svd)
     for site_id in tokenized_dict_10:
       if site_id not in dot_scores_dict:
             dot_scores_dict[site_id] = 0
@@ -244,10 +244,13 @@ Outputs: a list of tuples (cosine similarity value, site id)
 def index_search(
     query: str,
     score_func=accumulate_dot_scores,
-    subset_indices=None
+    filtered_data = data
 ) -> List[Tuple[int, int]]:
-    idf = compute_idf(query, n_sites)
-    doc_norms = compute_doc_norms(query, n_sites)
+    len_sites = len(filtered_data)
+    filtered_reduced_docs, vectorizer, svd = get_reduced_docs(filtered_data)
+
+    idf = compute_idf(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
+    doc_norms = compute_doc_norms(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
 
     index_search_list_tuples = []
 
@@ -263,17 +266,12 @@ def index_search(
         q += (query_word_counts_dict[word] * idf[word]) ** 2
     abs_q = math.sqrt(q)
     
-    numer = score_func(query_word_counts_dict, query)
+    numer = score_func(query_word_counts_dict, query, filtered_reduced_docs, len_sites, filtered_data, vectorizer, svd)
     reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer, svd)
-    similarity_score_to_site_index_tuple = svd_index_search(reduced_query, reduced_docs)
+    similarity_score_to_site_index_tuple = svd_index_search(reduced_query, filtered_reduced_docs)
     similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
     for site_id, score in numer.items():
-      if subset_indices is not None and site_id not in subset_indices:
-        continue
-      norm = doc_norms[site_id]
-      svd_score = similarity_score_to_site_index_dict[site_id]
-      cosine_sim = score/(norm * abs_q)
-      index_search_list_tuples.append((cosine_sim, site_id, svd_score))
+      index_search_list_tuples.append(((score / (doc_norms[site_id] * abs_q)), site_id, similarity_score_to_site_index_dict[site_id]))
       # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
 
     #index_search_list_tuples.sort(reverse=True)[:10]
@@ -296,7 +294,7 @@ def bert_search(
 
   sim = cosine_similarity(corpus_embeddings, query_embedding).flatten() 
   ids = sim.argsort()[::-1]
-  return [(sim[i], i) for i in ids[:10]]
+  return [(sim[i], i) for i in ids[:9]]
 
 def extract_bert_tags(query, doc) -> List[str]:
   
