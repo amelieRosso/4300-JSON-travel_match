@@ -93,6 +93,9 @@ def create_tokenized_dict(filtered_data: List[dict]) -> dict:
 svd = TruncatedSVD(n_components=200)
 vectorizer = TfidfVectorizer()
 
+tokenized_dict = create_tokenized_dict(data)
+docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
   filtered_tokenized_dict = create_tokenized_dict(filtered_data)
