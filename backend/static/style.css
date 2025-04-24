@@ -409,7 +409,7 @@ h3, .extra_info {
 .toggle-mode {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-family: 'TTNorms', sans-serif;
     color: #20a67d;
     font-size: 14px;
@@ -471,7 +471,8 @@ input:checked + .slider::before {
     margin: 3px;
     cursor: pointer;
     transition: 0.3s;
-    font-size: 12px;
+    font-family: 'LibreBaskerville', sans-serif;
+    font-size: 15px;
 }
 
 .tag-button:hover {
@@ -496,10 +497,10 @@ input:checked + .slider::before {
     border-radius: 15px;
     padding: 5px 10px;
     margin: 3px;
-    margin-left: 10px;
     cursor: pointer;
     transition: 0.3s;
-    font-size: 12px;
+    font-family: 'LibreBaskerville', sans-serif;
+    font-size: 15px;
 }
 
 .clear-tags-button:hover {

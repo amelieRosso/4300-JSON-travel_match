@@ -4,6 +4,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<!-- Handle the mismatch between tag and article singular and plural -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pluralize/8.0.0/pluralize.min.js"></script> 
 <body>
     <div class="full-body-container">
         <!-- <img src="{{ url_for('static', filename='images/title_background.png') }}" /> -->
@@ -35,12 +37,13 @@
                     </div>
                     <!-- Made selection for BERT/SVD into a toggle for cleaner look -->
                     <div class="toggle-mode">
-                        <span id="toggle-mode-label">BERT</span>
+                        <!-- <span id="toggle-mode-label">BERT</span> -->
+                        <span>SVD</span>
                         <label class="switch">
                           <input type="checkbox" id="search-toggle" onchange="filterText()">
                           <span class="slider round"></span>
                         </label>
-                    </div>
+                        <span id="toggle-mode-label">BERT</span>
                 </div>
             </div>
             <div id="answer-box">
@@ -121,24 +124,49 @@
         }
 
         function applyHighlight(container, tag) {
-            const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            let regexPattern;
-            if (tag.includes(' ')) {
-                // for phrases: no word boundaries
-                regexPattern = `(${safeTag})`;
-            } else {
-                // for single words: use word boundaries
-                regexPattern = `\\b(${safeTag})\\b`;
-            }
+            // Get singular and plural forms of the tag using pluralize
+            const singular = pluralize.singular(tag);
+            const plural = pluralize.plural(tag);
 
+            // Escape special regex characters in both form
+            const safeSingular = singular.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const safePlural = plural.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            let regexPattern;
+
+            if (tag.includes(' ')) {
+                // For multi-word tags, just match exact phrase
+                regexPattern = `(${safeSingular})`;
+            } else {
+                // For single words, match both singular and plural forms
+                regexPattern = `\\b(${safeSingular}|${safePlural})\\b`;
+            }
             const regex = new RegExp(regexPattern, 'gi');
+
+            // Replace matched words in container's HTML with highlighted <mark>
             container.innerHTML = container.innerHTML.replace(regex, `<mark class="tag-highlight">$1</mark>`);
         }
 
         function removeHighlight(container, tag) {
-            const regex = new RegExp(`<mark class="tag-highlight">(${tag})</mark>`, 'gi');
+            const singular = pluralize.singular(tag);
+            const plural = pluralize.plural(tag);
+            const safeSingular = singular.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const safePlural = plural.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            let regexPattern;
+
+            if (tag.includes(' ')) {
+                regexPattern = `<mark class="tag-highlight">(${safeSingular})</mark>`;
+            } else {
+                regexPattern = `<mark class="tag-highlight">(${safeSingular}|${safePlural})</mark>`;
+            }
+
+            const regex = new RegExp(regexPattern, 'gi');
+
+            // Replace highlighted tags with plain text
             container.innerHTML = container.innerHTML.replace(regex, '$1');
         }
+
 
         function clearAllHighlights(cardId) {
             const card = document.getElementById(`card-${cardId}`);
@@ -158,12 +186,17 @@
 
         // All the html and js logic for the information in the answer cards.
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
+            // Detect if BERT is active
+            const isBert = document.getElementById("search-toggle")?.checked;
+
             // const tagHtml = tags && tags.length > 0
             // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             // : `<span>No tags available</span>`;
-            const tagHtml = tags && tags.length > 0
-            ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
-            : `<span>No tags available</span>`;
+            const tagHtml = isBert 
+            ? `<span>No Tags for BERT</span>`
+            : (tags && tags.length > 0
+                ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
+                : `<span>No tags available</span>`);
 
             const flagsHtml = (isoCodes || []).map(code => 
             `<img class="flag_icon" src="/static/images/${code}.svg" alt="${code} flag" />`
@@ -248,7 +281,7 @@
                     <p class="tags"> 
                         Tags: ${tagHtml}
                         <button class="clear-tags-button" id="clear-tags-${id}" style="display:none;" onclick="clearAllHighlights('${id}')">
-                            X Clear All
+                            Clear All
                         </button>
                     </p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
