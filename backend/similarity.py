@@ -351,13 +351,14 @@ bert_model = SentenceTransformer('bert-base-nli-mean-tokens')
 
 def bert_search(
     query,
-    docs,
+    filtered_data,
 ) -> List[Tuple[int, int]]:
+  tokenized_dict = create_tokenized_dict(filtered_data)
+  docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
   query_tokens = preprocess_description(query)
   query_embedding = bert_model.encode(list(query_tokens))
   corpus_embeddings = bert_model.encode(docs)
-
-  sim = cosine_similarity(corpus_embeddings, query_embedding).flatten() 
+  sim = cosine_similarity(corpus_embeddings, query_embedding).mean(axis=1)
   ids = sim.argsort()[::-1]
   return [(sim[i], i) for i in ids[:9]]
 
