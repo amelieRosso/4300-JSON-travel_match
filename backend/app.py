@@ -117,7 +117,8 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
             place["Tags"] = tags
             place["id"] = filtered_data[idx]["id"]
             result.append(place)
-
+    # reshuffle based on score
+    result = sorted(result, key = lambda place: place['Similarity_Score'], reverse=True)
     return result
 
 
