@@ -139,11 +139,26 @@
             container.innerHTML = container.innerHTML.replace(regex, `<mark class="tag-highlight">$1</mark>`);
         }
 
-
         function removeHighlight(container, tag) {
-            const regex = new RegExp(`<mark class="tag-highlight">(${tag})</mark>`, 'gi');
+            const singular = pluralize.singular(tag);
+            const plural = pluralize.plural(tag);
+            const safeSingular = singular.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const safePlural = plural.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            let regexPattern;
+
+            if (tag.includes(' ')) {
+                regexPattern = `<mark class="tag-highlight">(${safeSingular})</mark>`;
+            } else {
+                regexPattern = `<mark class="tag-highlight">(${safeSingular}|${safePlural})</mark>`;
+            }
+
+            const regex = new RegExp(regexPattern, 'gi');
+
+            // Replace highlighted tags with plain text
             container.innerHTML = container.innerHTML.replace(regex, '$1');
         }
+
 
         function clearAllHighlights(cardId) {
             const card = document.getElementById(`card-${cardId}`);
