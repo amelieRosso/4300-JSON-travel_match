@@ -409,7 +409,7 @@ h3, .extra_info {
 .toggle-mode {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-family: 'TTNorms', sans-serif;
     color: #20a67d;
     font-size: 14px;
