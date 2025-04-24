@@ -231,7 +231,6 @@ def accumulate_dot_scores(query_word_counts: dict, query: str) -> dict:
     for site_id in tokenized_dict_10:
       if site_id not in dot_scores_dict:
             dot_scores_dict[site_id] = 0
-    print(f"dot_scores_dict {dot_scores_dict}")
     return dot_scores_dict
 
 """
@@ -270,7 +269,11 @@ def index_search(
         continue
       norm = doc_norms[site_id]
       svd_score = similarity_score_to_site_index_dict[site_id]
-      cosine_sim = score/(norm * abs_q)
+      denom = norm * abs_q
+      if denom == 0:
+        cosine_sim = 0
+      else:
+        cosine_sim = score/denom
       index_search_list_tuples.append((cosine_sim, site_id, svd_score))
       # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
 
