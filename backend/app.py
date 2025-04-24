@@ -99,7 +99,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
     else:  # default: SVD
         filtered_reduced_docs, vectorizer, svd = similarity.get_reduced_docs(filtered_data)
         reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd)
-        top_10 = similarity.index_search(query = query, filtered_data = filtered_data)
+        top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
 
         for score_cos, idx, score_svd in top_10:
             place = get_place_details(idx, filtered_data)

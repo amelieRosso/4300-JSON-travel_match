@@ -299,11 +299,13 @@ Outputs: a list of tuples (cosine similarity value, site id)
 # need to figure out tokenizer
 def index_search(
     query: str,
+    filtered_reduced_docs,
+    vectorizer,
+    svd,
     score_func=accumulate_dot_scores,
     filtered_data = data
 ) -> List[Tuple[int, int]]:
     len_sites = len(filtered_data)
-    filtered_reduced_docs, vectorizer, svd = get_reduced_docs(filtered_data)
 
     idf = compute_idf(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
     doc_norms = compute_doc_norms(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
