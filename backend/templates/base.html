@@ -193,7 +193,7 @@
             // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
             // : `<span>No tags available</span>`;
             const tagHtml = isBert 
-            ? `<span>No Tags for BERT</span>`
+            ? ``
             : (tags && tags.length > 0
                 ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
                 : `<span>No tags available</span>`);
@@ -279,7 +279,7 @@
                     </div>
                     <hr>
                     <p class="tags"> 
-                        Tags: ${tagHtml}
+                        ${!isBert ? "Tags: " + tagHtml: " "}  
                         <button class="clear-tags-button" id="clear-tags-${id}" style="display:none;" onclick="clearAllHighlights('${id}')">
                             Clear All
                         </button>
