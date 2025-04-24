@@ -90,7 +90,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
 
             place = get_place_details(local_idx, filtered_data )
             # tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
-            place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
+            place["Similarity_Score"] = str(round(score * 100, 1))
             # place["Tags"] = tags
             place["id"] = data[local_idx]["id"]
             result.append(place)
