@@ -84,16 +84,15 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
             return [] # If there are no BERT results, skip the process below to avoid the IndexError
 
         for score, local_idx in scores:
-            if local_idx >= len(filtered_indices):
-                print(f"[WARNING] Skipping out-of-range local_idx={local_idx} for filtered_indices length={len(filtered_indices)}")
+            if local_idx >= len(filtered_data):
+                print(f"[WARNING] Skipping out-of-range local_idx={local_idx} for filtered_indices length={len(filtered_data)}")
                 continue # This is a temporary fix to avoid getting the IndexError. I don't love just skipping over indices > length of filtered_indices, but it's helping the error from throwing
 
-            global_idx = filtered_indices[local_idx]
-            place = get_place_details(global_idx)
+            place = get_place_details(local_idx, filtered_data )
             # tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
             place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
             # place["Tags"] = tags
-            place["id"] = data[global_idx]["id"]
+            place["id"] = data[local_idx]["id"]
             result.append(place)
 
     else:  # default: SVD
