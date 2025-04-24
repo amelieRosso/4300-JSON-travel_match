@@ -328,7 +328,7 @@ def index_search(
     similarity_score_to_site_index_tuple = svd_index_search(reduced_query, filtered_reduced_docs)
     similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
     for site_id, score in numer.items():
-      index_search_list_tuples.append(((score / (doc_norms[site_id] * abs_q)), site_id, similarity_score_to_site_index_dict[site_id]))
+      index_search_list_tuples.append(((score / ((doc_norms[site_id] * abs_q) + 1)), site_id, similarity_score_to_site_index_dict[site_id]))
       # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
 
     #index_search_list_tuples.sort(reverse=True)[:10]
