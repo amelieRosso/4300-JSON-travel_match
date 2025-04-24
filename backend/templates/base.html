@@ -20,10 +20,10 @@
                       </button>
                       <div class="input-box" onclick="sendFocus()">
                         <input
-                          placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
-                          id="filter-text-val"
-                          onkeyup="filterText()"
-                        >
+                        placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
+                        id="filter-text-val"
+                        onkeypress="handleEnter(event)"
+                        />
                       </div>
                     </div>
                     <div class="dropdowns-inline">
@@ -73,7 +73,14 @@
 
             return highlighted;
         }
+
         let debounceTimeout;
+
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+            filterText();  // Triggers the search
+            }
+        }
         
         // js code for showing more or less information.
         function readMore(dotsId, moreId, btnId, textOpen, textClose) {

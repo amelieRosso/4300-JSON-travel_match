@@ -17,7 +17,6 @@ from sentence_transformers import SentenceTransformer
 nltk.download('punkt_tab')
 nltk.download('stopwords')
 nltk.download('wordnet')
-nltk.download('omw-1.4')
 
 # Get the directory of the current script
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -60,8 +59,14 @@ def preprocess_description(text:str) -> np.ndarray:
     filtered_tokens = [token for token in tokens if token.lower() not in all_stopwords]  
 
     # if lemmatizer takes too long, switch to using stemming
-    lemmatizer = nltk.stem.WordNetLemmatizer()
-    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
+    try:
+      lemmatizer = nltk.stem.WordNetLemmatizer()
+      lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
+    except Exception as e:
+      print("Lemmatizer failed:", e)
+      stemmer = nltk.stem.PorterStemmer()
+      lemmatized_tokens = [stemmer.stem(token) for token in filtered_tokens]
+
     return np.array(lemmatized_tokens)
 
 """
@@ -85,13 +90,11 @@ def create_tokenized_dict(filtered_data: List[dict]) -> dict:
       tokenized_dict[site_id] = np.concatenate([tokenize_name, tokenize_description, tokenize_reviews])
     return tokenized_dict
 
-# svd = TruncatedSVD(n_components=200)
-# vectorizer = TfidfVectorizer()
+svd = TruncatedSVD(n_components=200)
+vectorizer = TfidfVectorizer()
 
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
-  vectorizer = TfidfVectorizer()
-  svd = TruncatedSVD(n_components=200)
   filtered_tokenized_dict = create_tokenized_dict(filtered_data)
   filtered_docs = [" ".join(filtered_tokenized_dict[site_id]) for site_id in sorted(filtered_tokenized_dict.keys()) ]
   filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
