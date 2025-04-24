@@ -54,7 +54,7 @@ def preprocess_description(text:str) -> np.ndarray:
         "site", "location", "place", "area", "visit",  
     }
 
-    # 🔽 Combine both
+    
     all_stopwords = stop_words.union(custom_stopwords)
     # remove stopwords
     filtered_tokens = [token for token in tokens if token.lower() not in all_stopwords]  
@@ -85,11 +85,13 @@ def create_tokenized_dict(filtered_data: List[dict]) -> dict:
       tokenized_dict[site_id] = np.concatenate([tokenize_name, tokenize_description, tokenize_reviews])
     return tokenized_dict
 
-svd = TruncatedSVD(n_components=200)
-vectorizer = TfidfVectorizer()
+# svd = TruncatedSVD(n_components=200)
+# vectorizer = TfidfVectorizer()
 
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
+  vectorizer = TfidfVectorizer()
+  svd = TruncatedSVD(n_components=200)
   filtered_tokenized_dict = create_tokenized_dict(filtered_data)
   filtered_docs = [" ".join(filtered_tokenized_dict[site_id]) for site_id in sorted(filtered_tokenized_dict.keys()) ]
   filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
@@ -149,10 +151,8 @@ def svd_index_search(
 #     return tags
 
 # This is causing errors (specifically line 156)
-""" def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
+def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
     
-    print(preprocess_description(doc_text))
-   
     dim_scores = reduced_query.flatten() * reduced_doc.flatten()
     top_dims = dim_scores.argsort()[::-1]  
 
@@ -179,7 +179,8 @@ def svd_index_search(
                     seen_roots.add(root)
                     break  # go to next dimension
 
-    return tags """
+    return tags 
+
 """
 Expects: [data] from top 10 sites be the data from whc_sites_2021 in the json file. 
 Outputs: a dict of site_id to tokenized descriptions.
