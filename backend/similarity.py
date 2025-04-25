@@ -50,7 +50,7 @@ def preprocess_description(text:str) -> np.ndarray:
     stop_words = set(stopwords.words("english"))
 
     custom_stopwords = {
-        "site", "location", "place", "area", "visit",  
+        "site", "location", "place", "area", "go", "visit",  
     }
 
     
