@@ -44,6 +44,8 @@ def get_place_details(index, filtered_data):
     region = place.get("Region", "N/A")
     review_objects = place.get("reviews", [])
     reviews = [r.get("text", "") for r in review_objects if "text" in r]
+    longitude = place.get("longitude", "N/A")
+    latitude = place.get("latitude", "N/A")
     # code = country_code.get(country, "unknown")
     # print(f"Looking up code for: {country} -> {country_code.get(country)}")
     iso_codes_raw = place.get("iso_code", "")
@@ -60,13 +62,18 @@ def get_place_details(index, filtered_data):
             "Reviews": reviews,
             # "Country_Code": code
             "ISO_Codes": iso_codes,
+            "longitude": longitude,
+            "latitude": latitude,
 
     }
 
 # Sample search using json with pandas
 # TODO: Bert is being slow right now, so want to look into ways to have it go faster (goes faster after first search goes through, so maybe there's some caching taking place??)
-def json_search(query, country_filter="", category_filter="", mode="svd"):
+def json_search(query, country_filter="", category_filter="", mode="svd", weights=None):
     filtered_data = data  # default
+
+    if weights is None:
+        weights = {}
 
     if country_filter:
         filtered_data = [entry for entry in filtered_data if country_filter.lower() in entry.get("Country name", "").lower()]
@@ -101,7 +108,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
         except ValueError as e:
             print(f"[ERROR] {e}")
             return []
-        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd)
+        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd, weights)
         top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
 
         for score_cos, idx, score_svd in top_10:
@@ -128,15 +135,25 @@ def home():
 
 @app.route("/episodes")
 def episodes_search():
-    text = request.args.get("title")
-    print(type(text))
-    print(text)
-    country_filter = request.args.get("country", "").strip().lower()
-    category_filter = request.args.get("category", "").strip().lower()
-    mode = request.args.get("mode", "svd") 
-    return json_search(text, country_filter, category_filter, mode)
+    if request.method == "POST":
+        data_req = request.get_json()
+        text = data_req.get("query")
+        weights = data_req.get("weights", {})  # Default token weight to empty dict
+        mode = data_req.get("mode", "svd")
+        country_filter = data_req.get("country", "").strip().lower()
+        category_filter = data_req.get("category", "").strip().lower()
+    else:
+        text = request.args.get("title")
+        weights_json = request.args.get("weights", "{}")
+        weights = json.loads(weights_json)
+        print(type(text))
+        print(text)
+        country_filter = request.args.get("country", "").strip().lower()
+        category_filter = request.args.get("category", "").strip().lower()
+        mode = request.args.get("mode", "svd") 
+    return json_search(text, country_filter, category_filter, mode, weights)
 
-@app.route("/filters")
+"""@app.route("/filters")
 def filters():
     with open("whc_sites_2021_with_ratings.json") as f:
         data = json.load(f)
@@ -154,7 +171,7 @@ def filters():
     return jsonify({
         "countries": sorted(country_tokens),
         "categories": categories
-    })
+    })"""
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)

@@ -390,7 +390,15 @@ h3, .extra_info {
     font-family: 'TTNorms', sans-serif;
     color: #20a67d;
     width: 220px;
-}  
+  }  
+
+  #map {
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      width: 50%;
+      height: 50%;
+  }
 
 .tag-highlight {
     background-color: #fff3b0;
@@ -511,4 +519,81 @@ input:checked + .slider::before {
 .button-loading-gif {
     width: 30px;
     height: 30px;
+}
+
+/* Adjust Priority */
+.priority-btn{
+    font-family:'TTNorms',sans-serif;
+    border:none;
+    border-radius:25px;
+    padding:8px 18px;
+    background:#20a67d;
+    color:#fff;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.priority-btn:hover{opacity:.8;}
+.priority-btn.secondary{
+    background:#e74c3c;
+}
+
+#priority-panel{
+    width:600px;
+    max-width:90%;
+    background:whitesmoke;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    border-radius:12px;
+    padding:20px 30px;
+    margin-top:12px;
+}
+
+.priority-actions{
+    display:flex;            /* lay buttons in a row */
+    justify-content:center;  /* 🔹 horizontal centre in the panel */
+    gap:24px;                /* 🔹 more space between buttons    */
+    margin-top:24px;         /* 🔹 space above the pair          */
+}
+
+.token-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.token-row label{
+    min-width:110px;
+    font-family:'TTNorms',sans-serif;
+}
+
+.token-value{
+    font-family:'TTNorms',sans-serif;
+}
+
+.token-row input[type=range] {
+    -webkit-appearance:none;
+    width:100%;
+    height:6px;
+    background:#ccc;
+    border-radius:3px;
+    outline:none;
+}
+
+.token-row input[type=range]::-webkit-slider-runnable-track {
+    height:6px;
+    border-radius:3px;
+    background:linear-gradient(to right,#20a67d var(--fill,0%),#ccc 0%);
+}
+
+.token-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance:none;
+    width:18px; height:18px; border-radius:50%;
+    background:#20a67d; cursor:pointer;
+    border:none; 
+    margin-top:-6px; 
+}
+
+.token-row input[type=range]:hover { 
+    opacity:0.9 
 }

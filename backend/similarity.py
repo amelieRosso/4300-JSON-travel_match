@@ -12,6 +12,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
+from collections import Counter
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -115,9 +116,20 @@ def get_reduced_docs(filtered_data):
 #     print(f"Dimension {dim + 1}: {top_words}")
 
 
-def transform_query_to_svd(query: str, vectorizer, svd):
+def transform_query_to_svd(query: str, vectorizer, svd, weights: dict = None):
+    if weights is None:
+        weights = {}
     query_tokens = preprocess_description(query)
-    query_str = " ".join(query_tokens)
+    counter = Counter(query_tokens)
+
+    # Apply weights based on token frequency 
+    weighted_tokens = []
+    for token, count in counter.items():
+        weight = count  # weight = frequency count => tf = w/|query|
+        weighted_tokens.extend([token] * weight)
+    # query_str = " ".join(query_tokens)
+    # Join the weighted tokens back into a string
+    query_str = " ".join(weighted_tokens)
     query_tfidf = vectorizer.transform([query_str])
     reduced_query = svd.transform(query_tfidf)
     return reduced_query, query_tfidf
@@ -296,7 +308,6 @@ def accumulate_dot_scores(query_word_counts: dict, query: str, reduced_docs, n_s
     for site_id in tokenized_dict_10:
       if site_id not in dot_scores_dict:
             dot_scores_dict[site_id] = 0
-    print(f"dot_scores_dict {dot_scores_dict}")
     return dot_scores_dict
 
 """
