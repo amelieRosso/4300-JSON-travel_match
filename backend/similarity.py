@@ -12,6 +12,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
+from collections import Counter
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -115,9 +116,28 @@ def get_reduced_docs(filtered_data):
 #     print(f"Dimension {dim + 1}: {top_words}")
 
 
-def transform_query_to_svd(query: str, vectorizer, svd):
+def transform_query_to_svd(query: str, vectorizer, svd, weights: dict = None):
+    if weights is None:
+        weights = {}
     query_tokens = preprocess_description(query)
-    query_str = " ".join(query_tokens)
+    counter = Counter(query_tokens)
+
+    # Apply weights based on token frequency 
+    weighted_tokens = []
+    for token, count in counter.items():
+        weight = weights.get(token, count)  # or custom logic later
+        weighted_tokens.extend([token] * weight)
+    # query_str = " ".join(query_tokens)
+
+    # Print to test
+    print(f"\nOriginal Query Tokens: {list(counter.elements())}")
+    print(f"Applied Weights:")
+    for token, count in counter.items():
+        print(f"   Token: '{token}'  ->  Weight: {weights.get(token, count)}")
+    print(f"Weighted Query String: {' '.join(weighted_tokens)}\n")
+
+    # Join the weighted tokens back into a string
+    query_str = " ".join(weighted_tokens)
     query_tfidf = vectorizer.transform([query_str])
     reduced_query = svd.transform(query_tfidf)
     return reduced_query, query_tfidf

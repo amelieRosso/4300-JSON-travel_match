@@ -65,8 +65,11 @@ def get_place_details(index, filtered_data):
 
 # Sample search using json with pandas
 # TODO: Bert is being slow right now, so want to look into ways to have it go faster (goes faster after first search goes through, so maybe there's some caching taking place??)
-def json_search(query, country_filter="", category_filter="", mode="svd"):
+def json_search(query, country_filter="", category_filter="", mode="svd", weights=None):
     filtered_data = data  # default
+
+    if weights is None:
+        weights = {}
 
     if country_filter:
         filtered_data = [entry for entry in filtered_data if country_filter.lower() in entry.get("Country name", "").lower()]
@@ -101,7 +104,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd"):
         except ValueError as e:
             print(f"[ERROR] {e}")
             return []
-        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd)
+        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd, weights)
         top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
 
         for score_cos, idx, score_svd in top_10:
@@ -128,12 +131,21 @@ def home():
 
 @app.route("/episodes")
 def episodes_search():
-    text = request.args.get("title")
-    print(type(text))
-    print(text)
-    country_filter = request.args.get("country", "").strip().lower()
-    category_filter = request.args.get("category", "").strip().lower()
-    mode = request.args.get("mode", "svd") 
+    if request.method == "POST":
+        data_req = request.get_json()
+        text = data_req.get("query")
+        weights = data_req.get("weights", {})  # Default token weight to empty dict
+        mode = data_req.get("mode", "svd")
+        country_filter = data_req.get("country", "").strip().lower()
+        category_filter = data_req.get("category", "").strip().lower()
+    else:
+        text = request.args.get("title")
+        weights = {}
+        print(type(text))
+        print(text)
+        country_filter = request.args.get("country", "").strip().lower()
+        category_filter = request.args.get("category", "").strip().lower()
+        mode = request.args.get("mode", "svd") 
     return json_search(text, country_filter, category_filter, mode)
 
 @app.route("/filters")
