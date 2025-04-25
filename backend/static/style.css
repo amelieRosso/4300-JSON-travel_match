@@ -379,3 +379,11 @@ h3, .extra_info {
     color: #20a67d;
     width: 220px;
   }  
+
+  #map {
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      width: 50%;
+      height: 50%;
+  }
