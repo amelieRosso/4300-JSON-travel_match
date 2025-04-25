@@ -127,6 +127,15 @@ h1{
     }
 }
 
+#map {
+    position: absolute;
+    float: right;
+    top: 5%;
+    right: 5%;
+    width: 50%;
+    height: 50%;
+}
+
 .tagline {
     display: flex;
     max-width: 50%;
@@ -391,14 +400,6 @@ h3, .extra_info {
     color: #20a67d;
     width: 220px;
   }  
-
-  #map {
-      position: absolute;
-      top: 5%;
-      right: 8%;
-      width: 50%;
-      height: 50%;
-  }
 
 .tag-highlight {
     background-color: #fff3b0;
