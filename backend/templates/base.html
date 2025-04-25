@@ -15,35 +15,52 @@
                 <div class="tagline">
                     <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
                 </div>
-                <div class="input-row">
-                    <div class="input-container">
-                      <button type="submit" id="search-button" onClick="filterText()">
-                        <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
-                      </button>
-                      <div class="input-box" onclick="sendFocus()">
-                        <input
-                        placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
-                        id="filter-text-val"
-                        onkeypress="handleEnter(event)"
-                        />
-                      </div>
+                <div class="input-column">
+                    <div class="input-row">
+                        <div class="input-container">
+                        <button type="submit" id="search-button" onClick="filterText()">
+                            <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
+                        </button>
+                        <div class="input-box" onclick="sendFocus()">
+                            <input
+                            placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
+                            id="filter-text-val"
+                            onkeypress="handleEnter(event)"
+                            />
+                        </div>
+                        </div>
+                        <div class="dropdowns-inline">
+                        <input list="country-list" id="country-filter" placeholder="Filter by country" oninput="filterText()">
+                        <datalist id="country-list"></datalist>
+                    
+                        <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
+                        <datalist id="category-list"></datalist>
+                        </div>
+                        <!-- Made selection for BERT/SVD into a toggle for cleaner look -->
+                        <div class="toggle-mode">
+                            <!-- <span id="toggle-mode-label">BERT</span> -->
+                            <span>SVD</span>
+                            <label class="switch">
+                            <input type="checkbox" id="search-toggle" onchange="filterText()">
+                            <span class="slider round"></span>
+                            </label>
+                            <span id="toggle-mode-label">BERT</span>
                     </div>
-                    <div class="dropdowns-inline">
-                      <input list="country-list" id="country-filter" placeholder="Filter by country" oninput="filterText()">
-                      <datalist id="country-list"></datalist>
-                  
-                      <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
-                      <datalist id="category-list"></datalist>
+                    <div id="priority-toggle-wrapper" style="display:none;">
+                        <button id="priority-toggle" class="priority-btn">Adjust Priority ⏷ </button>
                     </div>
-                    <!-- Made selection for BERT/SVD into a toggle for cleaner look -->
-                    <div class="toggle-mode">
-                        <!-- <span id="toggle-mode-label">BERT</span> -->
-                        <span>SVD</span>
-                        <label class="switch">
-                          <input type="checkbox" id="search-toggle" onchange="filterText()">
-                          <span class="slider round"></span>
-                        </label>
-                        <span id="toggle-mode-label">BERT</span>
+
+                    <div id="priority-panel" style="display:none;">
+                        <form id="priority-form">
+                          <!-- rows with sliders will be injected here -->
+                          <div id="priority-sliders"></div>
+                      
+                          <div class="priority-actions">
+                            <button type="button" id="priority-reset"  class="priority-btn secondary">Reset</button>
+                            <button type="button" id="priority-apply"  class="priority-btn">Apply</button>
+                          </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div id="answer-box">
@@ -53,6 +70,52 @@
     </div>
 
     <script>
+        const pWrap = document.getElementById("priority-toggle-wrapper");
+        const pBtn = document.getElementById("priority-toggle");
+        const pPanel = document.getElementById("priority-panel");
+        const pBox = document.getElementById("priority-sliders");
+        const pApply = document.getElementById("priority-apply");
+        const pReset = document.getElementById("priority-reset");
+        let qTokens = []; // current query tokens
+        let weights = {}; // map token to weight
+
+        function tokenise(s){ return (s||"").toLowerCase().match(/\b[\w-]+\b/g)||[]; }
+        function buildSliders(){
+            pBox.innerHTML = ""; 
+            weights = {};
+            qTokens.forEach(t => {
+                weights[t] = 1;
+                const row = document.createElement("div");
+                row.className = "token-row";
+                row.innerHTML = `
+                <label>${t}</label>
+                <input type="range" min="0" max="10" value="1">
+                <span class="token-value">1</span>`;
+                const rng = row.querySelector("input"), val = row.querySelector("span");
+                rng.style.setProperty("--fill", (rng.value/rng.max*100)+"%");
+                rng.oninput = e => {
+                    val.textContent = e.target.value;
+                    weights[t] =+ e.target.value;
+                    e.target.style.setProperty("--fill",
+                        (e.target.value/e.target.max*100) + "%");
+                };
+                pBox.appendChild(row);
+            });
+        }
+
+        pBtn.onclick = () => {
+            const open = pPanel.style.display === "block";
+            pPanel.style.display = open ? "none" : "block";
+            pBtn.textContent = open ? "Adjust Priority ⏷ " : "Hide Adjustment ⏶ ";
+        };
+        pReset.onclick = () => {pBox.querySelectorAll("input").forEach(
+            r => {r.value =1 ;
+                  r.dispatchEvent(new Event("input"));
+                 }
+            );
+        };
+        pApply.onclick = () => filterText(true);   // reuse same search
+
         function highlightTags(description, tags) {
             let highlighted = description;
 
@@ -300,7 +363,23 @@
 
         // Set a new debounce timer
         debounceTimeout = setTimeout(() => {
-            const query = document.getElementById("filter-text-val").value;
+            let query = document.getElementById("filter-text-val").value.trim();
+            const reuseWeights = arguments[0] === true; // true only when “Apply” clicked
+
+            // refresh slider panel on every ENTER
+            if (!reuseWeights) {
+                qTokens = [...new Set(tokenise(query))]; // tokens in the box
+                buildSliders(); 
+                pPanel.style.display = "none";
+                pBtn.textContent = "Adjust Priority ⏷";
+            }
+            if (reuseWeights) {
+                // turn weights map into n copies of each token
+                query = Object.entries(weights)
+                              .flatMap(([tok, w]) => Array(w).fill(tok))
+                              .join(" ");
+            }
+
             const container = document.getElementById("answer-box");
             const searchButton = document.getElementById("search-button");
             if (query.length === 0) {
@@ -324,6 +403,8 @@
                 category: category,
                 mode: mode
             });
+            if (reuseWeights) params.append("weights", JSON.stringify(weights));
+
 
             fetch("/episodes?" + params.toString())
                 .then((response) => response.json())
@@ -333,6 +414,17 @@
                     document.querySelectorAll('.tag-highlight').forEach(el => {
                         el.outerHTML = el.innerText;  
                     });
+
+                    if (data && data.length) {
+                        pWrap.style.display = "block";
+                        if (pBox.childElementCount === 0) {       // first time for this query
+                            qTokens = [...new Set(tokenise(query))];
+                            buildSliders();
+                        }
+                    } else {
+                        pWrap.style.display = "none";
+                    }
+
                      // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
                      //TODO: if all the similarity scores are 0 then show no results found
                     if (data?.length == 0) {
@@ -386,6 +478,10 @@
                     });
                 });
         });
+
+
+
+
             
     </script>
 </body>

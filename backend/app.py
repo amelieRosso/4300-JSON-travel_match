@@ -140,13 +140,14 @@ def episodes_search():
         category_filter = data_req.get("category", "").strip().lower()
     else:
         text = request.args.get("title")
-        weights = {}
+        weights_json = request.args.get("weights", "{}")
+        weights = json.loads(weights_json)
         print(type(text))
         print(text)
         country_filter = request.args.get("country", "").strip().lower()
         category_filter = request.args.get("category", "").strip().lower()
         mode = request.args.get("mode", "svd") 
-    return json_search(text, country_filter, category_filter, mode)
+    return json_search(text, country_filter, category_filter, mode, weights)
 
 @app.route("/filters")
 def filters():

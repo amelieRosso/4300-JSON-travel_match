@@ -125,17 +125,9 @@ def transform_query_to_svd(query: str, vectorizer, svd, weights: dict = None):
     # Apply weights based on token frequency 
     weighted_tokens = []
     for token, count in counter.items():
-        weight = weights.get(token, count)  # or custom logic later
+        weight = count  # weight = frequency count => tf = w/|query|
         weighted_tokens.extend([token] * weight)
     # query_str = " ".join(query_tokens)
-
-    # Print to test
-    print(f"\nOriginal Query Tokens: {list(counter.elements())}")
-    print(f"Applied Weights:")
-    for token, count in counter.items():
-        print(f"   Token: '{token}'  ->  Weight: {weights.get(token, count)}")
-    print(f"Weighted Query String: {' '.join(weighted_tokens)}\n")
-
     # Join the weighted tokens back into a string
     query_str = " ".join(weighted_tokens)
     query_tfidf = vectorizer.transform([query_str])
