@@ -44,6 +44,8 @@ def get_place_details(index, filtered_data):
     region = place.get("Region", "N/A")
     review_objects = place.get("reviews", [])
     reviews = [r.get("text", "") for r in review_objects if "text" in r]
+    longitude = place.get("longitude", "N/A")
+    latitude = place.get("latitude", "N/A")
     # code = country_code.get(country, "unknown")
     # print(f"Looking up code for: {country} -> {country_code.get(country)}")
     iso_codes_raw = place.get("iso_code", "")
@@ -60,6 +62,8 @@ def get_place_details(index, filtered_data):
             "Reviews": reviews,
             # "Country_Code": code
             "ISO_Codes": iso_codes,
+            "longitude": longitude,
+            "latitude": latitude,
 
     }
 
@@ -149,7 +153,7 @@ def episodes_search():
         mode = request.args.get("mode", "svd") 
     return json_search(text, country_filter, category_filter, mode, weights)
 
-@app.route("/filters")
+"""@app.route("/filters")
 def filters():
     with open("whc_sites_2021_with_ratings.json") as f:
         data = json.load(f)
@@ -167,7 +171,7 @@ def filters():
     return jsonify({
         "countries": sorted(country_tokens),
         "categories": categories
-    })
+    })"""
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)

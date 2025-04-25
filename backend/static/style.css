@@ -390,7 +390,15 @@ h3, .extra_info {
     font-family: 'TTNorms', sans-serif;
     color: #20a67d;
     width: 220px;
-}  
+  }  
+
+  #map {
+      position: absolute;
+      top: 5%;
+      right: 8%;
+      width: 50%;
+      height: 50%;
+  }
 
 .tag-highlight {
     background-color: #fff3b0;

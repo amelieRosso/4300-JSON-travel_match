@@ -308,7 +308,6 @@ def accumulate_dot_scores(query_word_counts: dict, query: str, reduced_docs, n_s
     for site_id in tokenized_dict_10:
       if site_id not in dot_scores_dict:
             dot_scores_dict[site_id] = 0
-    print(f"dot_scores_dict {dot_scores_dict}")
     return dot_scores_dict
 
 """
