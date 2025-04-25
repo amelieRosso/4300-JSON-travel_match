@@ -33,8 +33,8 @@ with open(code_map_path, 'r', encoding='utf-8') as f:
 app = Flask(__name__)
 CORS(app)
 
-def get_place_details(index):
-    place = data[index]
+def get_place_details(index, filtered_data):
+    place = filtered_data[index]
     name = place.get("Name", "N/A")
     short_description = place.get("short_description", "N/A")
     rating = place.get("rating", "N/A")
@@ -68,53 +68,64 @@ def get_place_details(index):
     }
 
 # Sample search using json with pandas
-def json_search(query, country_filter="", category_filter="", mode="svd"):
-    filtered_docs = []
-    filtered_indices = []
+# TODO: Bert is being slow right now, so want to look into ways to have it go faster (goes faster after first search goes through, so maybe there's some caching taking place??)
+def json_search(query, country_filter="", category_filter="", mode="svd", weights=None):
+    filtered_data = data  # default
 
-    for i, entry in enumerate(data):
-        country = entry.get("Country name", "").lower()
-        category = entry.get("category_long", "").lower()
+    if weights is None:
+        weights = {}
 
-        if (not country_filter or country_filter.lower() in country) and (not category_filter or category_filter.lower() in category):
-            full_text = entry.get("Name", "") + " " + entry.get("short_description", "")
-            reviews = entry.get("reviews", [])
-            full_text += " " + " ".join(r.get("text", "") for r in reviews)
-            filtered_docs.append(full_text)
-            filtered_indices.append(i)
+    if country_filter:
+        filtered_data = [entry for entry in filtered_data if country_filter.lower() in entry.get("Country name", "").lower()]
 
-    if not filtered_indices:
-        return []
+    if category_filter:
+        filtered_data = [entry for entry in filtered_data if category_filter.lower() in entry.get("category_long", "").lower()]
 
     result = []
 
     if mode == "bert":
-        scores = similarity.bert_search(query, filtered_docs)
+        scores = similarity.bert_search(query, filtered_data)
+
+        if not scores:
+            print(f"[INFO] No BERT results for query '{query}' with filters: country={country_filter}, category={category_filter}")
+            return [] # If there are no BERT results, skip the process below to avoid the IndexError
 
         for score, local_idx in scores:
-            global_idx = filtered_indices[local_idx]
-            place = get_place_details(global_idx)
-            tags = similarity.extract_bert_tags(query, similarity.docs[global_idx])
-            place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
-            place["Tags"] = tags
-            place["id"] = data[global_idx]["id"]
+            # if local_idx >= len(filtered_data):
+            #     print(f"[WARNING] Skipping out-of-range local_idx={local_idx} for filtered_indices length={len(filtered_data)}")
+            #     continue # This is a temporary fix to avoid getting the IndexError. I don't love just skipping over indices > length of filtered_indices, but it's helping the error from throwing
+
+            place = get_place_details(local_idx, filtered_data)
+            # tags = similarity.extract_bert_tags(query, filtered_docs[local_idx])
+            place["Similarity_Score"] = str(round(score * 100, 1))
+            # place["Tags"] = tags
+            place["id"] = filtered_data[local_idx]["id"]
             result.append(place)
-          
 
     else:  # default: SVD
-        reduced_query, _ = similarity.transform_query_to_svd(query)
-        top_10 = similarity.index_search(query, subset_indices=set(filtered_indices))
+        try:
+            filtered_reduced_docs, vectorizer, svd = similarity.get_reduced_docs(filtered_data)
+        except ValueError as e:
+            print(f"[ERROR] {e}")
+            return []
+        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd, weights)
+        top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
 
         for score_cos, idx, score_svd in top_10:
-            place = get_place_details(idx)
-            reduced_docs = similarity.reduced_docs[idx]
-            tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd, similarity.vectorizer)
-            score = (score_cos + score_svd) / 2
-            place["Similarity_Score"] = str(round(score * 100, 1)) + "%"
+            place = get_place_details(idx, filtered_data)
+            reduced_docs = filtered_reduced_docs[idx]
+            score = (0.2*score_cos) + (0.8*score_svd) 
+            tags = similarity.extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, similarity.docs[idx])
+            # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
+            # This actually happens with a lot of queries. Might make more sense to just order by similarity score
+            # sometimes this is Nan??
+            # For Nan, what if we just show no similarity score for now before debugging why
+            place["Similarity_Score"] = round(score * 100, 1)
             place["Tags"] = tags
-            place["id"] = data[idx]["id"]
+            place["id"] = filtered_data[idx]["id"]
             result.append(place)
-
+    # reshuffle based on score
+    result = sorted(result, key = lambda place: place['Similarity_Score'], reverse=True)
     return result
 
 
@@ -124,13 +135,23 @@ def home():
 
 @app.route("/episodes")
 def episodes_search():
-    text = request.args.get("title")
-    print(type(text))
-    print(text)
-    country_filter = request.args.get("country", "").strip().lower()
-    category_filter = request.args.get("category", "").strip().lower()
-    mode = request.args.get("mode", "svd") 
-    return json_search(text, country_filter, category_filter, mode)
+    if request.method == "POST":
+        data_req = request.get_json()
+        text = data_req.get("query")
+        weights = data_req.get("weights", {})  # Default token weight to empty dict
+        mode = data_req.get("mode", "svd")
+        country_filter = data_req.get("country", "").strip().lower()
+        category_filter = data_req.get("category", "").strip().lower()
+    else:
+        text = request.args.get("title")
+        weights_json = request.args.get("weights", "{}")
+        weights = json.loads(weights_json)
+        print(type(text))
+        print(text)
+        country_filter = request.args.get("country", "").strip().lower()
+        category_filter = request.args.get("category", "").strip().lower()
+        mode = request.args.get("mode", "svd") 
+    return json_search(text, country_filter, category_filter, mode, weights)
 
 """@app.route("/filters")
 def filters():
