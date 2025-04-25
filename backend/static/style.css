@@ -392,6 +392,15 @@ h3, .extra_info {
     width: 220px;
 }  
 
+#map {
+    position: absolute;
+    float: right;
+    top: 5%;
+    right: 5%;
+    width: 50%;
+    height: 50%;
+}
+
 .tag-highlight {
     background-color: #fff3b0;
     padding: 2px 4px;

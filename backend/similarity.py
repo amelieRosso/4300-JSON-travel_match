@@ -5,7 +5,6 @@ import json
 import numpy as np
 import nltk
 nltk.data.path
-from nltk.tokenize import word_tokenize, TreebankWordTokenizer
 from nltk.corpus import stopwords
 from typing import List, Tuple
 from sklearn.metrics.pairwise import cosine_similarity
@@ -37,7 +36,6 @@ def preprocess_description(text:str) -> np.ndarray:
     #preprocessing steps followed from: https://spotintelligence.com/2022/12/21/nltk-preprocessing-pipeline/
     text = text.removeprefix("<p>").removesuffix("</p>")
     text = text.lower()
-    #words_list = re.findall("[a-z]+", lowercase_text)
     
 
     # remove URLs in the text
@@ -51,7 +49,7 @@ def preprocess_description(text:str) -> np.ndarray:
     stop_words = set(stopwords.words("english"))
 
     custom_stopwords = {
-        "site", "location", "place", "area", "visit",  
+        "site", "location", "place", "area", "go", "visit",  
     }
 
     
@@ -206,7 +204,7 @@ Outputs: a dict of site_id to tokenized descriptions.
 # create dict of doc_id to tokenized description
 def create_tokenized_dict_10(query: str, reduced_docs, filtered_data, vectorizer, svd) -> dict:
     
-    reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer, svd)
+    reduced_query, _ = transform_query_to_svd(query, vectorizer, svd)
     similarity_score_to_site_index_tuple = svd_index_search(reduced_query, reduced_docs)
 
     site_info_dict = {}

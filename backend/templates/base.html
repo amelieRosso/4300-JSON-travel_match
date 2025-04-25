@@ -6,9 +6,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 <!-- Handle the mismatch between tag and article singular and plural -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pluralize/8.0.0/pluralize.min.js"></script> 
+
+<!-- AMELIE MAP CHANGES -->
+<link
+rel="stylesheet"
+href="https://js.arcgis.com/4.32/esri/themes/light/main.css"
+/>
+<script src="https://js.arcgis.com/4.32/"></script>
+ 
 <body>
     <div class="full-body-container">
-        <!-- <img src="{{ url_for('static', filename='images/title_background.png') }}" /> -->
         <div class="background">
             <div class="top-text">
                 <h1> World Heritage Search </h1>
@@ -62,6 +69,7 @@
                         </form>
                     </div>
                 </div>
+                <div id="map"> </div>
             </div>
             <div id="answer-box">
             </div>
@@ -69,7 +77,82 @@
         
     </div>
 
+
     <script>
+
+
+
+let view;
+ 
+       function createMap() {
+         require(["esri/Map", "esri/views/SceneView"], (Map, SceneView) => {
+           const map = new Map({
+             basemap: "topo-3d",
+             zoom: 10,
+           });
+ 
+           view = new SceneView({
+             container: "map",
+             map: map,
+           });
+         });
+       }
+ 
+       function mapPoint(lat_long_list) {
+         view.graphics.removeAll()
+         pointGraphics = [];
+         lat_long_list?.forEach((site) => {
+             const longitude = site[0]
+             const latitude = site[1]
+           require(["esri/Graphic"], (Graphic) => {
+             console.log("longitude" + longitude);
+             console.log("latitude" + latitude);
+ 
+             const point = {
+               type: "point",
+               longitude: longitude,
+               latitude: latitude,
+             };
+ 
+             const markerSymbol = {
+               type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+               url: "http://static.arcgis.com/images/Symbols/Basic/RedStickpin.png",
+               width: "32px",
+               height: "32px",
+             };
+ 
+             // Create a graphic and add the geometry and symbol to it
+             const pointGraphic = new Graphic({
+               geometry: point,
+               symbol: markerSymbol,
+             });
+ 
+             pointGraphics.push(pointGraphic);
+           });
+           view.graphics.addMany(pointGraphics);
+ 
+           if (lat_long_list.length > 0) {
+             console.log("hi");
+             zoomToPoint(lat_long_list[0][0], lat_long_list[0][1])
+           }
+ 
+         });
+       }
+ 
+       function zoomToPoint(longitude, latitude) {
+         view.goTo({
+             center: [longitude, latitude],
+             zoom: 5
+         });
+         //view.when(() => view.goTo(point));
+       }
+ 
+       createMap();
+ 
+
+
+// AMELIE MAP CHANGES -------------
+
         const pWrap = document.getElementById("priority-toggle-wrapper");
         const pBtn = document.getElementById("priority-toggle");
         const pPanel = document.getElementById("priority-panel");
@@ -252,9 +335,6 @@
             // Detect if BERT is active
             const isBert = document.getElementById("search-toggle")?.checked;
 
-            // const tagHtml = tags && tags.length > 0
-            // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
-            // : `<span>No tags available</span>`;
             const tagHtml = isBert 
             ? ``
             : (tags && tags.length > 0
@@ -281,8 +361,6 @@
 
 
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
-            // const previewIndex = Math.min(description.length, 200);
-            // const descriptionPreview = description.slice(0, previewIndex);
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = description;
             const fullText = tempDiv.innerText || tempDiv.textContent || "";
@@ -295,9 +373,6 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
-            // const highlightedPreview = highlightTags(previewWords, tags);
-            // const highlightedMore = highlightTags(remainingWords, tags);
-            // const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -425,8 +500,6 @@
                         pWrap.style.display = "none";
                     }
 
-                     // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
-                     //TODO: if all the similarity scores are 0 then show no results found
                     if (data?.length == 0) {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
@@ -449,6 +522,14 @@
                         tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
                         container.appendChild(tempDiv);
                     });
+
+                    let lat_long_list = [];
+                     data?.forEach((row) => {
+                         lat_long_list.push([row["longitude"], row["latitude"]]);
+                         console.log(row["Name"])
+                     });
+ 
+                     mapPoint(lat_long_list);
                 })
                 .finally(() => {
                     // Restore the submit button after fetch completes
