@@ -400,6 +400,23 @@ h3, .extra_info {
       height: 50%;
   }
 
+#map {
+    position: absolute;
+    float: right;
+    top: 5%;
+    right: 5%;
+    width: 50%;
+    height: 50%;
+    max-width: 600px;
+}
+@media(max-width: 1200px) {
+    #map {
+        max-width: 500px;
+        min-height: 250px;
+        aspect-ratio: 1/1;
+    }
+}
+
 .tag-highlight {
     background-color: #fff3b0;
     padding: 2px 4px;

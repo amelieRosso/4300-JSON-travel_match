@@ -1,14 +1,8 @@
 import json
 import os
-import re
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
-from typing import List, Tuple, Dict
 import json
-import math
-import pandas as pd
-import numpy as np
 import similarity
 
 # ROOT_PATH for linking with all your files. 
@@ -62,8 +56,8 @@ def get_place_details(index, filtered_data):
             "Reviews": reviews,
             # "Country_Code": code
             "ISO_Codes": iso_codes,
-            "longitude": longitude,
-            "latitude": latitude,
+             "longitude": longitude,
+             "latitude": latitude,
 
     }
 

@@ -6,45 +6,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
 <!-- Handle the mismatch between tag and article singular and plural -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pluralize/8.0.0/pluralize.min.js"></script> 
+
+<!-- AMELIE MAP CHANGES -->
+<link
+rel="stylesheet"
+href="https://js.arcgis.com/4.32/esri/themes/light/main.css"
+/>
+<script src="https://js.arcgis.com/4.32/"></script>
+ 
 <body>
     <div class="full-body-container">
-        <!-- <img src="{{ url_for('static', filename='images/title_background.png') }}" /> -->
         <div class="background">
             <div class="top-text">
                 <h1> World Heritage Search </h1>
                 <div class="tagline">
                     <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
                 </div>
-                <div class="input-row">
-                    <div class="input-container">
-                      <button type="submit" id="search-button" onClick="filterText()">
-                        <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
-                      </button>
-                      <div class="input-box" onclick="sendFocus()">
-                        <input
-                        placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
-                        id="filter-text-val"
-                        onkeypress="handleEnter(event)"
-                        />
-                      </div>
+                <div class="input-column">
+                    <div class="input-row">
+                        <div class="input-container">
+                        <button type="submit" id="search-button" onClick="filterText()">
+                            <img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>
+                        </button>
+                        <div class="input-box" onclick="sendFocus()">
+                            <input
+                            placeholder="Search for your next UNESCO heritage sites... (e.g. sea, mountain, historic)"
+                            id="filter-text-val"
+                            onkeypress="handleEnter(event)"
+                            />
+                        </div>
+                        </div>
+                        <div class="dropdowns-inline">
+                        <input list="country-list" id="country-filter" placeholder="Filter by country" oninput="filterText()">
+                        <datalist id="country-list"></datalist>
+                    
+                        <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
+                        <datalist id="category-list"></datalist>
+                        </div>
+                        <!-- Made selection for BERT/SVD into a toggle for cleaner look -->
+                        <div class="toggle-mode">
+                            <!-- <span id="toggle-mode-label">BERT</span> -->
+                            <span>SVD</span>
+                            <label class="switch">
+                            <input type="checkbox" id="search-toggle" onchange="filterText()">
+                            <span class="slider round"></span>
+                            </label>
+                            <span id="toggle-mode-label">BERT</span>
                     </div>
-                    <div class="dropdowns-inline">
-                      <input list="country-list" id="country-filter" placeholder="Filter by country" oninput="filterText()">
-                      <datalist id="country-list"></datalist>
-                  
-                      <input list="category-list" id="category-filter" placeholder="Filter by category" oninput="filterText()">
-                      <datalist id="category-list"></datalist>
+                    <div id="priority-toggle-wrapper" style="display:none;">
+                        <button id="priority-toggle" class="priority-btn">Adjust Priority ⏷ </button>
                     </div>
-                    <!-- Made selection for BERT/SVD into a toggle for cleaner look -->
-                    <div class="toggle-mode">
-                        <!-- <span id="toggle-mode-label">BERT</span> -->
-                        <span>SVD</span>
-                        <label class="switch">
-                          <input type="checkbox" id="search-toggle" onchange="filterText()">
-                          <span class="slider round"></span>
-                        </label>
-                        <span id="toggle-mode-label">BERT</span>
+
+                    <div id="priority-panel" style="display:none;">
+                        <form id="priority-form">
+                          <!-- rows with sliders will be injected here -->
+                          <div id="priority-sliders"></div>
+                      
+                          <div class="priority-actions">
+                            <button type="button" id="priority-reset"  class="priority-btn secondary">Reset</button>
+                            <button type="button" id="priority-apply"  class="priority-btn">Apply</button>
+                          </div>
+                        </form>
+                    </div>
                 </div>
+                <div id="map"> </div>
             </div>
             <div id="answer-box">
             </div>
@@ -52,7 +77,128 @@
         
     </div>
 
+
     <script>
+
+
+
+let view;
+ 
+       function createMap() {
+         require(["esri/Map", "esri/views/SceneView"], (Map, SceneView) => {
+           const map = new Map({
+             basemap: "topo-3d",
+             zoom: 10,
+           });
+ 
+           view = new SceneView({
+             container: "map",
+             map: map,
+           });
+         });
+       }
+ 
+       function mapPoint(lat_long_list) {
+         view.graphics.removeAll()
+         pointGraphics = [];
+         lat_long_list?.forEach((site) => {
+             const longitude = site[0]
+             const latitude = site[1]
+           require(["esri/Graphic"], (Graphic) => {
+             console.log("longitude" + longitude);
+             console.log("latitude" + latitude);
+ 
+             const point = {
+               type: "point",
+               longitude: longitude,
+               latitude: latitude,
+             };
+ 
+             const markerSymbol = {
+               type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+               url: "http://static.arcgis.com/images/Symbols/Basic/RedStickpin.png",
+               width: "32px",
+               height: "32px",
+             };
+ 
+             // Create a graphic and add the geometry and symbol to it
+             const pointGraphic = new Graphic({
+               geometry: point,
+               symbol: markerSymbol,
+             });
+ 
+             pointGraphics.push(pointGraphic);
+           });
+           view.graphics.addMany(pointGraphics);
+ 
+           if (lat_long_list.length > 0) {
+             console.log("hi");
+             zoomToPoint(lat_long_list[0][0], lat_long_list[0][1])
+           }
+ 
+         });
+       }
+ 
+       function zoomToPoint(longitude, latitude) {
+         view.goTo({
+             center: [longitude, latitude],
+             zoom: 5
+         });
+         //view.when(() => view.goTo(point));
+       }
+ 
+       createMap();
+ 
+
+
+// AMELIE MAP CHANGES -------------
+
+        const pWrap = document.getElementById("priority-toggle-wrapper");
+        const pBtn = document.getElementById("priority-toggle");
+        const pPanel = document.getElementById("priority-panel");
+        const pBox = document.getElementById("priority-sliders");
+        const pApply = document.getElementById("priority-apply");
+        const pReset = document.getElementById("priority-reset");
+        let qTokens = []; // current query tokens
+        let weights = {}; // map token to weight
+
+        function tokenise(s){ return (s||"").toLowerCase().match(/\b[\w-]+\b/g)||[]; }
+        function buildSliders(){
+            pBox.innerHTML = ""; 
+            weights = {};
+            qTokens.forEach(t => {
+                weights[t] = 1;
+                const row = document.createElement("div");
+                row.className = "token-row";
+                row.innerHTML = `
+                <label>${t}</label>
+                <input type="range" min="0" max="10" value="1">
+                <span class="token-value">1</span>`;
+                const rng = row.querySelector("input"), val = row.querySelector("span");
+                rng.style.setProperty("--fill", (rng.value/rng.max*100)+"%");
+                rng.oninput = e => {
+                    val.textContent = e.target.value;
+                    weights[t] =+ e.target.value;
+                    e.target.style.setProperty("--fill",
+                        (e.target.value/e.target.max*100) + "%");
+                };
+                pBox.appendChild(row);
+            });
+        }
+
+        pBtn.onclick = () => {
+            const open = pPanel.style.display === "block";
+            pPanel.style.display = open ? "none" : "block";
+            pBtn.textContent = open ? "Adjust Priority ⏷ " : "Hide Adjustment ⏶ ";
+        };
+        pReset.onclick = () => {pBox.querySelectorAll("input").forEach(
+            r => {r.value =1 ;
+                  r.dispatchEvent(new Event("input"));
+                 }
+            );
+        };
+        pApply.onclick = () => filterText(true);   // reuse same search
+
         function highlightTags(description, tags) {
             let highlighted = description;
 
@@ -189,9 +335,6 @@
             // Detect if BERT is active
             const isBert = document.getElementById("search-toggle")?.checked;
 
-            // const tagHtml = tags && tags.length > 0
-            // ? tags.map(tag => `<span class="tag">#${tag}</span>`).join(" ")
-            // : `<span>No tags available</span>`;
             const tagHtml = isBert 
             ? ``
             : (tags && tags.length > 0
@@ -218,8 +361,6 @@
 
 
             const filteredReviews = (reviews || []).filter(r => r && r.trim().length > 0);
-            // const previewIndex = Math.min(description.length, 200);
-            // const descriptionPreview = description.slice(0, previewIndex);
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = description;
             const fullText = tempDiv.innerText || tempDiv.textContent || "";
@@ -232,9 +373,6 @@
             ? `<ol>${filteredReviews.map(r => `<li>${r}</li>`).join("")}</ol>`
             : `<span>No reviews yet.</span>`;
             
-            // const highlightedPreview = highlightTags(previewWords, tags);
-            // const highlightedMore = highlightTags(remainingWords, tags);
-            // const highlightedReviews = highlightTags(reviewHtml,tags);
             return `
                 <div class='imageContainer'>
                     <img class="siteImage" src="/static/images/${id}.jpg" alt="Site image for ${name}"/>
@@ -333,8 +471,17 @@
                     document.querySelectorAll('.tag-highlight').forEach(el => {
                         el.outerHTML = el.innerText;  
                     });
-                     // This issue doesn't really happen, the console always shows a length of 10 even for unexpected searches
-                     //TODO: if all the similarity scores are 0 then show no results found
+
+                    if (data && data.length) {
+                        pWrap.style.display = "block";
+                        if (pBox.childElementCount === 0) {       // first time for this query
+                            qTokens = [...new Set(tokenise(query))];
+                            buildSliders();
+                        }
+                    } else {
+                        pWrap.style.display = "none";
+                    }
+
                     if (data?.length == 0) {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
@@ -357,6 +504,14 @@
                         tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
                         container.appendChild(tempDiv);
                     });
+
+                    let lat_long_list = [];
+                     data?.forEach((row) => {
+                         lat_long_list.push([row["longitude"], row["latitude"]]);
+                         console.log(row["Name"])
+                     });
+ 
+                     mapPoint(lat_long_list);
                 })
                 .finally(() => {
                     // Restore the submit button after fetch completes
