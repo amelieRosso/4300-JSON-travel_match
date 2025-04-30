@@ -89,11 +89,51 @@ def create_tokenized_dict(filtered_data: List[dict]) -> dict:
       tokenized_dict[site_id] = np.concatenate([tokenize_name, tokenize_description, tokenize_reviews])
     return tokenized_dict
 
-svd = TruncatedSVD(n_components=200)
-vectorizer = TfidfVectorizer()
+# svd = TruncatedSVD(n_components=200)
+# vectorizer = TfidfVectorizer()
 
+# tokenized_dict = create_tokenized_dict(data)
+# docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+
+#create reduced_docs (global var)
 tokenized_dict = create_tokenized_dict(data)
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+vectorizer = TfidfVectorizer()
+docs_tfidf = vectorizer.fit_transform(docs)
+svd = TruncatedSVD(n_components=200)
+reduced_docs = svd.fit_transform(docs_tfidf)
+
+
+def extract_svd_dimension_terms():
+  
+  terms = vectorizer.get_feature_names_out()
+  
+  # Create the output text file
+  output_file = "svd_dimension_terms.txt"
+  
+  with open(output_file, 'w', encoding='utf-8') as f:
+      for dim_idx in range(200):
+          # Get the component vector for this dimension
+          component = svd.components_[dim_idx]
+          
+          # Get the indices of all terms sorted by importance
+          sorted_indices = component.argsort()[::-1][:100]
+          
+          # Write the dimension header
+          f.write(f"Dimension {dim_idx}:\n")
+          
+          list=[]
+          for idx in sorted_indices:
+              term = terms[idx]
+              list.append(term)
+          f.write(f"{list}")
+          
+          f.write("\n")
+  
+  print(f"Dimension terms saved to {os.path.abspath(output_file)}")
+  return output_file
+
+extract_svd_dimension_terms()
 
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
@@ -172,16 +212,16 @@ def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
     dim_scores = reduced_query.flatten() * reduced_doc.flatten()
     top_dims = dim_scores.argsort()[::-1]  
 
-    terms = vectorizer.get_feature_names_out()
-    doc_text_lower = preprocess_description(doc_text)
+    # terms = vectorizer.get_feature_names_out()
+    # doc_text_lower = preprocess_description(doc_text)
 
     tags = []
-    seen_roots = set()
+    # seen_roots = set()
 
     for dim in top_dims:
         if len(tags) >= 5:
             break
-
+        tags.append(svd_dimension_terms.txt [dim])
         # Get terms associated with this dimension
         component = svd.components_[dim]
         top_term_indices = component.argsort()[::-1]
