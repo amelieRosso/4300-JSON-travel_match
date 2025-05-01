@@ -172,7 +172,7 @@ h1{
 }
 .answerContainer:hover {
     cursor:grab;
-    transform:scale(1.01);
+    transform:translateY(-10px);
     
   }
 

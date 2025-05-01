@@ -110,12 +110,11 @@ def json_search(query, country_filter="", category_filter="", mode="svd", weight
             reduced_docs = filtered_reduced_docs[idx]
             score = (0.2*score_cos) + (0.8*score_svd) 
             tags = similarity.extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, similarity.docs[idx])
-            # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
-            # This actually happens with a lot of queries. Might make more sense to just order by similarity score
             # sometimes this is Nan??
             # For Nan, what if we just show no similarity score for now before debugging why
             place["Similarity_Score"] = round(score * 100, 1)
-            place["Tags"] = [t[0] for t in tags]
+            #place["Tags"] = [t[0] for t in tags]
+            place["Tags"] = tags
             place["id"] = filtered_data[idx]["id"]
             result.append(place)
     # reshuffle based on score

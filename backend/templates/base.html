@@ -105,8 +105,8 @@ let view;
              const longitude = site[0]
              const latitude = site[1]
            require(["esri/Graphic"], (Graphic) => {
-             console.log("longitude" + longitude);
-             console.log("latitude" + latitude);
+            //  console.log("longitude" + longitude);
+            //  console.log("latitude" + latitude);
  
              const point = {
                type: "point",
@@ -132,7 +132,6 @@ let view;
            view.graphics.addMany(pointGraphics);
  
            if (lat_long_list.length > 0) {
-             console.log("hi");
              zoomToPoint(lat_long_list[0][0], lat_long_list[0][1])
            }
  
@@ -199,29 +198,29 @@ let view;
         };
         pApply.onclick = () => filterText(true);   // reuse same search
 
-        function highlightTags(description, tags) {
-            let highlighted = description;
+        // function highlightTags(description, tags) {
+        //     let highlighted = description;
 
-            tags.forEach(tag => {
-                // Escape regex special characters in tag
-                const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        //     tags.forEach(tag => {
+        //         // Escape regex special characters in tag
+        //         const safeTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-                // For compound tags (e.g., "mountain range"), split by space or hyphen
-                // Then allow optional 's' on each part and optional space/hyphen between
-                const pattern = safeTag
-                    .split(/\s+/) // split multi-word tags
-                    .map(part => `${part}s?`) // allow optional plural for each part
-                    .join('[\\s-]*'); // allow optional space or hyphen between parts
+        //         // For compound tags (e.g., "mountain range"), split by space or hyphen
+        //         // Then allow optional 's' on each part and optional space/hyphen between
+        //         const pattern = safeTag
+        //             .split(/\s+/) // split multi-word tags
+        //             .map(part => `${part}s?`) // allow optional plural for each part
+        //             .join('[\\s-]*'); // allow optional space or hyphen between parts
 
-                const regex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+        //         const regex = new RegExp(`\\b(${pattern})\\b`, 'gi');
 
-                highlighted = highlighted.replace(regex, match =>
-                    `<mark class="tag-highlight">${match}</mark>`
-                );
-            });
+        //         highlighted = highlighted.replace(regex, match =>
+        //             `<mark class="tag-highlight">${match}</mark>`
+        //         );
+        //     });
 
-            return highlighted;
-        }
+        //     return highlighted;
+        // }
 
         let debounceTimeout;
 
@@ -236,7 +235,7 @@ let view;
             const dots = document.getElementById(dotsId);
             const moreText = document.getElementById(moreId);
             const btnText = document.getElementById(btnId);
-            if (dots.style.display === "none") {
+            if (dots?.style.display === "none") {
                 dots.style.display = "inline";
                 btnText.innerHTML = textOpen; 
                 moreText.style.display = "none";
@@ -248,20 +247,26 @@ let view;
         }
 
         // js code for toggle highlight on tag button
-        function toggleHighlight(cardId, tag) {
+        function toggleHighlight(cardId, topWords) {
             const card = document.getElementById(`card-${cardId}`);
             const descriptionDiv = card.querySelector('.short_description');
             const reviewSpan = card.querySelector(`#review-more-${cardId}`);
             const button = event.target;
             button.classList.toggle("active-tag");
+            topWordsList = topWords.split(',');
+            console.log(topWords);
 
             const isActive = button.classList.contains("active-tag");
             if (isActive) {
-                applyHighlight(descriptionDiv, tag);
-                applyHighlight(reviewSpan, tag);
+                topWordsList.map((word) => {
+                    applyHighlight(descriptionDiv, word);
+                    applyHighlight(reviewSpan, word);
+                })
             } else {
-                removeHighlight(descriptionDiv, tag);
-                removeHighlight(reviewSpan, tag);
+                topWordsList.map((word) => {
+                    removeHighlight(descriptionDiv, word);
+                    removeHighlight(reviewSpan, word);
+                })
             }
 
             const anyActive = card.querySelectorAll('.tag-button.active-tag').length > 0;
@@ -331,14 +336,14 @@ let view;
         }
 
         // All the html and js logic for the information in the answer cards.
+        // CHANGE- tags holds tuples of (dimLabel, top5wordsList)
         function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
             // Detect if BERT is active
             const isBert = document.getElementById("search-toggle")?.checked;
-
             const tagHtml = isBert 
             ? ``
             : (tags && tags.length > 0
-                ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag}')">#${tag}</button>`).join(" ")
+                ? tags.map(tag => `<button class="tag-button" onclick="toggleHighlight('${id}', '${tag[1]}')">#${tag[0]}</button>`).join(" ")
                 : `<span>No tags available</span>`);
 
             const flagsHtml = (isoCodes || []).map(code => 

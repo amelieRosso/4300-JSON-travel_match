@@ -1,9 +1,9 @@
 # Used LLM for assistance to generate meanings for each dimension.
 labels = [
-    "city",
+    "urban",
     "nature",
     "historic",
-    "architecture",
+    "medieval",
     "marine",
     "castle",
     "temple",
@@ -15,13 +15,13 @@ labels = [
     "industry",
     "hiking",
     "religion",
-    "underground",
+    "quiet places",
     "mosaic",
     "islamic",
-    "fossils",
+    "old",
     "burial",
     "military",
-    "river",
+    "water",
     "volcano",
     "carving",
     "bridge",
@@ -150,28 +150,28 @@ labels = [
     "colonial plateau",     # 146
     "architectural styles", # 147
     "rail transport",       # 148
-    "African heritage",     # 149
-    "gates & light",        # 150
-    "basilica sites",       # 151
-    "opera culture",        # 152
+    "stone",     # 149
+    "aqueduct",        # 150
+    "small",       # 151
+    "Spain",        # 152
     "art carvings",         # 153
     "natural groups",       # 154
     "neolithic view",       # 155
     "pueblo zone",          # 156
     "endemic culture",      # 157
-    "university water",     # 158
+    "university",     # 158
     "prehistoric site",     # 159
     "largest colony",       # 160
-    "networked heritage",   # 161
-    "romanesque Asia",      # 162
-    "saint structures",     # 163
+    "heritage",   # 161
+    "old",      # 162
+    "art",     # 163
     "salt region",          # 164
-    "fjord civilization",   # 165
+    "ancient",   # 165
     "archaeological sites", # 166
     "medieval influence",   # 167
     "terraced hill",        # 168
     "wild coast",           # 169
-    "windmill camp",        # 170
+    "religious",        # 170
     "agave path",           # 171
     "wooden architecture",  # 172
     "historical port",      # 173
