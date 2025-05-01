@@ -1,0 +1,23 @@
+# Auto-generated SVD dimension labels
+labels = [
+    ["park", "beautiful", "city", "history", "see"],
+    ["park", "national", "specie", "lake", "forest"],
+    ["island", "town", "city", "century", "em"],
+    ["church", "cathedral", "park", "castle", "monastery"],
+    ["island", "cave", "tour", "museum", "marine"],
+    ["castle", "tour", "town", "palace", "garden"],
+    ["island", "temple", "castle", "palace", "garden"],
+    ["castle", "monastery", "mountain", "church", "landscape"],
+    ["garden", "palace", "em", "royal", "monastery"],
+    ["cave", "cathedral", "castle", "em", "rock"],
+    ["castle", "tomb", "palace", "monastery", "church"],
+    ["cave", "park", "town", "temple", "national"],
+    ["em", "temple", "mine", "tour", "castle"],
+    ["em", "park", "island", "roman", "cave"],
+    ["monastery", "tour", "mosque", "cave", "mine"],
+    ["lake", "temple", "park", "palace", "island"],
+    ["cave", "roman", "church", "specie", "forest"],
+    ["lake", "fort", "mosque", "cave", "roman"],
+    ["lake", "bird", "monastery", "rock", "fossil"],
+    ["mosque", "tomb", "church", "museum", "bus"],
+]

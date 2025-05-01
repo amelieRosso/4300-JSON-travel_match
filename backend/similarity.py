@@ -14,7 +14,10 @@ from sentence_transformers import SentenceTransformer
 from collections import Counter
 import svd_dimensions
 import top5_terms
-
+# from scipy.sparse.linalg import svds
+# import matplotlib
+# import numpy as np
+# import matplotlib.pyplot as plt
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -103,7 +106,7 @@ tokenized_dict = create_tokenized_dict(data)
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
 vectorizer = TfidfVectorizer()
 docs_tfidf = vectorizer.fit_transform(docs)
-svd = TruncatedSVD(n_components=200)
+svd = TruncatedSVD(n_components=75)
 reduced_docs = svd.fit_transform(docs_tfidf)
 
 
@@ -112,10 +115,10 @@ def extract_svd_dimension_terms():
   terms = vectorizer.get_feature_names_out()
   
   # Create the output text file
-  output_file = "svd_dimension_terms.txt"
+  output_file = "svd_75_dimension_terms.txt"
   
   with open(output_file, 'w', encoding='utf-8') as f:
-      for dim_idx in range(200):
+      for dim_idx in range(75):
           # Get the component vector for this dimension
           component = svd.components_[dim_idx]
           
@@ -136,9 +139,9 @@ def extract_svd_dimension_terms():
   print(f"Dimension terms saved to {os.path.abspath(output_file)}")
   return output_file
 
-# extract_svd_dimension_terms()
+extract_svd_dimension_terms()
 
-def extract_top5terms(vectorizer, svd, output_path="top5_terms.py"):
+def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
     terms = vectorizer.get_feature_names_out()
 
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -153,7 +156,7 @@ def extract_top5terms(vectorizer, svd, output_path="top5_terms.py"):
 
     print(f"Saved Python labels module to {os.path.abspath(output_path)}")
     
-# extract_top5terms(vectorizer, svd)
+extract_top5terms(vectorizer, svd)
 
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
@@ -172,6 +175,14 @@ def get_reduced_docs(filtered_data):
 #     top_indices = term_topic_matrix[dim].argsort()[::-1][:10]  
 #     top_words = [terms[i] for i in top_indices]
 #     print(f"Dimension {dim + 1}: {top_words}")
+
+
+#Deciding # components by ploting graph
+# u, s, v_trans = svds(docs_tfidf, k=200)
+# plt.plot(s[::-1])
+# plt.xlabel("Singular value number")
+# plt.ylabel("Singular value")
+# plt.savefig("graph.jpg")
 
 
 def transform_query_to_svd(query: str, vectorizer, svd, weights: dict = None):
