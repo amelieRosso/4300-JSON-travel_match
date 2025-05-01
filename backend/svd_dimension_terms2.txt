@@ -1,0 +1,400 @@
+Dimension 0:
+['park', 'beautiful', 'city', 'history', 'see', 'one', 'century', 'tour', 'well', 'great', 'time', 'church', 'view', 'also', 'building']
+Dimension 1:
+['park', 'national', 'specie', 'lake', 'forest', 'mountain', 'bird', 'island', 'wildlife', 'animal', 'nature', 'hike', 'trail', 'natural', 'landscape']
+Dimension 2:
+['island', 'town', 'city', 'century', 'em', 'specie', 'historic', 'church', 'old', 'centre', 'urban', 'de', 'colonial', 'forest', 'sea']
+Dimension 3:
+['church', 'cathedral', 'park', 'castle', 'monastery', 'gothic', 'beautiful', 'inside', 'tour', 'st', 'national', 'garden', 'architecture', 'fresco', 'abbey']
+Dimension 4:
+['island', 'cave', 'tour', 'museum', 'marine', 'rock', 'guide', 'church', 'monastery', 'beach', 'sea', 'human', 'mine', 'reef', 'ocean']
+Dimension 5:
+['castle', 'tour', 'town', 'palace', 'city', 'garden', 'museum', 'mine', 'fort', 'historic', 'room', 'english', 'park', 'guide', 'ruin']
+Dimension 6:
+['island', 'temple', 'castle', 'palace', 'garden', 'cathedral', 'view', 'marine', 'sea', 'architecture', 'fort', 'specie', 'beautiful', 'beach', 'bird']
+Dimension 7:
+['castle', 'monastery', 'mountain', 'church', 'landscape', 'lake', 'em', 'temple', 'view', 'village', 'valley', 'mount', 'peak', 'town', 'top']
+Dimension 8:
+['garden', 'palace', 'em', 'royal', 'monastery', 'lake', 'tour', 'landscape', 'building', 'fountain', 'house', 'villa', 'room', 'cultural', 'residence']
+Dimension 9:
+['cave', 'cathedral', 'castle', 'em', 'rock', 'palace', 'gothic', 'art', 'landscape', 'garden', 'human', 'cultural', 'stained', 'glass', 'painting']
+Dimension 10:
+['castle', 'tomb', 'palace', 'church', 'monastery', 'royal', 'specie', 'ruin', 'archaeological', 'mosque', 'animal', 'ancient', 'park', 'bird', 'empire']
+Dimension 11:
+['cave', 'park', 'town', 'temple', 'national', 'island', 'historic', 'old', 'monastery', 'colonial', 'church', 'street', 'buddhist', 'building', 'wildlife']
+Dimension 12:
+['em', 'temple', 'mine', 'tour', 'castle', 'mining', 'cathedral', 'guide', 'museum', 'house', 'park', 'wildlife', 'building', 'english', 'industrial']
+Dimension 13:
+['em', 'park', 'island', 'roman', 'cave', 'ruin', 'view', 'hike', 'church', 'parking', 'walk', 'city', 'da', 'trail', 'lake']
+Dimension 14:
+['monastery', 'mosque', 'tour', 'em', 'mine', 'cave', 'tomb', 'mountain', 'century', 'mining', 'city', 'bus', 'guide', 'orthodox', 'cathedral']
+Dimension 15:
+['lake', 'temple', 'park', 'palace', 'mine', 'island', 'cave', 'cathedral', 'roman', 'mining', 'tour', 'castle', 'national', 'century', 'underground']
+Dimension 16:
+['cave', 'roman', 'church', 'specie', 'forest', 'garden', 'city', 'palace', 'bird', 'reserve', 'mosaic', 'endangered', 'ruin', 'villa', 'reef']
+Dimension 17:
+['lake', 'mosque', 'fort', 'cave', 'church', 'islamic', 'shah', 'boat', 'mine', 'nbsp', 'architectural', 'water', 'world', 'architecture', 'glacier']
+Dimension 18:
+['lake', 'monastery', 'fossil', 'bird', 'rock', 'museum', 'temple', 'animal', 'specie', 'reserve', 'historic', 'centre', 'art', 'old', 'em']
+Dimension 19:
+['tomb', 'mosque', 'church', 'dynasty', 'bus', 'old', 'burial', 'china', 'shrine', 'thracian', 'walk', 'islamic', 'town', 'necropolis', 'lot']
+Dimension 20:
+['fort', 'lake', 'tomb', 'fossil', 'palace', 'museum', 'fortification', 'san', 'fortress', 'spanish', 'temple', 'de', 'royal', 'view', 'military']
+Dimension 21:
+['tomb', 'de', 'water', 'lake', 'la', 'san', 'bird', 'boat', 'santiago', 'bridge', 'mine', 'monument', 'river', 'castle', 'compostela']
+Dimension 22:
+['de', 'mosque', 'san', 'fossil', 'la', 'mountain', 'islamic', 'university', 'mission', 'spanish', 'garden', 'castle', 'jesuit', 'volcano', 'mount']
+Dimension 23:
+['rock', 'mine', 'palace', 'tour', 'mining', 'lake', 'guide', 'em', 'carving', 'city', 'church', 'mountain', 'town', 'hike', 'experience']
+Dimension 24:
+['rock', 'temple', 'monastery', 'mine', 'fossil', 'garden', 'fort', 'bridge', 'park', 'reef', 'marine', 'water', 'town', 'mining', 'old']
+Dimension 25:
+['palace', 'village', 'guide', 'ruin', 'cathedral', 'river', 'church', 'road', 'tour', 'water', 'city', 'valley', 'system', 'boat', 'people']
+Dimension 26:
+['fossil', 'palace', 'bridge', 'whale', 'span', 'million', 'valley', 'history', 'evolution', 'marine', 'reef', 'museum', 'cliff', 'de', 'wine']
+Dimension 27:
+['bridge', 'city', 'river', 'span', 'canal', 'china', 'sup', 'art', 'boat', 'industrial', 'chinese', 'museum', 'railway', 'rock', 'grotto']
+Dimension 28:
+['city', 'garden', 'fossil', 'university', 'tour', 'reef', 'water', 'ruin', 'marine', 'cathedral', 'system', 'world', 'abbey', 'guide', 'fountain']
+Dimension 29:
+['village', 'roman', 'tour', 'fossil', 'building', 'dynasty', 'tower', 'mosaic', 'wall', 'guide', 'china', 'traditional', 'chinese', 'architecture', 'basilica']
+Dimension 30:
+['reef', 'marine', 'coral', 'museum', 'shark', 'lagoon', 'glacier', 'turtle', 'system', 'art', 'atoll', 'fish', 'building', 'barrier', 'palace']
+Dimension 31:
+['abbey', 'tour', 'span', 'guide', 'bridge', 'forest', 'town', 'temple', 'university', 'glacier', 'guided', 'rock', 'old', 'sup', 'english']
+Dimension 32:
+['wine', 'city', 'de', 'museum', 'abbey', 'vineyard', 'fort', 'bird', 'landscape', 'santiago', 'tasting', 'compostela', 'great', 'university', 'tour']
+Dimension 33:
+['city', 'mine', 'desert', 'monastery', 'house', 'wall', 'street', 'like', 'museum', 'underground', 'one', 'mining', 'temple', 'forest', 'ticket']
+Dimension 34:
+['village', 'rock', 'san', 'bus', 'forest', 'specie', 'ticket', 'park', 'span', 'lake', 'city', 'century', 'bridge', 'museum', '16th']
+Dimension 35:
+['bus', 'town', 'de', 'ruin', 'old', 'buddhist', 'grotto', 'route', 'abbey', 'china', 'park', 'fort', 'buddha', 'entrance', 'heritage']
+Dimension 36:
+['sup', 'span', 'great', 'wine', 'th', 'nbsp', 'building', 'good', 'industrial', 'city', 'ruin', 'tasting', 'ancient', 'fortress', 'lake']
+Dimension 37:
+['university', 'span', 'sup', 'village', 'reef', 'th', 'shrine', 'monument', 'route', 'mountain', 'garden', 'marine', 'nbsp', 'europe', 'japan']
+Dimension 38:
+['abbey', 'fort', 'basilica', 'mountain', 'san', 'railway', 'desert', 'span', 'fresco', 'st', 'bus', 'painting', 'station', 'early', 'valley']
+Dimension 39:
+['wine', 'forest', 'basilica', 'historic', 'mosaic', 'cultural', 'bus', 'sup', 'villa', 'landscape', 'get', 'shrine', 'entrance', 'fossil', 'centre']
+Dimension 40:
+['bridge', 'spanish', 'mountain', 'span', 'guide', 'wine', 'reef', 'tour', 'tomb', 'garden', 'ruin', 'mount', 'river', 'colonial', 'mosaic']
+Dimension 41:
+['abbey', 'san', 'mosque', 'mountain', 'spanish', 'fortress', 'boat', 'bird', 'colonial', 'system', 'water', 'tower', 'shrine', 'mound', 'mission']
+Dimension 42:
+['abbey', 'university', 'spanish', 'glacier', 'bridge', 'roman', 'historic', 'colonial', 'restaurant', 'world', 'street', 'ice', 'shrine', 'nice', 'monument']
+Dimension 43:
+['canal', 'water', 'system', 'forest', 'aqueduct', 'fort', 'mosaic', 'old', 'trail', 'centre', 'mill', 'villa', 'room', 'san', 'hydraulic']
+Dimension 44:
+['tower', 'san', 'nbsp', 'desert', 'abbey', 'monument', 'mound', 'grotto', 'span', '000', 'gorilla', 'historic', 'statue', 'specie', 'volcano']
+Dimension 45:
+['san', 'landscape', 'mission', 'town', 'jesuit', 'train', 'ticket', 'university', 'railway', 'museum', 'wine', 'valley', 'glacier', 'beautiful', 'bus']
+Dimension 46:
+['valley', 'university', 'building', 'centre', 'fort', 'mexico', 'bridge', 'world', 'campus', 'pyramid', 'bird', 'abbey', 'top', 'mayan', 'industrial']
+Dimension 47:
+['glacier', 'ice', 'span', 'university', 'ruin', 'tomb', 'village', 'mosque', 'fort', 'volcano', 'historic', 'wine', 'centre', 'bird', 'canal']
+Dimension 48:
+['valley', 'fortress', 'garden', 'glacier', 'sup', 'bus', 'villa', 'aqueduct', 'rock', 'wine', 'museum', 'canal', 'colonial', 'empire', 'river']
+Dimension 49:
+['university', 'campus', 'archaeological', 'time', 'hike', 'town', 'fortress', 'human', 'trail', 'coimbra', 'fresco', 'student', 'art', 'chinese', 'da']
+Dimension 50:
+['university', 'railway', 'canal', 'monument', 'colonial', 'route', 'desert', 'system', 'train', 'station', 'spanish', 'santiago', 'carving', 'example', 'world']
+Dimension 51:
+['villa', 'wine', 'forest', 'shrine', 'europe', 'renaissance', 'gorilla', 'glacier', 'sacred', 'railway', 'buddha', 'old', 'monument', 'grotto', 'stone']
+Dimension 52:
+['tower', 'glacier', 'railway', 'mosaic', 'villa', 'de', 'well', 'buddhist', 'station', 'outstanding', 'century', 'remains', 'restaurant', 'coal', 'archaeological']
+Dimension 53:
+['basilica', 'bridge', 'bird', 'fortress', 'christian', 'mosaic', 'old', 'st', 'sea', 'museum', 'house', 'hike', 'art', 'jewish', 'caribbean']
+Dimension 54:
+['empire', 'tower', 'san', 'museum', 'hike', 'fossil', 'sup', 'water', 'iran', 'village', 'capital', 'staff', 'gorilla', 'university', 'fort']
+Dimension 55:
+['wine', 'glacier', 'basilica', 'mound', 'railway', 'square', 'train', 'monument', 'san', 'volcano', 'ice', 'water', 'largest', 'st', 'carving']
+Dimension 56:
+['tower', 'spanish', 'view', 'art', 'tour', 'iran', 'see', 'archaeological', 'ancient', 'building', 'river', 'first', 'english', 'forest', 'mine']
+Dimension 57:
+['specie', 'archaeological', 'sea', 'property', 'empire', 'endangered', 'bus', 'well', 'buddhist', 'site', 'bird', 'valley', 'region', 'train', 'endemic']
+Dimension 58:
+['villa', 'ruin', 'car', 'kremlin', 'bridge', 'russian', 'wine', 'house', 'walk', 'heritage', 'russia', 'fortress', 'mission', 'glacier', 'volcano']
+Dimension 59:
+['house', 'mound', 'grotto', 'university', 'basilica', 'road', 'forest', 'km', 'san', 'longmen', 'drive', 'north', 'village', 'beautiful', 'st']
+Dimension 60:
+['fortress', 'pyramid', 'mine', 'museum', 'mexico', 'canal', 'water', 'tomb', 'mayan', 'centre', 'beautiful', 'forest', 'desert', 'wine', 'central']
+Dimension 61:
+['tower', 'fresco', 'university', 'house', 'town', 'shrine', 'ruin', 'canal', 'painting', 'glacier', 'fossil', 'kremlin', 'square', 'site', 'russian']
+Dimension 62:
+['villa', 'empire', 'house', 'museum', 'capital', 'wildlife', 'industrial', 'village', 'archaeological', 'carving', 'volcano', 'mining', 'km', 'palace', 'wooden']
+Dimension 63:
+['monument', 'fortress', 'ruin', 'villa', 'house', 'group', 'sup', 'centre', 'archaeological', 'landscape', 'bus', 'valley', 'hill', 'age', '14th']
+Dimension 64:
+['gorilla', 'valley', 'fossil', 'ancient', 'aqueduct', 'fortress', 'monument', 'statue', 'mill', 'roman', 'university', 'elephant', 'tour', 'sanctuary', '19th']
+Dimension 65:
+['canal', 'landscape', 'bus', 'volcano', 'ruin', 'gorilla', 'house', 'old', 'boat', 'forest', 'century', 'mining', 'shop', 'basilica', 'human']
+Dimension 66:
+['gorilla', 'royal', 'house', 'human', 'grotto', 'forest', 'statue', 'valley', 'well', 'experience', 'sea', 'sup', 'train', 'preserved', 'building']
+Dimension 67:
+['gorilla', 'route', 'university', 'san', 'north', 'europe', 'villa', 'medina', 'road', 'south', 'central', 'carving', 'western', 'santiago', 'compostela']
+Dimension 68:
+['reserve', 'africa', 'boat', 'national', 'ticket', 'abbey', 'volcanic', 'volcano', 'site', 'village', 'coastal', 'beautiful', 'architecture', 'city', 'cliff']
+Dimension 69:
+['villa', 'span', 'burial', 'sea', 'boat', 'abbey', 'specie', 'mountain', 'cliff', 'gorilla', 'pyramid', 'unesco', 'along', 'beach', 'endangered']
+Dimension 70:
+['nbsp', 'boat', 'shrine', 'royal', 'de', 'desert', 'centre', 'fall', 'house', 'basilica', 'hanseatic', 'sea', 'grand', 'capital', 'king']
+Dimension 71:
+['gorilla', 'bus', 'railway', 'train', 'history', 'statue', 'great', 'mosque', 'route', 'university', 'walk', 'grotto', 'hill', 'shrine', 'situated']
+Dimension 72:
+['villa', 'railway', 'valley', 'sup', 'route', 'cultural', 'hunting', 'station', 'nbsp', 'west', 'train', 'ancient', 'worth', 'hike', 'top']
+Dimension 73:
+['ancient', 'ticket', 'entrance', 'central', 'span', 'inside', 'human', 'oasis', 'historic', 'bird', 'silk', 'da', 'valley', 'basilica', 'merv']
+Dimension 74:
+['river', 'abbey', 'gorilla', 'fortress', 'nbsp', 'boat', 'dolmen', 'university', 'group', 'desert', 'mound', 'two', 'day', 'specie', 'wine']
+Dimension 75:
+['nbsp', 'china', 'ancient', 'chinese', 'great', 'house', 'black', 'important', 'age', 'sea', 'three', 'forest', 'bay', 'santiago', 'ticket']
+Dimension 76:
+['fortress', 'nbsp', 'bridge', 'human', 'medina', 'room', 'entrance', 'royal', 'st', 'pyramid', 'coal', 'people', 'great', 'valley', 'mayan']
+Dimension 77:
+['square', 'reserve', 'road', 'canal', 'fortress', 'centre', 'railway', 'way', 'buddhist', 'painting', 'national', 'grand', 'medieval', 'nbsp', 'wine']
+Dimension 78:
+['architecture', 'property', 'basilica', 'carving', 'bus', 'royal', 'kremlin', 'fossil', 'canal', 'horse', 'nbsp', 'mosque', 'trail', 'portuguese', 'jewish']
+Dimension 79:
+['boat', 'medina', 'gorilla', 'building', 'house', 'water', 'reserve', 'villa', 'wine', 'trail', 'university', 'nice', 'buddhist', 'monument', 'interesting']
+Dimension 80:
+['gorilla', 'nbsp', 'mission', 'rsquo', 'view', 'road', 'western', 'museum', 'volcano', 'feature', 'jesuit', 'mausoleum', 'room', 'example', 'shrine']
+Dimension 81:
+['gorilla', '16th', 'st', 'chinese', 'industrial', 'china', 'empire', 'hill', 'archaeological', 'whale', 'renaissance', 'beijing', 'complex', 'qing', 'sea']
+Dimension 82:
+['citadel', 'valley', 'nbsp', 'mound', 'east', 'rsquo', 'al', 'canal', 'guide', 'baroque', 'convent', 'history', 'south', 'da', 'gate']
+Dimension 83:
+['renaissance', 'tomb', 'ruin', 'central', 'fortress', 'architecture', 'buddhist', 'sup', 'mission', 'example', 'jesuit', 'animal', '18th', 'gold', 'silk']
+Dimension 84:
+['house', 'hill', 'span', 'monument', 'carving', 'mission', 'dynasty', 'shrine', 'family', 'al', 'pyramid', 'nice', 'glacier', 'camp', 'many']
+Dimension 85:
+['hall', 'trade', 'fresco', 'bus', 'built', 'good', 'village', 'tour', 'african', '16th', 'span', 'forest', 'national', 'empire', 'mound']
+Dimension 86:
+['bird', '000', 'area', 'year', 'forest', 'royal', 'car', 'road', 'wooden', 'urban', 'salt', 'capital', 'sup', 'house', 'centre']
+Dimension 87:
+['gorilla', 'spanish', 'st', 'george', 'da', 'forest', 'carving', 'atlantic', 'coast', 'period', 'development', 'iran', 'around', 'iron', 'volcano']
+Dimension 88:
+['span', 'monument', 'villa', 'small', 'exhibition', 'hike', 'old', 'citadel', 'dynasty', 'valley', 'mausoleum', 'renaissance', 'canal', 'history', 'street']
+Dimension 89:
+['road', 'japan', 'mosaic', 'tower', 'medina', 'town', 'wall', 'one', 'span', 'train', 'tiger', 'thracian', 'animal', 'greek', 'bay']
+Dimension 90:
+['gorilla', 'reserve', 'shrine', 'coast', 'horse', 'nbsp', 'rainforest', 'house', 'fortress', 'mount', 'lot', 'bc', 'chinese', 'inca', 'china']
+Dimension 91:
+['mound', 'ancient', 'ticket', 'fossil', 'landscape', 'town', 'volcano', 'capital', 'period', 'nice', 'line', 'delta', 'lava', 'system', 'center']
+Dimension 92:
+['place', 'beautiful', 'property', 'get', 'animal', 'al', 'burial', 'fresco', 'medieval', 'network', 'horse', 'work', 'site', 'national', 'component']
+Dimension 93:
+['river', 'fortress', 'desert', 'islamic', 'house', 'spanish', 'hill', 'buddhist', 'time', 'australia', 'urban', 'century', 'area', 'sacred', 'feature']
+Dimension 94:
+['carving', 'volcano', 'india', 'sea', 'river', 'japan', 'beach', 'western', 'aqueduct', 'wall', 'national', 'bit', 'range', 'hike', 'indian']
+Dimension 95:
+['medina', 'square', 'see', 'forest', 'bird', 'atlantic', 'el', 'archaeological', 'sacred', 'cemetery', 'guide', 'africa', 'stone', 'iron', 'horse']
+Dimension 96:
+['boat', 'day', 'aqueduct', 'water', 'san', 'guide', '000', 'small', 'night', 'work', 'camp', 'coast', 'st', 'house', 'reef']
+Dimension 97:
+['good', 'tiger', 'mining', 'boat', 'architecture', 'time', 'san', 'place', 'da', 'caribbean', 'route', 'mount', 'art', 'middle', 'sundarbans']
+Dimension 98:
+['mission', 'industrial', 'area', 'world', 'medina', 'urban', 'river', 'volcano', 'gorilla', 'one', 'sea', 'art', 'interesting', 'group', 'guide']
+Dimension 99:
+['europe', 'one', 'water', 'human', 'da', 'western', 'basilica', 'fall', 'medina', 'natural', 'painting', 'information', 'empire', 'wall', 'waterfall']
+Dimension 100:
+['dolmen', 'capital', 'st', 'africa', 'stone', 'span', 'river', 'area', 'group', 'canal', 'world', 'lot', 'many', 'john', 'sea']
+Dimension 101:
+['mound', 'terrace', 'rice', 'span', 'burial', 'bath', 'kremlin', 'early', 'glacier', 'caribbean', '000', 'medina', 'plain', 'cuba', 'middle']
+Dimension 102:
+['carving', 'fresco', 'medina', 'see', 'australia', 'animal', 'sup', 'empire', 'canal', 'km', 'old', 'america', 'path', 'centre', 'traditional']
+Dimension 103:
+['western', 'pyramid', 'one', 'fortress', 'wooden', 'da', 'mexico', 'reserve', 'mining', 'private', 'al', 'hanseatic', 'region', 'mound', 'africa']
+Dimension 104:
+['period', 'wall', 'animal', 'plant', 'medina', 'fresco', 'hill', 'railway', 'boat', 'iran', 'gate', 'hanseatic', 'complex', 'horse', 'forest']
+Dimension 105:
+['span', 'coast', 'square', 'closed', 'historical', 'ticket', 'cultural', 'tiger', 'first', 'canal', 'australia', 'underground', 'nice', 'al', 'carthage']
+Dimension 106:
+['dolmen', 'gorilla', 'built', 'sup', 'railway', 'ruin', 'region', '000', 'st', 'hike', 'day', 'canyon', 'african', 'western', 'cemetery']
+Dimension 107:
+['mayan', 'reserve', 'inuit', 'bear', 'history', 'west', 'get', 'shrine', 'tower', 'black', 'fortress', 'water', 'greenland', 'hunting', 'nice']
+Dimension 108:
+['wall', 'architecture', 'route', 'fortress', 'good', 'stone', 'system', 'amazing', 'christian', 'lava', 'forest', 'gothic', 'km', 'day', 'created']
+Dimension 109:
+['square', 'boat', 'mount', 'statue', 'village', 'valley', 'mayan', 'mausoleum', 'great', 'north', 'agricultural', 'fortress', 'development', 'south', 'buddhist']
+Dimension 110:
+['mount', 'world', 'grand', 'early', 'medina', 'unesco', 'outstanding', 'archaeological', 'lushan', 'agricultural', 'mission', 'exhibition', 'centre', 'heritage', 'african']
+Dimension 111:
+['building', 'da', 'port', 'mission', 'railway', 'abbey', 'agricultural', 'guide', 'medina', 'km', 'hike', 'unique', '15th', 'many', 'dolmen']
+Dimension 112:
+['fortress', 'winter', 'animal', 'north', 'trading', 'snow', 'pyramid', 'nice', 'mission', 'plant', 'exhibition', 'shop', 'grotto', 'span', 'km']
+Dimension 113:
+['painting', 'english', 'number', 'shop', 'restaurant', 'iran', 'silk', 'historical', 'san', 'district', 'network', 'railway', 'oldest', 'souvenir', 'road']
+Dimension 114:
+['aqueduct', 'sea', 'spanish', 'architecture', 'art', 'nbsp', 'colonial', 'gorilla', 'fresco', 'largest', 'settlement', 'africa', 'beach', 'mission', 'place']
+Dimension 115:
+['mission', 'history', 'central', 'settlement', 'day', 'around', 'canal', 'shrine', 'russia', 'mosaic', 'habitat', 'russian', 'jesuit', 'gate', 'slave']
+Dimension 116:
+['mound', 'mausoleum', 'urban', 'fresco', 'medina', 'wall', 'aqueduct', 'shrine', 'dynasty', 'road', 'route', 'room', 'found', 'also', 'mosaic']
+Dimension 117:
+['bus', 'well', 'mining', 'road', 'africa', 'stone', 'place', 'river', 'fortress', 'contains', 'centre', 'christian', 'renaissance', 'cuenca', 'camp']
+Dimension 118:
+['port', 'mayan', 'mound', 'santiago', 'around', '15th', 'service', 'compostela', 'gothic', '13th', 'conservation', 'traditional', 'central', 'complex', 'outstanding']
+Dimension 119:
+['camp', 'europe', 'hour', 'group', '16th', 'site', 'nice', 'train', '2nd', 'african', 'painting', 'gate', 'germany', 'enjoy', 'colonial']
+Dimension 120:
+['complex', 'horse', 'northern', 'urban', 'station', 'glacier', 'mill', 'route', 'inside', 'one', 'hike', 'beach', 'university', 'mount', 'gorilla']
+Dimension 121:
+['great', 'bath', 'fortified', 'desert', 'hall', 'whale', 'japan', 'elephant', 'mission', 'gold', 'built', 'lighthouse', 'achaemenid', 'darius', 'empire']
+Dimension 122:
+['cemetery', 'medieval', 'network', 'water', 'necropolis', 'fantastic', 'new', 'hanseatic', '12th', 'serra', 'pueblo', 'mining', 'kingdom', 'burial', 'wetland']
+Dimension 123:
+['dolmen', 'convent', 'portuguese', 'al', 'new', 'good', 'route', 'king', 'statue', 'old', 'largest', 'whale', 'way', 'southern', 'family']
+Dimension 124:
+['street', 'mining', 'dolmen', 'road', 'el', 'span', 'art', 'built', 'preserved', 'painting', 'zone', 'nice', 'gate', 'renaissance', 'landscape']
+Dimension 125:
+['good', 'complex', 'situated', 'burial', 'snow', 'mound', 'exhibition', 'wall', 'site', 'romanesque', 'dome', 'interesting', 'le', 'sea', 'day']
+Dimension 126:
+['st', 'whale', 'ancient', 'aqueduct', 'fall', 'river', 'gate', 'george', '15th', 'hunting', 'beautiful', 'shark', 'capital', 'byzantine', 'hoi']
+Dimension 127:
+['urban', 'car', 'boat', 'dolmen', 'cable', 'square', 'mount', 'bauhaus', 'citadel', 'glacier', 'site', 'byzantine', 'heritage', 'tel', 'unesco']
+Dimension 128:
+['really', 'see', 'area', 'japan', 'fortified', 'capital', 'get', 'mound', 'line', 'natural', 'camp', 'dwelling', 'medieval', 'river', 'sunset']
+Dimension 129:
+['dolmen', 'tiger', 'inuit', 'basilica', 'mount', 'hunting', 'wall', 'national', 'founded', 'mausoleum', 'sundarbans', 'medina', 'portuguese', 'room', 'landscape']
+Dimension 130:
+['netherlands', 'iran', 'settlement', 'see', 'portuguese', 'national', 'gorilla', 'agricultural', 'endemic', 'beautiful', 'inside', 'harbour', 'hunting', 'antigua', 'also']
+Dimension 131:
+['terrace', 'river', 'rice', 'da', 'hour', 'small', 'inca', 'rhine', 'whale', 'cruise', 'quarter', 'bauhaus', 'protected', 'rsquo', 'religious']
+Dimension 132:
+['three', 'railway', 'around', 'art', '16th', 'lot', 'protected', 'citadel', 'english', 'site', 'sea', 'structure', 'several', 'aqueduct', 'burial']
+Dimension 133:
+['bay', 'renaissance', 'development', 'shark', 'port', 'pre', 'room', 'salt', '15th', 'hotel', 'example', 'outstanding', 'bird', 'residence', 'winter']
+Dimension 134:
+['le', 'empire', 'christian', 'giant', 'oldest', 'plant', 'planning', 'cemetery', 'dolmen', 'nbsp', 'number', 'gate', 'jesuit', 'monument', 'entrance']
+Dimension 135:
+['st', 'well', 'stone', 'mount', 'river', '000', 'al', 'mayan', 'worth', 'nice', 'pyramid', 'renaissance', 'also', 'car', 'along']
+Dimension 136:
+['square', 'many', 'fine', 'japan', 'cliff', 'column', 'del', 'atlantic', 'silk', 'trading', 'fall', 'red', 'hour', 'get', 'mt']
+Dimension 137:
+['nbsp', 'terrace', 'street', 'building', 'rice', 'worth', 'portuguese', 'used', 'berlin', 'shrine', 'definitely', 'medina', 'bauhaus', 'medieval', 'private']
+Dimension 138:
+['kingdom', 'settlement', 'fresco', 'terrace', 'renaissance', 'santa', 'traditional', 'oldest', 'mosaic', 'plant', 'snow', 'ferry', 'ancient', 'bauhaus', '20']
+Dimension 139:
+['sea', 'minaret', 'portuguese', 'cemetery', 'make', 'wildlife', 'building', 'province', 'volcano', 'walk', 'royal', 'street', 'phoenician', 'citadel', 'aqueduct']
+Dimension 140:
+['whale', 'rice', 'settlement', 'lot', 'mount', 'hunting', 'terrace', 'gorilla', 'snow', 'night', 'mayan', 'factory', 'trail', 'atlantic', 'santiago']
+Dimension 141:
+['le', 'walk', 'traditional', 'basilica', 'exhibition', 'new', 'painting', 'sri', 'havre', 'medina', 'beach', 'corbusier', 'explore', 'karst', 'much']
+Dimension 142:
+['aqueduct', 'art', 'north', 'portuguese', 'camp', 'dynasty', 'spa', 'reef', 'shop', 'lot', 'bird', 'around', 'fortified', 'small', 'bath']
+Dimension 143:
+['dolmen', 'stone', 'sup', 'sanctuary', 'whale', 'saint', 'yellowstone', 'way', 'important', 'view', 'known', 'also', 'mining', 'gold', 'gorilla']
+Dimension 144:
+['also', 'horse', 'road', 'jewish', 'aqueduct', 'square', 'line', 'sri', 'royal', 'wine', 'entrance', 'zone', 'wooden', 'lanka', 'small']
+Dimension 145:
+['square', 'region', 'exceptional', 'reef', 'medina', 'china', 'car', 'heritage', 'europe', 'karst', 'find', 'horizonte', 'zone', 'king', 'part']
+Dimension 146:
+['beautiful', 'trade', 'colony', 'netherlands', 'da', 'people', 'number', 'mountain', 'carving', 'africa', 'bear', 'mound', 'cliff', 'plateau', 'bauhaus']
+Dimension 147:
+['inside', 'gothic', 'style', 'colonial', 'mount', 'complex', 'local', 'picture', 'square', 'nice', 've', 'el', 'romanesque', 'water', 'ayutthaya']
+Dimension 148:
+['railway', 'mausoleum', 'land', 'amazing', 'dolmen', 'centre', 'cemetery', '19th', 'residence', 'lot', 'gorilla', 'rsquo', 'parking', 'train', 'process']
+Dimension 149:
+['central', 'dolmen', 'cuenca', 'beach', 'centre', 'nbsp', 'restaurant', 'mayan', 'african', 'three', 'africa', 'mausoleum', 'bauhaus', 'visited', 'waterfall']
+Dimension 150:
+['wonderful', 'grand', 'since', 'cuenca', 'silk', 'gate', 'jaipur', 'information', 'span', 'built', 'form', 'centre', 'horse', 'light', 'would']
+Dimension 151:
+['le', 'horse', 'mayan', 'hour', 'atlantic', '16th', 'traditional', 'wetland', 'view', 'built', 'santo', 'jaipur', 'basilica', 'interesting', 'entrance']
+Dimension 152:
+['mausoleum', 'station', 'still', 'whale', 'grand', 'sydney', 'complex', 'people', 'red', 'kid', 'opera', 'developed', 'piton', 'caribbean', 'ensemble']
+Dimension 153:
+['horse', 'exhibition', 'africa', 'lagoon', 'come', 'sanctuary', 'architectural', 'carving', 'fine', 'traditional', 'petroglyph', 'venice', 'magnificent', 'style', 'even']
+Dimension 154:
+['rice', 'terrace', 'group', 'nature', 'cuenca', 'rich', 'century', 'entrance', 'specie', 'del', 'inuit', 'mount', 'philippine', 'powerful', 'thing']
+Dimension 155:
+['christian', 'george', 'lagoon', 'new', 'jaipur', 'terrace', 'neolithic', 'settlement', 'building', 'view', 'almost', 'bath', 'rice', 'area', 'pyramid']
+Dimension 156:
+['mount', 'eastern', 'pueblo', 'mining', 'column', 'settlement', 'valley', 'rome', 'el', 'side', 'george', 'housing', 'white', 'zone', 'good']
+Dimension 157:
+['national', 'lemur', 'well', 'work', 'old', 'property', 'religious', 'endemic', 'colony', 'look', 'make', 'plant', 'photo', 'visiting', 'inuit']
+Dimension 158:
+['whale', 'mound', 'medina', 'unique', 'big', 'university', 'bridge', 'summer', 'small', 'wooden', 'emperor', 'le', 'design', 'recommend', 'water']
+Dimension 159:
+['sanctuary', 'square', 'tourist', 'saharan', 'interesting', 'outstanding', 'cultural', 'prehistoric', 'necropolis', 'real', 'animal', 'fortified', 'venice', 'thousand', 'aqueduct']
+Dimension 160:
+['dolmen', 'traditional', 'colony', 'la', 'villa', 'free', 'outstanding', 'example', 'several', 'people', 'europe', 'site', 'sri', 'minaret', 'largest']
+Dimension 161:
+['bauhaus', 'settlement', 'al', 'mount', 'viking', 'network', 'room', 'kazan', 'fortified', 'architectural', 'cliff', 'lushan', 'also', 'berlin', 'thracian']
+Dimension 162:
+['great', 'first', 'millennium', 'asia', 'piton', 'gold', 'citadel', 'two', 'remarkable', 'coffee', 'element', 'traditional', 'whale', 'romanesque', 'danube']
+Dimension 163:
+['around', 'christian', 'structure', 'aqueduct', 'family', 'nbsp', 'cuenca', 'atlantic', 'mine', 'also', 'hour', 'found', 'central', 'fortification', 'saint']
+Dimension 164:
+['local', 'beach', 'convent', 'think', 'salt', 'minaret', 'delphi', 'centre', 'mt', 'wonderful', 'good', 'agricultural', 'region', '100', 'desert']
+Dimension 165:
+['aqueduct', 'beautiful', 'one', 'fjord', 'whale', 'back', 'berlin', 'traditional', 'civilization', 'layout', 'architectural', 'impressive', 'petroglyph', 'country', 'vast']
+Dimension 166:
+['mission', 'founded', 'exhibition', 'france', 'near', 'venice', 'karst', 'atoll', 'cuenca', 'coro', 'coffee', 'archaeological', 'like', 'royal', 'islamic']
+Dimension 167:
+['camp', 'natural', 'layout', 'influence', 'kingdom', 'inside', '000', 'petroglyph', 'medieval', 'almost', 'suzhou', 'statue', 'train', 'iran', 'created']
+Dimension 168:
+['whale', '16th', 'terrace', 'toledo', 'new', 'type', 'rice', 'hill', 'bc', 'kazan', 'hour', 'bern', 'mayan', 'visitor', 'impressive']
+Dimension 169:
+['america', 'wildlife', 'karst', 'hall', 'cliff', 'coast', 'kingdom', 'grand', 'feature', 'give', 'medina', 'morne', 'photo', 'slave', 'convent']
+Dimension 170:
+['dolmen', 'natural', 'family', 'netherlands', 'camp', 'iran', 'cuenca', 'windmill', 'station', 'definitely', 'beemster', 'buddhist', 'feel', 'byzantine', 'lagoon']
+Dimension 171:
+['atlantic', 'colony', 'part', 'jewish', 'wooden', 'tequila', 'america', 'highly', 'brazil', 'three', 'path', 'close', 'indigenous', 'agave', 'greek']
+Dimension 172:
+['thracian', 'bauhaus', 'major', 'compostela', '15th', 'santiago', 'wooden', 'basin', 'santa', 'portuguese', 'angkor', 'architecture', 'sundarbans', 'tel', 'lamu']
+Dimension 173:
+['portuguese', 'day', 'painting', 'lovely', 'along', 'late', 'monte', 'role', 'historical', 'port', 'jar', 'early', 'minute', 'berlin', 'zimbabwe']
+Dimension 174:
+['time', 'level', 'jewish', 'major', 'rsquo', 'mission', 'also', 'atlantic', 'lyon', 'king', 'high', 'shark', 'corfu', 'trading', 'venice']
+Dimension 175:
+['colony', 'cable', 'netherlands', 'exhibition', 'sukur', 'line', 'dacian', 'local', 'canal', 'cultural', 'thing', 'carthage', 'see', 'beach', 'bath']
+Dimension 176:
+['sydney', 'harar', 'islam', 'three', 'silk', 'hour', 'english', 'gold', 'aphrodisia', 'culture', 'spanish', 'people', 'became', 'market', 'belfry']
+Dimension 177:
+['thracian', 'grand', 'mausoleum', 'sundarbans', 'tiger', 'main', 'beach', 'speyer', 'community', 'little', 'convent', 'mangrove', 'wooden', 'spanish', 'volcanic']
+Dimension 178:
+['sydney', 'painting', 'canal', 'buddhist', 'wall', 'culture', 'opera', 'harappan', 'type', 'column', 'jewish', 'ceremonial', 'bath', 'spend', 'fortified']
+Dimension 179:
+['since', 'red', 'known', 'citadel', 'del', 'small', 'atlantic', 'le', 'sydney', 'time', 'sighişoara', 'brick', 'danube', 'tequila', 'reach']
+Dimension 180:
+['lemur', 'portuguese', 'dolmen', 'central', '15th', 'domingo', 'santo', 'engineering', 'became', 'limestone', 'chan', 'tsingy', 'kongo', 'well', 'spiritual']
+Dimension 181:
+['kuk', 'hall', 'angkor', 'asia', 'dragon', 'taxila', 'jewish', 'neolithic', 'tallinn', '000', 'komodo', 'one', 'artistic', 'jesuit', 'wall']
+Dimension 182:
+['whale', 'dolmen', 'nice', 'factory', 'bauhaus', 'salt', 'rsquo', 'luther', 'iraq', 'statue', 'aleppo', 'kazan', 'gate', 'famous', 'ndash']
+Dimension 183:
+['camp', 'founded', 'nice', 'european', 'jaipur', 'ii', 'child', 'monumental', 'fall', 'al', 'number', 'salt', 'sicily', 'gulf', 'butterfly']
+Dimension 184:
+['minaret', 'fortified', 'spanish', 'lagoon', 'path', 'coast', 'reef', 'like', 'open', 'karst', 'characteristic', 'style', 'big', 'baroque', 'venice']
+Dimension 185:
+['gate', 'jeddah', 'karst', 'makkah', 'field', 'km', 'way', 'tradition', 'preserved', 'jaipur', 'easy', 'atoll', 'mill', 'dome', 'holy']
+Dimension 186:
+['east', 'cuenca', 'period', 'port', 'home', 'english', 'wall', 'swahili', 'asante', 'fall', 'lighthouse', 'asia', 'medieval', 'mexico', 'major']
+Dimension 187:
+['colonial', 'bauhaus', 'salt', 'pillar', 'dessau', 'age', 'berlin', 'tiger', 'karst', 'lemur', 'painting', 'convent', 'south', 'greek', 'housing']
+Dimension 188:
+['two', 'southern', 'pre', 'salzburg', 'also', 'car', 'floor', 'time', 'beach', 'baroque', 'northern', 'parking', 'oasis', 'spent', 'food']
+Dimension 189:
+['view', 'intact', 'lemur', 'mission', 'many', 'serra', 'later', 'renaissance', 'basin', 'span', 'buddhist', 'canyon', 'sousse', 'short', 'sukur']
+Dimension 190:
+['settlement', 'beemster', '17th', 'southern', 'carthage', 'wall', 'thracian', 'port', 'delta', 'lalibela', 'ethiopian', 'plan', 'petroglyph', 'building', 'northern']
+Dimension 191:
+['piton', 'berlin', 'thracian', 'netherlands', 'people', 'exhibition', 'morne', 'jewish', 'pyramid', 'sanctuary', 'intact', 'beemster', 'land', 'gros', 'like']
+Dimension 192:
+['medieval', 'sydney', 'main', 'found', 'cuenca', 'picture', 'butterfly', 'opera', 'wetland', 'nice', 'beach', 'africa', 'circle', 'saint', 'carving']
+Dimension 193:
+['gate', 'wooden', 'train', 'trail', 'rsquo', 'almost', 'islamic', 'parking', 'human', 'development', 'sydney', 'opera', 'national', 'toledo', 'port']
+Dimension 194:
+['delta', 'nbsp', 'early', 'region', 'caucasus', 'svaneti', 'fine', 'greek', 'terrace', 'sphere', 'kizhi', 'serra', 'inside', 'upper', 'minaret']
+Dimension 195:
+['settlement', 'get', 'phoenician', 'car', 'salt', 'season', 'germany', 'like', '000', 'historic', 'fun', 'visitor', 'baalbek', 'erbil', 'little']
+Dimension 196:
+['mill', 'housing', 'byblos', 'berlin', 'near', 'point', 'choirokoitia', 'mediterranean', 'gate', 'historic', 'kazan', 'gift', 'agricultural', 'american', 'germany']
+Dimension 197:
+['gate', 'christian', 'japan', 'car', 'maritime', '10', 'renaissance', 'complex', 'landmark', 'minute', 'military', 'meat', 'champagne', 'jeddah', 'last']
+Dimension 198:
+['jar', 'ironbridge', 'style', 'religious', 'delphi', 'stunning', 'aqueduct', 'development', 'every', 'mtskheta', 'get', 'dolmen', 'nearby', 'chamber', 'nature']
+Dimension 199:
+['morne', 'piton', 'neolithic', 'byblos', 'le', 'time', 'hallstatt', 'georgia', 'jesus', 'windmill', 'day', 'suzhou', 'petroglyph', 'social', 'recommend']
