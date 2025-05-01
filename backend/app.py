@@ -115,7 +115,7 @@ def json_search(query, country_filter="", category_filter="", mode="svd", weight
             # sometimes this is Nan??
             # For Nan, what if we just show no similarity score for now before debugging why
             place["Similarity_Score"] = round(score * 100, 1)
-            place["Tags"] = tags
+            place["Tags"] = [t[0] for t in tags]
             place["id"] = filtered_data[idx]["id"]
             result.append(place)
     # reshuffle based on score

@@ -1,4 +1,4 @@
-[
+labels = [
     "urban heritage",        # Dimension 0
     "natural reserve",       # Dimension 1
     "colonial city",         # Dimension 2
@@ -99,8 +99,7 @@
     "middle art",           # Dimension 97
     "group world",          # Dimension 98
     "information waterfall",# Dimension 99
-    "john dolmen"           # Dimension 100
-    [
+    "john dolmen",         # Dimension 100
     "rice terrace",         # 101
     "traditional carving",  # 102
     "mining fortress",      # 103
@@ -203,4 +202,4 @@
     "prehistoric legacy" # Dimension 199
 ]
 
-]
+

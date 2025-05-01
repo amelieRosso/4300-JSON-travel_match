@@ -12,6 +12,9 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
 from collections import Counter
+import svd_dimensions
+import top5_terms
+
 
 # download tokenizer info 
 nltk.download('punkt_tab')
@@ -133,7 +136,24 @@ def extract_svd_dimension_terms():
   print(f"Dimension terms saved to {os.path.abspath(output_file)}")
   return output_file
 
-extract_svd_dimension_terms()
+# extract_svd_dimension_terms()
+
+def extract_top5terms(vectorizer, svd, output_path="top5_terms.py"):
+    terms = vectorizer.get_feature_names_out()
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write("# Auto-generated SVD dimension labels\n")
+        f.write("labels = [\n")
+        for dim_idx in range(svd.components_.shape[0]):
+            component = svd.components_[dim_idx]
+            sorted_indices = component.argsort()[::-1][:5]
+            top_terms = [f'"{terms[i]}"' for i in sorted_indices]
+            f.write(f"    [{', '.join(top_terms)}],\n")
+        f.write("]\n")
+
+    print(f"Saved Python labels module to {os.path.abspath(output_path)}")
+    
+# extract_top5terms(vectorizer, svd)
 
 #create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
@@ -207,33 +227,33 @@ def svd_index_search(
 #     return tags
 
 # This is causing errors (specifically line 156)
-def extract_svd_tags(reduced_query, reduced_doc, svd, vectorizer, doc_text=""):
+def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, doc_text=""):
     
-    dim_scores = reduced_query.flatten() * reduced_doc.flatten()
+    dim_scores = reduced_query.flatten() * reduced_docs.flatten()
     top_dims = dim_scores.argsort()[::-1]  
 
     # terms = vectorizer.get_feature_names_out()
     # doc_text_lower = preprocess_description(doc_text)
 
     tags = []
+    
     # seen_roots = set()
 
-    for dim in top_dims:
-        if len(tags) >= 5:
-            break
-        tags.append(svd_dimension_terms.txt [dim])
-        # Get terms associated with this dimension
-        component = svd.components_[dim]
-        top_term_indices = component.argsort()[::-1]
+    for dim in top_dims[:5]:
+        tags.append((svd_dimensions.labels[dim], top5_terms.top5terms[dim]))
 
-        for idx in top_term_indices:
-            term = terms[idx]
-            if term in doc_text_lower:
-                root = term.lower()
-                if root not in seen_roots:
-                    tags.append(term)
-                    seen_roots.add(root)
-                    break  # go to next dimension
+        # # Get terms associated with this dimension
+        # component = svd.components_[dim]
+        # top_term_indices = component.argsort()[::-1]
+
+        # for idx in top_term_indices:
+        #     term = terms[idx]
+        #     if term in doc_text_lower:
+        #         root = term.lower()
+        #         if root not in seen_roots:
+        # #             tags.append(term)
+        #             seen_roots.add(root)
+        #             break  # go to next dimension
 
     return tags 
 
