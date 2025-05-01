@@ -2,6 +2,31 @@
 labels = [
     "urban",
     "nature",
+    "old", #garbage dimension..?
+    "religious buildings",
+    "marine",
+    "architecture",
+    "beauty",
+    "rural",
+    "homely",
+    "artistic/picturesque",
+    "ancient",
+    "old/cultural", #another garbage dim
+    "guided", #idk
+    "walkable",
+    "touristy", #garbage dim
+    "bad dim", # garbage
+    "water",
+    "islamic",
+    "bad dim",
+    "asian"
+]
+
+
+
+labels1 = [
+    "urban",
+    "nature",
     "historic",
     "medieval",
     "marine",

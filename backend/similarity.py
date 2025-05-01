@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sentence_transformers import SentenceTransformer
 from collections import Counter
 import svd_dimensions
-import top5_terms
+import svd_dimensions_terms
 # from scipy.sparse.linalg import svds
 # import matplotlib
 # import numpy as np
@@ -106,7 +106,7 @@ tokenized_dict = create_tokenized_dict(data)
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
 vectorizer = TfidfVectorizer()
 docs_tfidf = vectorizer.fit_transform(docs)
-svd = TruncatedSVD(n_components=75)
+svd = TruncatedSVD(n_components=20)
 reduced_docs = svd.fit_transform(docs_tfidf)
 
 
@@ -115,10 +115,10 @@ def extract_svd_dimension_terms():
   terms = vectorizer.get_feature_names_out()
   
   # Create the output text file
-  output_file = "svd_75_dimension_terms.txt"
+  output_file = "svd_15_dimension_terms.txt"
   
   with open(output_file, 'w', encoding='utf-8') as f:
-      for dim_idx in range(75):
+      for dim_idx in range(20):
           # Get the component vector for this dimension
           component = svd.components_[dim_idx]
           
@@ -141,7 +141,7 @@ def extract_svd_dimension_terms():
 
 extract_svd_dimension_terms()
 
-def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
+def extract_top5terms(vectorizer, svd, output_path="top(20dim)_terms.py"):
     terms = vectorizer.get_feature_names_out()
 
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -149,7 +149,7 @@ def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
         f.write("labels = [\n")
         for dim_idx in range(svd.components_.shape[0]):
             component = svd.components_[dim_idx]
-            sorted_indices = component.argsort()[::-1][:5]
+            sorted_indices = component.argsort()[::-1][:20]
             top_terms = [f'"{terms[i]}"' for i in sorted_indices]
             f.write(f"    [{', '.join(top_terms)}],\n")
         f.write("]\n")
@@ -251,7 +251,7 @@ def extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, doc_text=""):
     # seen_roots = set()
 
     for dim in top_dims[:5]:
-        tags.append((svd_dimensions.labels[dim], top5_terms.top5terms[dim]))
+        tags.append((svd_dimensions.labels[dim], svd_dimensions_terms.labels[dim]))
 
         # # Get terms associated with this dimension
         # component = svd.components_[dim]

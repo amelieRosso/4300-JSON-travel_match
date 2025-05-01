@@ -1,0 +1,23 @@
+# Auto-generated SVD dimension labels
+labels = [
+    ["park", "beautiful", "city", "history", "see", "one", "century", "tour", "well", "great", "time", "church", "view", "also", "building", "town", "experience", "temple", "museum", "island"],
+    ["park", "national", "specie", "lake", "forest", "mountain", "bird", "island", "wildlife", "animal", "nature", "hike", "trail", "natural", "landscape", "plant", "waterfall", "reserve", "endangered", "cave"],
+    ["island", "town", "city", "century", "em", "specie", "historic", "church", "old", "centre", "urban", "de", "colonial", "forest", "sea", "example", "bird", "16th", "street", "marine"],
+    ["church", "cathedral", "park", "castle", "monastery", "gothic", "beautiful", "inside", "tour", "st", "national", "garden", "architecture", "fresco", "abbey", "stunning", "interior", "romanesque", "worth", "tower"],
+    ["island", "cave", "tour", "museum", "marine", "rock", "guide", "church", "monastery", "beach", "sea", "human", "mine", "reef", "ocean", "boat", "coral", "interesting", "archipelago", "land"],
+    ["castle", "tour", "town", "palace", "city", "garden", "museum", "mine", "fort", "historic", "room", "english", "park", "guide", "ruin", "walk", "interesting", "mining", "shop", "roman"],
+    ["island", "temple", "castle", "palace", "garden", "cathedral", "view", "sea", "marine", "fort", "fortress", "architecture", "specie", "beach", "beautiful", "royal", "bird", "visit", "ocean", "explore"],
+    ["castle", "monastery", "mountain", "church", "lake", "landscape", "em", "temple", "view", "village", "valley", "mount", "peak", "town", "top", "painting", "hill", "region", "hike", "wall"],
+    ["garden", "palace", "em", "royal", "monastery", "landscape", "building", "fountain", "tour", "lake", "house", "room", "villa", "cultural", "residence", "traditional", "design", "ticket", "plant", "tree"],
+    ["cave", "cathedral", "castle", "em", "rock", "gothic", "palace", "art", "landscape", "garden", "human", "cultural", "stained", "mountain", "painting", "glass", "000", "valley", "france", "tower"],
+    ["castle", "tomb", "palace", "monastery", "church", "specie", "ruin", "royal", "mosque", "archaeological", "animal", "em", "ancient", "park", "painting", "bird", "empire", "rock", "island", "wildlife"],
+    ["cave", "park", "town", "temple", "island", "national", "historic", "old", "monastery", "colonial", "street", "buddhist", "church", "building", "century", "centre", "painting", "architecture", "wildlife", "urban"],
+    ["em", "temple", "mine", "tour", "mining", "castle", "park", "museum", "guide", "cathedral", "building", "national", "house", "wildlife", "english", "specie", "industrial", "guided", "interesting", "japan"],
+    ["em", "park", "island", "roman", "cave", "ruin", "church", "view", "hike", "parking", "walk", "lake", "da", "trail", "top", "get", "stato", "timgad", "nbsp", "little"],
+    ["monastery", "em", "mosque", "tour", "cave", "mine", "mountain", "tomb", "bus", "century", "cathedral", "orthodox", "guide", "ticket", "spanish", "mining", "monk", "road", "monastic", "founded"],
+    ["lake", "temple", "park", "palace", "mine", "island", "cathedral", "cave", "mining", "roman", "landscape", "national", "castle", "tour", "archaeological", "century", "underground", "english", "ruin", "glacier"],
+    ["cave", "church", "roman", "specie", "garden", "city", "bird", "forest", "mosaic", "villa", "basilica", "ticket", "mine", "endangered", "reef", "lake", "reserve", "empire", "water", "threatened"],
+    ["lake", "mosque", "fort", "fossil", "islamic", "boat", "shah", "architectural", "nbsp", "museum", "architecture", "water", "ottoman", "dome", "iran", "baikal", "intricate", "world", "tour", "minaret"],
+    ["fort", "mine", "mining", "landscape", "roman", "park", "tour", "system", "view", "fortress", "wall", "abbey", "island", "industrial", "fortification", "water", "history", "underground", "experience", "tower"],
+    ["tomb", "mosque", "church", "dynasty", "mine", "mountain", "island", "tour", "china", "park", "burial", "city", "thracian", "mining", "bus", "walk", "islamic", "palace", "village", "chinese"],
+]
