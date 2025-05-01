@@ -1,3 +1,4 @@
+# Used LLM for assistance to generate meanings for each dimension.
 [
     "urban heritage",        # Dimension 0
     "natural reserve",       # Dimension 1
@@ -99,36 +100,35 @@
     "middle art",           # Dimension 97
     "group world",          # Dimension 98
     "information waterfall",# Dimension 99
-    "john dolmen"           # Dimension 100
-    [
+    "water areas"           # Dimension 100
     "rice terrace",         # 101
-    "traditional carving",  # 102
+    "traditional",  # 102
     "mining fortress",      # 103
     "plant gate",           # 104
-    "cultural tiger",       # 105
-    "gorilla canyon",       # 106
-    "greenland bear",       # 107
-    "stone system",         # 108
+    "coastal",       # 105
+    "canyon",       # 106
+    "architecture",       # 107
+    "stone",         # 108
     "agricultural statue",  # 109
     "lushan archaeological",# 110
     "guided abbey",         # 111
     "snow trading",         # 112
     "english silk",         # 113
     "settlement sea",       # 114
-    "jesuit slave",         # 115
+    "russian",         # 115
     "dynasty room",         # 116
     "cuenca well",          # 117
-    "compostela conservation", # 118
+    "old architecture", # 118
     "europe train",         # 119
-    "university glacier",   # 120
-    "achaemenid lighthouse",# 121
+    "university",   # 120
+    "colorful",# 121
     "necropolis wetland",   # 122
-    "southern convent",     # 123
-    "romanesque zone",      # 124
-    "interesting dome",     # 125
-    "shark byzantine",      # 126
-    "bauhaus citadel",      # 127
-    "sunset dwelling",      # 128
+    "southern",     # 123
+    "romanesque",      # 124
+    "interesting",     # 125
+    "ancient",      # 126
+    "urban",      # 127
+    "sunset",      # 128
     "sundarbans basilica",  # 129
     "harbour endemic",      # 130
     "inca cruise",          # 131
@@ -201,6 +201,4 @@
     "architectural mixture", # Dimension 197
     "archaeological sites", # Dimension 198
     "prehistoric legacy" # Dimension 199
-]
-
 ]
