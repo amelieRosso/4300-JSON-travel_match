@@ -1,5 +1,5 @@
 # Used LLM for assistance to generate meanings for each dimension.
-[
+labels = [
     "urban heritage",        # Dimension 0
     "natural reserve",       # Dimension 1
     "colonial city",         # Dimension 2
