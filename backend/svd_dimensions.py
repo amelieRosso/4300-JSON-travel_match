@@ -1,106 +1,106 @@
 # Used LLM for assistance to generate meanings for each dimension.
 labels = [
-    "urban heritage",        # Dimension 0
-    "natural reserve",       # Dimension 1
-    "colonial city",         # Dimension 2
-    "gothic monument",       # Dimension 3
-    "marine exploration",    # Dimension 4
-    "royal estate",          # Dimension 5
-    "coastal architecture",  # Dimension 6
-    "alpine vista",          # Dimension 7
-    "formal gardens",        # Dimension 8
-    "sacred art",            # Dimension 9
-    "imperial tombs",        # Dimension 10
-    "ancient village",       # Dimension 11
-    "industrial relics",     # Dimension 12
-    "panoramic hike",        # Dimension 13
-    "religious complex",     # Dimension 14
-    "underground marvel",    # Dimension 15
-    "forest sanctuary",      # Dimension 16
-    "arabic/middle eastern culture",        # Dimension 17
-    "avian fossil",          # Dimension 18
-    "burial shrine",         # Dimension 19
-    "military stronghold",   # Dimension 20
-    "river crossing",        # Dimension 21
-    "volcanic mission",      # Dimension 22
-    "rocky journey",         # Dimension 23
-    "marine fort",           # Dimension 24
-    "rural waterways",       # Dimension 25
-    "evolution trail",       # Dimension 26
-    "canal industry",        # Dimension 27
-    "academic reef",         # Dimension 28
-    "dynastic mosaic",       # Dimension 29
-    "coral habitat",         # Dimension 30
-    "guided abbey",          # Dimension 31
-    "vineyard trail",        # Dimension 32
-    "desert enclave",        # Dimension 33
-    "forest bus",            # Dimension 34
-    "buddhist heritage",     # Dimension 35
-    "tasting ruins",         # Dimension 36
-    "shrine route",          # Dimension 37
-    "painted valley",        # Dimension 38
-    "villa culture",         # Dimension 39
-    "colonial mosaic",       # Dimension 40
-    "mound system",          # Dimension 41
-    "ice street",            # Dimension 42
-    "hydraulic trail",       # Dimension 43
-    "desert tower",          # Dimension 44
-    "mission landscape",     # Dimension 45
-    "campus pyramid",        # Dimension 46
-    "volcanic mosque",       # Dimension 47
-    "empire aqueduct",       # Dimension 48
-    "coimbra fresco",        # Dimension 49
-    "station route",         # Dimension 50
-    "renaissance shrine",    # Dimension 51
-    "coal remains",          # Dimension 52
-    "caribbean hike",        # Dimension 53
-    "capital staff",         # Dimension 54
-    "ice square",            # Dimension 55
-    "iranian tour",          # Dimension 56
-    "endemic species",      # Dimension 57
-    "kremlin walk",         # Dimension 58
-    "grotto road",          # Dimension 59
-    "mayan centre",         # Dimension 60
-    "painting town",        # Dimension 61
-    "wooden carvings",      # Dimension 62
-    "hill landscape",       # Dimension 63
-    "elephant mill",        # Dimension 64
-    "boat shop",            # Dimension 65
-    "preserved building",   # Dimension 66
-    "santiago road",        # Dimension 67
-    "ticket cliff",         # Dimension 68
-    "mountain beach",       # Dimension 69
-    "hanseatic fall",       # Dimension 70
-    "situated railway",     # Dimension 71
-    "hunting station",      # Dimension 72
-    "oasis entrance",       # Dimension 73
-    "dolmen group",         # Dimension 74
-    "black bay",            # Dimension 75
-    "room people",          # Dimension 76
-    "way trail",            # Dimension 77
-    "portuguese horse",     # Dimension 78
-    "interesting building", # Dimension 79
-    "feature view",         # Dimension 80
-    "whale complex",        # Dimension 81
-    "baroque convent",      # Dimension 82
-    "gold animal",          # Dimension 83
-    "family camp",          # Dimension 84
-    "african trade",        # Dimension 85
-    "urban salt",           # Dimension 86
-    "george period",        # Dimension 87
-    "exhibition street",    # Dimension 88
-    "greek tower",          # Dimension 89
-    "rainforest mount",     # Dimension 90
-    "lava delta",           # Dimension 91
-    "network component",    # Dimension 92
-    "islamic australia",    # Dimension 93
-    "indian range",         # Dimension 94
-    "cemetery el",          # Dimension 95
-    "night reef",           # Dimension 96
-    "middle art",           # Dimension 97
-    "group world",          # Dimension 98
-    "information waterfall",# Dimension 99
-    "water areas"           # Dimension 100
+    "city",
+    "nature",
+    "historic",
+    "architecture",
+    "marine",
+    "castle",
+    "temple",
+    "mountains",
+    "palace",
+    "art",
+    "ruins",
+    "heritage",
+    "industry",
+    "hiking",
+    "religion",
+    "underground",
+    "mosaic",
+    "islamic",
+    "fossils",
+    "burial",
+    "military",
+    "river",
+    "volcano",
+    "carving",
+    "bridge",
+    "village",
+    "evolution",
+    "infrastructure",
+    "education",
+    "tradition",
+    "coral",
+    "guided",
+    "wine",
+    "desert",
+    "scenic",
+    "buddhist",
+    "ancient",
+    "japan",
+    "railway",
+    "culture",
+    "colonial",
+    "spanish",
+    "ice",
+    "hydraulic",
+    "wildlife",
+    "transport",
+    "jesuit",
+    "mayan",
+    "volcanoes",
+    "coimbra",
+    "travel",
+    "heritage",     # 51
+    "archaeology",  # 52
+    "religion",     # 53
+    "civilization", # 54
+    "nature",       # 55
+    "exploration",  # 56
+    "conservation", # 57
+    "russia",       # 58
+    "settlement",   # 59
+    "mesoamerica",  # 60
+    "architecture", # 61
+    "industry",     # 62
+    "ruins",        # 63
+    "antiquity",    # 64
+    "landscape",    # 65
+    "wildlife",     # 66
+    "routes",       # 67
+    "coastline",    # 68
+    "biodiversity", # 69
+    "royalty",      # 70
+    "transport",    # 71
+    "pilgrimage",   # 72
+    "silkroad",     # 73
+    "ecology",      # 74
+    "china",        # 75
+    "dynasty",      # 76
+    "medieval",     # 77
+    "culture",      # 78
+    "journey",      # 79
+    "colonial",     # 80
+    "empires",      # 81
+    "gates",        # 82
+    "baroque",      # 83
+    "families",     # 84
+    "villages",     # 85
+    "preservation", # 86
+    "periods",      # 87
+    "streets",      # 88
+    "traditions",   # 89
+    "rainforest",   # 90
+    "geology",      # 91
+    "components",   # 92
+    "islamic",      # 93
+    "coast",        # 94
+    "graveyard",    # 95
+    "marine",       # 96
+    "bengal",       # 97
+    "urbanism",     # 98
+    "artifacts",    # 99
+    "megaliths" ,    # 100
     "rice terrace",         # 101
     "traditional",  # 102
     "mining fortress",      # 103
