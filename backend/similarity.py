@@ -96,12 +96,12 @@ tokenized_dict = create_tokenized_dict(data)
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
 vectorizer_no_filter = TfidfVectorizer()
 docs_tfidf = vectorizer_no_filter.fit_transform(docs)
-svd_no_filter = TruncatedSVD(n_components=75)
+svd_no_filter = TruncatedSVD(n_components=200)
 reduced_docs = svd_no_filter.fit_transform(docs_tfidf)
 
 def get_reduced_docs(filtered_data):
-  vectorizer = TfidfVectorizer()
-  svd = TruncatedSVD(n_components = 75)
+  # vectorizer = TfidfVectorizer()
+  # svd = TruncatedSVD(n_components = 75)
   filtered_tokenized_dict = create_tokenized_dict(filtered_data)
   filtered_docs = [" ".join(filtered_tokenized_dict[site_id]) for site_id in sorted(filtered_tokenized_dict.keys()) ]
   filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
@@ -136,7 +136,6 @@ def extract_svd_dimension_terms():
   print(f"Dimension terms saved to {os.path.abspath(output_file)}")
   return output_file
 
-extract_svd_dimension_terms()
 
 def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
     terms = vectorizer.get_feature_names_out()
@@ -153,7 +152,6 @@ def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
 
     print(f"Saved Python labels module to {os.path.abspath(output_path)}")
     
-extract_top5terms(vectorizer_no_filter, svd_no_filter)
 
 #create reduced_docs (global var)
 

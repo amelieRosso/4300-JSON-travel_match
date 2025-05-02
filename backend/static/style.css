@@ -176,7 +176,7 @@ h1{
 }
 .answerContainer:hover {
     cursor:grab;
-    transform:scale(1.01);
+    transform:translateY(-10px);
     
   }
 
@@ -400,7 +400,7 @@ h3, .extra_info {
     float: right;
     width: 35%;
     margin-right: 100px;
-    box-shadow: 8px 8px 8px;
+    box-shadow: 8px 8px 8px rgb(0 0 0 / 20%);
     min-height: 300px;
     aspect-ratio: 1/0.8;
     margin-top: 20px;
