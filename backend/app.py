@@ -97,30 +97,46 @@ def json_search(query, country_filter="", category_filter="", mode="svd", weight
             result.append(place)
 
     else:  # default: SVD
-        try:
-            filtered_reduced_docs, vectorizer, svd = similarity.get_reduced_docs(filtered_data)
-        except ValueError as e:
-            print(f"[ERROR] {e}")
-            return []
-        reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd, weights)
-        top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
+        if filtered_data == data:
+            reduced_query, _ = similarity.transform_query_to_svd(query, similarity.vectorizer_no_filter, similarity.svd_no_filter, weights)
+            top_10 = similarity.index_search(query = query, filtered_reduced_docs = similarity.reduced_docs, vectorizer = similarity.vectorizer_no_filter, svd = similarity.svd_no_filter, filtered_data = data)
 
-        for score_cos, idx, score_svd in top_10:
-            place = get_place_details(idx, filtered_data)
-            reduced_docs = filtered_reduced_docs[idx]
-            score = (0.2*score_cos) + (0.8*score_svd) 
-            tags = similarity.extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, similarity.docs[idx])
-            # we need to do the actual reordering here. searching "i want a sunny place in india" gives something at the top with a lower sim score than 2nd place.
-            # This actually happens with a lot of queries. Might make more sense to just order by similarity score
-            # sometimes this is Nan??
-            # For Nan, what if we just show no similarity score for now before debugging why
-            place["Similarity_Score"] = round(score * 100, 1)
-            place["Tags"] = tags
-            place["id"] = filtered_data[idx]["id"]
-            result.append(place)
-    # reshuffle based on score
-    result = sorted(result, key = lambda place: place['Similarity_Score'], reverse=True)
-    return result
+            for score_cos, idx, score_svd in top_10:
+                place = get_place_details(idx, data)
+                reduced_docs = similarity.reduced_docs[idx]
+                score = (0.2*score_cos) + (0.8*score_svd)
+                tags = similarity.extract_svd_tags(reduced_query, reduced_docs, similarity.svd_no_filter, similarity.vectorizer_no_filter, similarity.docs[idx])
+                # sometimes this is Nan??
+                # For Nan, what if we just show no similarity score for now before debugging why
+                place["Similarity_Score"] = round(score * 100, 1)
+                #place["Tags"] = [t[0] for t in tags]
+                place["Tags"] = tags
+                place["id"] = data[idx]["id"]
+                result.append(place)
+            # reshuffle based on score
+            result = sorted(result, key = lambda place: place["Similarity_Score"], reverse = True)
+            return result
+        else:
+            try:
+                filtered_reduced_docs, vectorizer, svd = similarity.get_reduced_docs(filtered_data)
+            except ValueError as e:
+                print(f"[ERROR] {e}")
+                return []
+            
+            reduced_query, _ = similarity.transform_query_to_svd(query, vectorizer, svd, weights)
+            top_10 = similarity.index_search(query = query, filtered_reduced_docs = filtered_reduced_docs, vectorizer = vectorizer, svd = svd, filtered_data = filtered_data)
+
+            for score_cos, idx, score_svd in top_10:
+                place = get_place_details(idx, filtered_data)
+                reduced_docs = filtered_reduced_docs[idx]
+                score = (0.2*score_cos) + (0.8*score_svd)
+                tags = similarity.extract_svd_tags(reduced_query, reduced_docs, svd, vectorizer, similarity.docs[idx])
+                place["Similarity_Score"] = round(score * 100, 1)
+                place["Tags"] = tags
+                place["id"] = filtered_data[idx]["id"]
+                result.append(place)
+            result = sorted(result, key = lambda place: place["Similarity_Score"], reverse = True)
+            return result
 
 
 @app.route("/")

@@ -94,13 +94,68 @@ vectorizer = TfidfVectorizer()
 
 tokenized_dict = create_tokenized_dict(data)
 docs = [" ".join(tokenized_dict[site_id]) for site_id in sorted(tokenized_dict.keys()) ]
+vectorizer_no_filter = TfidfVectorizer()
+docs_tfidf = vectorizer_no_filter.fit_transform(docs)
+svd_no_filter = TruncatedSVD(n_components=75)
+reduced_docs = svd_no_filter.fit_transform(docs_tfidf)
 
-#create reduced_docs (global var)
 def get_reduced_docs(filtered_data):
+  vectorizer = TfidfVectorizer()
+  svd = TruncatedSVD(n_components = 75)
   filtered_tokenized_dict = create_tokenized_dict(filtered_data)
   filtered_docs = [" ".join(filtered_tokenized_dict[site_id]) for site_id in sorted(filtered_tokenized_dict.keys()) ]
   filtered_docs_tfidf = vectorizer.fit_transform(filtered_docs)
   return svd.fit_transform(filtered_docs_tfidf), vectorizer, svd
+
+def extract_svd_dimension_terms():
+  
+  terms = vectorizer_no_filter.get_feature_names_out()
+  
+  # Create the output text file
+  output_file = "svd_75_dimension_terms.txt"
+  
+  with open(output_file, 'w', encoding='utf-8') as f:
+      for dim_idx in range(75):
+          # Get the component vector for this dimension
+          component = svd_no_filter.components_[dim_idx]
+          
+          # Get the indices of all terms sorted by importance
+          sorted_indices = component.argsort()[::-1][:100]
+          
+          # Write the dimension header
+          f.write(f"Dimension {dim_idx}:\n")
+          
+          list=[]
+          for idx in sorted_indices:
+              term = terms[idx]
+              list.append(term)
+          f.write(f"{list}")
+          
+          f.write("\n")
+  
+  print(f"Dimension terms saved to {os.path.abspath(output_file)}")
+  return output_file
+
+extract_svd_dimension_terms()
+
+def extract_top5terms(vectorizer, svd, output_path="top5(75dim)_terms.py"):
+    terms = vectorizer.get_feature_names_out()
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write("# Auto-generated SVD dimension labels\n")
+        f.write("labels = [\n")
+        for dim_idx in range(svd.components_.shape[0]):
+            component = svd.components_[dim_idx]
+            sorted_indices = component.argsort()[::-1][:5]
+            top_terms = [f'"{terms[i]}"' for i in sorted_indices]
+            f.write(f"    [{', '.join(top_terms)}],\n")
+        f.write("]\n")
+
+    print(f"Saved Python labels module to {os.path.abspath(output_path)}")
+    
+extract_top5terms(vectorizer_no_filter, svd_no_filter)
+
+#create reduced_docs (global var)
 
 # uncomment it to play with the dimension
 # # Step 3: Get term-topic matrix (terms per dimension)
@@ -323,34 +378,59 @@ def index_search(
     filtered_data = data
 ) -> List[Tuple[int, int]]:
     len_sites = len(filtered_data)
+    if filtered_data == data:
+      idf = compute_idf(query, len_sites, reduced_docs, data, vectorizer_no_filter, svd_no_filter)
+      doc_norms = compute_doc_norms(query, len_sites, reduced_docs, data, vectorizer_no_filter, svd_no_filter)
+      
+      index_search_list_tuples = []
 
-    idf = compute_idf(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
-    doc_norms = compute_doc_norms(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
+      tokenize_list = preprocess_description(query).tolist()
+      query_word_counts_dict = {}
 
-    index_search_list_tuples = []
+      for word in tokenize_list:
+        query_word_counts_dict[word] = tokenize_list.count(word)
+      
+      q = 0
+      for word in query_word_counts_dict:
+        if word in idf:
+          q += (query_word_counts_dict[word] * idf[word]) ** 2
+      abs_q = math.sqrt(q)
 
-    tokenize_list = preprocess_description(query).tolist()
-    query_word_counts_dict = {}
+      numer = score_func(query_word_counts_dict, query, reduced_docs, len_sites, data, vectorizer_no_filter, svd_no_filter)
+      reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer_no_filter, svd_no_filter)
+      similarity_score_to_site_index_tuple = svd_index_search(reduced_query, reduced_docs)
+      similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
+      for site_id, score in numer.items():
+        index_search_list_tuples.append(((score / ((doc_norms[site_id] * abs_q) + 1)), site_id, similarity_score_to_site_index_dict[site_id]))
 
-    for word in tokenize_list:
-      query_word_counts_dict[word] = tokenize_list.count(word)
-    
-    q = 0
-    for word in query_word_counts_dict:
-      if word in idf:
-        q += (query_word_counts_dict[word] * idf[word]) ** 2
-    abs_q = math.sqrt(q)
-    
-    numer = score_func(query_word_counts_dict, query, filtered_reduced_docs, len_sites, filtered_data, vectorizer, svd)
-    reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer, svd)
-    similarity_score_to_site_index_tuple = svd_index_search(reduced_query, filtered_reduced_docs)
-    similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
-    for site_id, score in numer.items():
-      index_search_list_tuples.append(((score / ((doc_norms[site_id] * abs_q) + 1)), site_id, similarity_score_to_site_index_dict[site_id]))
-      # index = index_search_list_tuples.index(((score / (doc_norms[site_id] * abs_q)), site_id))
+      return sorted(index_search_list_tuples, key=lambda x: (x[0], x[2]), reverse=True)
 
-    #index_search_list_tuples.sort(reverse=True)[:10]
-    return sorted(index_search_list_tuples, key=lambda x: (x[0], x[2]), reverse=True)
+    else:
+      idf = compute_idf(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
+      doc_norms = compute_doc_norms(query, len_sites, filtered_reduced_docs, filtered_data, vectorizer, svd)
+
+      index_search_list_tuples = []
+
+      tokenize_list = preprocess_description(query).tolist()
+      query_word_counts_dict = {}
+
+      for word in tokenize_list:
+        query_word_counts_dict[word] = tokenize_list.count(word)
+
+      q = 0
+      for word in query_word_counts_dict:
+        if word in idf:
+          q += (query_word_counts_dict[word] * idf[word]) ** 2
+      abs_q = math.sqrt(q)
+
+      numer = score_func(query_word_counts_dict, query, filtered_reduced_docs, len_sites, filtered_data, vectorizer, svd)
+      reduced_query, query_tfidf = transform_query_to_svd(query, vectorizer, svd)
+      similarity_score_to_site_index_tuple = svd_index_search(reduced_query, filtered_reduced_docs)
+      similarity_score_to_site_index_dict = {t[1]: t[0] for t in similarity_score_to_site_index_tuple}
+      for site_id, score in numer.items():
+        index_search_list_tuples.append(((score / ((doc_norms[site_id] * abs_q) + 1)), site_id, similarity_score_to_site_index_dict[site_id]))
+      
+      return sorted(index_search_list_tuples, key = lambda x: (x[0], x[2]), reverse = True)
 
 
 """
