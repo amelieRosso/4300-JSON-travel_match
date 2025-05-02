@@ -19,8 +19,11 @@ href="https://js.arcgis.com/4.32/esri/themes/light/main.css"
         <div class="background">
             <div class="top-text">
                 <h1> World Heritage Search </h1>
-                <div class="tagline">
-                    <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
+                <div class="row-container">
+                        <div class="tagline">
+                            <h2>Browse through our collection of UNESCO sites and find your next travel destination.</h2>
+                        </div>
+                    <div id="map"></div>
                 </div>
                 <div class="input-column">
                     <div class="input-row">
@@ -69,7 +72,6 @@ href="https://js.arcgis.com/4.32/esri/themes/light/main.css"
                         </form>
                     </div>
                 </div>
-                <div id="map"> </div>
             </div>
             <div id="answer-box">
             </div>
@@ -535,6 +537,7 @@ let view;
                     // Restore the submit button after fetch completes
                     searchButton.innerHTML = `<img src="{{ url_for('static', filename='images/arrow_icon.png') }}" alt="buttonpng"/>`;
                     searchButton.disabled = false;
+                    window.scrollTo({ top: 190, behavior: "smooth" });
                 });
         }, 200);  // Only search after user stops typing for 200ms
         }
