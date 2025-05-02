@@ -163,7 +163,7 @@ def episodes_search():
         mode = request.args.get("mode", "svd") 
     return json_search(text, country_filter, category_filter, mode, weights)
 
-"""@app.route("/filters")
+@app.route("/filters")
 def filters():
     with open("whc_sites_2021_with_ratings.json") as f:
         data = json.load(f)
@@ -181,7 +181,7 @@ def filters():
     return jsonify({
         "countries": sorted(country_tokens),
         "categories": categories
-    })"""
+    })
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)
