@@ -140,6 +140,17 @@ let view;
  
          });
        }
+       
+       function flyToLocation(lat, lng) {
+            if (!view) return;
+
+            view.goTo({
+            center: [lng, lat],
+            zoom: 7
+            });
+
+            document.getElementById("map")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
  
        function zoomToPoint(longitude, latitude) {
          view.goTo({
@@ -333,7 +344,7 @@ let view;
         }
 
         // All the html and js logic for the information in the answer cards.
-        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes){ 
+        function answerBoxTemplate(name,description,rating,reviews, similarity_score, tags, id, inscribe_date, category, country, region, isoCodes, latitude, longitude){ 
             // Detect if BERT is active
             const isBert = document.getElementById("search-toggle")?.checked;
 
@@ -426,6 +437,7 @@ let view;
                     </p>
                     <p class="inscribe-date"> Inscribe Date: ${inscribe_date}</p>
                     <p class="region"> Region: ${region}</p>
+                    <button class="map-btn" onclick="flyToLocation(${latitude}, ${longitude})">See on map</button>
                 </div>                
             </div>`
         }
@@ -521,7 +533,7 @@ let view;
                     data?.forEach(row => {
                         let tempDiv = document.createElement("div");
                         tempDiv.classList.add('answerContainer');
-                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes);
+                        tempDiv.innerHTML = answerBoxTemplate(row.Name, row["Short Description"], row.Rating, row.Reviews, row.Similarity_Score, row.Tags, row.id, row["Inscribe Date"], row.Category, row.Country, row.Region, row.ISO_Codes, row.latitude, row.longitude);
                         container.appendChild(tempDiv);
                     });
 
